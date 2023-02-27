@@ -22,7 +22,7 @@ class Game : ApplicationAdapter() {
         batch = SpriteBatch()
         camera = OrthographicCamera()
         camera.setToOrtho(false, GAME_WIDTH, GAME_HEIGHT)
-        tkt = Texture("tkt.png")
+        tkt = Texture("texture/misc/tkt.png")
     }
 
     override fun render() {
