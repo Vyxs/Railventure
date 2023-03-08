@@ -58,6 +58,16 @@ class World {
     }
 
     /**
+     * Update an entity in the world
+     *
+     * @param entity The entity to update
+     * @param components The components of the entity
+     */
+    fun updateEntity(entity: Entity, components: List<Component>) {
+        entities[entity] = components
+    }
+
+    /**
      * Remove an entity from the world
      *
      * @param entity The entity to remove
@@ -77,13 +87,13 @@ class World {
     }
 
     /**
-     * Get all entities with a specific component
+     * Get all entities with specific components
      *
-     * @param component The component type to search for
+     * @param componentList The component types to search for
      * @return A list of entities with the component
      **/
-    fun getEntitiesWithComponent(component: ComponentType): List<Entity> {
-        return entities.filter { entry -> entry.value.any { component == it.componentType } }.keys.toList()
+    fun getEntitiesWithComponents(vararg components: ComponentType): Set<Map.Entry<Entity, List<Component>>> {
+        return entities.filter { entry -> entry.value.any { components.contains(it.componentType) } }.entries
     }
 
     /**
@@ -92,18 +102,8 @@ class World {
      * @param componentList The component types to search for
      * @return A list of entities with the component
      **/
-    fun getEntitiesWithComponents(vararg components: ComponentType): List<Entity> {
-        return entities.filter { entry -> entry.value.any { components.contains(it.componentType) } }.keys.toList()
-    }
-
-    /**
-     * Get all entities with specific components
-     *
-     * @param componentList The component types to search for
-     * @return A list of entities with the component
-     **/
-    fun getEntitiesWithComponents(componentList: List<ComponentType>): List<Entity> {
-        return entities.filter { entry -> entry.value.any { componentList.contains(it.componentType) } }.keys.toList()
+    fun getEntitiesWithComponents(componentList: List<ComponentType>): Set<Map.Entry<Entity, List<Component>>> {
+        return entities.filter { entry -> entry.value.any { componentList.contains(it.componentType) } }.entries
     }
 
     /**
@@ -126,6 +126,7 @@ class World {
     fun <T : Component> getComponent(entity: Entity, componentType: ComponentType): T {
         return entities[entity]!!.first { it.componentType == componentType } as T
     }
+
     /**
      * Get all components of an entity
      *
@@ -144,17 +145,6 @@ class World {
      **/
     fun hasEntity(entity: Entity): Boolean {
         return entities.containsKey(entity)
-    }
-
-    /**
-     * Check if an entity has a specific component
-     *
-     * @param entity The entity to check
-     * @param component The component class to check
-     * @return True if the entity has the component, false otherwise
-     **/
-    fun hasComponent(entity: Entity, component: ComponentType): Boolean {
-        return entities[entity]!!.any { component == it.componentType }
     }
 
     /**

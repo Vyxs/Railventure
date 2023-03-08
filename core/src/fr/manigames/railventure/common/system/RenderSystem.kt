@@ -27,24 +27,34 @@ class RenderSystem(
     override fun render(delta: Float) {
         ScreenUtils.clear(0f, 0f, 0f, 1f)
 
-        world.getEntitiesWithComponent(ComponentType.TILE_RENDERABLE).forEach { entity ->
-            val renderComponent: TileRenderComponent = world.getComponent(entity, ComponentType.TILE_RENDERABLE)
-            tileRenderer.setProjectionMatrix(camera.combined)
-            tileRenderer.renderTile(renderComponent.type, renderComponent.x, renderComponent.y)
+        world.getEntitiesWithComponents(ComponentType.TILE_RENDERABLE).forEach { entry ->
+            entry.value.first { it.componentType == ComponentType.TILE_RENDERABLE }.let { component ->
+                val renderComponent: TileRenderComponent = component as TileRenderComponent
+                tileRenderer.setProjectionMatrix(camera.combined)
+                tileRenderer.renderTile(renderComponent.type, renderComponent.x, renderComponent.y)
+            }
         }
 
-        world.getEntitiesWithComponents(ComponentType.HUD_POSITION, ComponentType.TEXT).forEach { entity ->
-            val position: HudPositionComponent = world.getComponent(entity, ComponentType.HUD_POSITION)
-            val text: TextComponent = world.getComponent(entity, ComponentType.TEXT)
-            hudRenderer.setProjectionMatrix(camera.combined)
-            hudRenderer.renderText(text.text, position.x, position.y, text.color)
+        world.getEntitiesWithComponents(ComponentType.HUD_POSITION, ComponentType.TEXT).forEach { entry ->
+            entry.value.first { it.componentType == ComponentType.HUD_POSITION }.let { hud ->
+                val position: HudPositionComponent = hud as HudPositionComponent
+                entry.value.first { it.componentType == ComponentType.TEXT }.let { component ->
+                    val text: TextComponent = component as TextComponent
+                    hudRenderer.setProjectionMatrix(camera.combined)
+                    hudRenderer.renderText(text.text, position.x, position.y, text.color)
+                }
+            }
         }
 
-        world.getEntitiesWithComponents(ComponentType.TEXTURE, ComponentType.WORLD_POSITION).forEach { entity ->
-            val position: WorldPositionComponent = world.getComponent(entity, ComponentType.WORLD_POSITION)
-            val texture: TextureComponent = world.getComponent(entity, ComponentType.TEXTURE)
-            tileRenderer.setProjectionMatrix(camera.combined)
-            tileRenderer.renderTexture(texture.texture, position.world_x, position.world_y)
+        world.getEntitiesWithComponents(ComponentType.TEXTURE, ComponentType.WORLD_POSITION).forEach { entry ->
+            entry.value.first { it.componentType == ComponentType.WORLD_POSITION }.let { worldPos ->
+                val position: WorldPositionComponent = worldPos as WorldPositionComponent
+                entry.value.first { it.componentType == ComponentType.TEXTURE }.let { component ->
+                    val texture: TextureComponent = component as TextureComponent
+                    tileRenderer.setProjectionMatrix(camera.combined)
+                    tileRenderer.renderTexture(texture.texture, position.world_x, position.world_y)
+                }
+            }
         }
     }
 
