@@ -9,6 +9,7 @@ import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.common.renderer.HudRenderer
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.common.component.*
+import fr.manigames.railventure.common.renderer.DebugRenderer
 
 class RenderSystem(
     world: World,
@@ -40,7 +41,6 @@ class RenderSystem(
                 val position: HudPositionComponent = hud as HudPositionComponent
                 entry.value.first { it.componentType == ComponentType.TEXT }.let { component ->
                     val text: TextComponent = component as TextComponent
-                    hudRenderer.setProjectionMatrix(camera.combined)
                     hudRenderer.renderText(text.text, position.x, position.y, text.color)
                 }
             }

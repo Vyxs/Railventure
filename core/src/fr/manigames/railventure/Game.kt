@@ -14,25 +14,17 @@ import fr.manigames.railventure.api.graphics.font.Color
 import fr.manigames.railventure.common.system.RenderSystem
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.common.component.*
-
-private val assetLoadFunc: (AssetManager) -> Unit = {
-    it.load(R.Texture.RAIL_V, Texture::class.java)
-    it.load(R.Texture.RAIL_H, Texture::class.java)
-    it.load(R.Texture.RAIL_X, Texture::class.java)
-    it.load(R.Texture.RAIL_TOP_LEFT, Texture::class.java)
-    it.load(R.Texture.RAIL_TOP_RIGHT, Texture::class.java)
-    it.load(R.Texture.RAIL_BOT_LEFT, Texture::class.java)
-    it.load(R.Texture.RAIL_BOT_RIGHT, Texture::class.java)
-    it.load(R.Texture.RAIL_T_BOT, Texture::class.java)
-    it.load(R.Texture.RAIL_T_TOP, Texture::class.java)
-    it.load(R.Texture.RAIL_T_LEFT, Texture::class.java)
-    it.load(R.Texture.RAIL_T_RIGHT, Texture::class.java)
-}
+import fr.manigames.railventure.common.component.HudPositionComponent
+import fr.manigames.railventure.common.component.TextComponent
+import fr.manigames.railventure.common.component.TileRenderComponent
+import fr.manigames.railventure.test.CameraController
+import fr.manigames.railventure.test.TestSystem
+import java.util.logging.Logger
 
 class Game : ApplicationListener {
 
     companion object {
+        const val DEBUG = true
         val GAME_WIDTH = Ratio.R_1280_720.width
         val GAME_HEIGHT = Ratio.R_1280_720.height
     }
@@ -42,36 +34,31 @@ class Game : ApplicationListener {
     private val assets = Assets()
     private lateinit var world: World
     private val systems: LinkedHashSet<System> = linkedSetOf()
+    private val logger: Logger = Logger.getLogger(Game::class.java.name)
 
     override fun create() {
         world = World()
         camera = OrthographicCamera()
         viewport = StretchViewport(GAME_WIDTH, GAME_HEIGHT, camera)
-        systems.add(
-            RenderSystem(world, assets, camera)
+        systems.addAll(
+            listOf(
+                RenderSystem(world, assets, camera)
+            )
         )
+        if (DEBUG) {
+            systems.add(TestSystem(world, assets, camera, viewport, logger))
+        }
         init()
-
-        /////// test
-        val entity = EntityBuilder.make()
-        world.addEntity(entity, TileRenderComponent(TileType.RAIL_V, 50, 50))
-
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2, 2))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2, 3))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2, 4))
-
-        // hud should not be entity but it's an example, so Hud and Text component should be removed later
-        val entity2 = EntityBuilder.make()
-        world.addEntity(entity2, TextComponent("Hello ECS World!", Color(0.2f, 0.1f, 0.7f, 1f)), HudPositionComponent(100f, 100f))
-
-        world.addEntity(EntityBuilder.make(), TextComponent("Line of text"), HudPositionComponent(100f, 50f))
     }
 
     private fun init() {
         systems.forEach(System::init)
-        assets.load(assetLoadFunc)
-        camera.setToOrtho(false, GAME_WIDTH, GAME_HEIGHT)
+        assets.load(R::assetLoadingFunction)
+        camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         assets.finishLoading()
+
+        world.addEntity(EntityBuilder.make(), TileRenderComponent(TileType.RAIL_V, 50, 50))
+        world.addEntity(EntityBuilder.make(), TextComponent("Hello ECS World!", Color(0.2f, 0.1f, 0.7f, 1f)), HudPositionComponent(100f, 600f))
     }
 
     override fun resize(width: Int, height: Int) {
@@ -98,9 +85,8 @@ class Game : ApplicationListener {
 
     private fun update() {
         assets.update()
-        camera.update()
         systems.forEach { system ->
-            system.update(0f)
+            system.update(1f)
         }
     }
 
