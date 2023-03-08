@@ -1,4 +1,4 @@
-package fr.manigames.railventure
+package fr.manigames.railventure.api.config
 
 class UserOptions {
 }
