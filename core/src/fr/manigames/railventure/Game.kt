@@ -4,10 +4,12 @@ import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.R
 import fr.manigames.railventure.api.entity.EntityBuilder
 import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.graphics.display.Ratio
 import fr.manigames.railventure.api.graphics.font.Color
 import fr.manigames.railventure.common.system.RenderSystem
 import fr.manigames.railventure.api.system.System
@@ -31,11 +33,12 @@ private val assetLoadFunc: (AssetManager) -> Unit = {
 class Game : ApplicationListener {
 
     companion object {
-        const val GAME_WIDTH = 400f
-        const val GAME_HEIGHT = 240f
+        val GAME_WIDTH = Ratio.R_1280_720.width
+        val GAME_HEIGHT = Ratio.R_1280_720.height
     }
 
     private lateinit var camera: OrthographicCamera
+    private lateinit var viewport: StretchViewport
     private val assets = Assets()
     private lateinit var world: World
     private val systems: LinkedHashSet<System> = linkedSetOf()
@@ -43,6 +46,7 @@ class Game : ApplicationListener {
     override fun create() {
         world = World()
         camera = OrthographicCamera()
+        viewport = StretchViewport(GAME_WIDTH, GAME_HEIGHT, camera)
         systems.add(
             RenderSystem(world, assets, camera)
         )
@@ -71,6 +75,7 @@ class Game : ApplicationListener {
     }
 
     override fun resize(width: Int, height: Int) {
+        viewport.update(width, height)
         systems.forEach { system ->
             system.resize(width, height)
         }
@@ -100,7 +105,7 @@ class Game : ApplicationListener {
     }
 
     override fun dispose() {
-        systems.forEach(System::dispose)
         assets.dispose()
+        systems.forEach(System::dispose)
     }
 }

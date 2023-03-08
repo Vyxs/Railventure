@@ -14,7 +14,7 @@ class TileRenderer(private val asset: Assets) : Renderer {
     fun renderTile(type: TileType, x: Int, y: Int) {
         asset.getTexture(type.assetKey)?.let { texture ->
             batch.begin()
-            batch.draw(texture, x.toFloat(), y.toFloat())
+            batch.draw(texture, x.toFloat(), y.toFloat(), Metric.TILE_SIZE, Metric.TILE_SIZE)
             batch.end()
         }
     }
@@ -22,7 +22,7 @@ class TileRenderer(private val asset: Assets) : Renderer {
     fun renderTexture(texture: String, worldX: Int, worldY: Int) {
         asset.getTexture(texture)?.let { tex ->
             batch.begin()
-            batch.draw(tex, worldX.toFloat() * Metric.TILE_SIZE, worldY.toFloat() * Metric.TILE_SIZE)
+            batch.draw(tex, worldX.toFloat() * Metric.TILE_SIZE, worldY.toFloat() * Metric.TILE_SIZE, Metric.TILE_SIZE, Metric.TILE_SIZE)
             batch.end()
         }
     }
