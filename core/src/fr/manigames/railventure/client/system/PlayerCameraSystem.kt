@@ -1,8 +1,10 @@
 package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.OrthographicCamera
 import fr.manigames.railventure.api.component.ComponentType
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM
 import fr.manigames.railventure.api.entity.Entity
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
@@ -17,6 +19,8 @@ class PlayerCameraSystem(
     private var player: Entity? = null
 
     override fun init() {
+        if (camera is OrthographicCamera)
+            camera.zoom = CAMERA_ZOOM
         findPlayer()
     }
 

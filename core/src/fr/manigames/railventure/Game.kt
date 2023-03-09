@@ -20,7 +20,7 @@ class Game : ApplicationListener {
 
     companion object {
         const val DEBUG = true
-        const val USE_PLAYER_CAMERA = false
+        const val USE_PLAYER_CAMERA = true
 
         val GAME_WIDTH = Ratio.R_1280_720.width
         val GAME_HEIGHT = Ratio.R_1280_720.height

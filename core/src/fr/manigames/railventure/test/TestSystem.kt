@@ -54,12 +54,10 @@ class TestSystem(
         world.addEntity(EntityBuilder.make(), PlayerComposition(
             worldPosition = WorldPositionComponent(2f, 2f),
             moveable = MoveableComponent(
-                maxSpeed = 10f,
+                maxSpeed = 5f,
                 maxAngularSpeed = 1f
             )
         ).toComponents())
-
-
     }
 
     override fun render(delta: Float) {
