@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.R
 import fr.manigames.railventure.api.graphics.display.Ratio
-import fr.manigames.railventure.common.system.RenderSystem
+import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.client.system.PlayerCameraSystem

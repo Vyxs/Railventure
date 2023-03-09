@@ -9,7 +9,7 @@ import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.common.component.*
 import fr.manigames.railventure.common.composition.PlayerComposition
-import fr.manigames.railventure.common.renderer.DebugRenderer
+import fr.manigames.railventure.client.renderer.DebugRenderer
 import java.util.logging.Logger
 
 /**

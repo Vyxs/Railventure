@@ -1,4 +1,4 @@
-package fr.manigames.railventure.common.renderer
+package fr.manigames.railventure.client.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
