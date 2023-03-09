@@ -9,7 +9,6 @@ import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.common.renderer.HudRenderer
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.common.component.*
-import fr.manigames.railventure.common.renderer.DebugRenderer
 
 class RenderSystem(
     world: World,

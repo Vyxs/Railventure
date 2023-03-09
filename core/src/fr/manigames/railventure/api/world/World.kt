@@ -2,6 +2,7 @@ package fr.manigames.railventure.api.world
 
 import fr.manigames.railventure.api.component.Component
 import fr.manigames.railventure.api.component.ComponentType
+import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.entity.Entity
 
 class World {
@@ -87,7 +88,15 @@ class World {
     }
 
     /**
-     * Get all entities with specific components
+     * Get all entities with specific components. The components at least must be present in the entity.
+     *
+     * Exemple:
+     *
+     * Entity 1: Component A, Component B, Component C
+     * Entity 2: Component A, Component B
+     * Entity 3: Component A, Component C
+     *
+     * getEntitiesWithComponents(Component A, Component B) will return Entity 1 and Entity 2
      *
      * @param componentList The component types to search for
      * @return A list of entities with the component
@@ -97,7 +106,15 @@ class World {
     }
 
     /**
-     * Get all entities with specific components
+     * Get all entities with specific components. The components at least must be present in the entity.
+     *
+     * Exemple:
+     *
+     * Entity 1: Component A, Component B, Component C
+     * Entity 2: Component A, Component B
+     * Entity 3: Component A, Component C
+     *
+     * getEntitiesWithComponents(Component A, Component B) will return Entity 1 and Entity 2
      *
      * @param componentList The component types to search for
      * @return A list of entities with the component
