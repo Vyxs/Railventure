@@ -14,6 +14,7 @@ object R {
         am.load(Texture.RAIL_T_TOP, com.badlogic.gdx.graphics.Texture::class.java)
         am.load(Texture.RAIL_T_LEFT, com.badlogic.gdx.graphics.Texture::class.java)
         am.load(Texture.RAIL_T_RIGHT, com.badlogic.gdx.graphics.Texture::class.java)
+        am.load(Texture.WAGON, com.badlogic.gdx.graphics.Texture::class.java)
     }
 
     object Texture {
@@ -28,6 +29,7 @@ object R {
         const val RAIL_T_TOP: String = "texture/rail/rail-t-top.png"
         const val RAIL_T_LEFT: String = "texture/rail/rail-t-left.png"
         const val RAIL_T_RIGHT: String = "texture/rail/rail-t-right.png"
+        const val WAGON: String = "texture/wagon/wagon.png"
     }
 
 }

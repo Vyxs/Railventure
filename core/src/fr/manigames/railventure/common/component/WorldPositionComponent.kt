@@ -4,6 +4,6 @@ import fr.manigames.railventure.api.component.Component
 import fr.manigames.railventure.api.component.ComponentType
 
 data class WorldPositionComponent(
-    val world_x: Int,
-    val world_y: Int
+    var world_x: Float,
+    var world_y: Float
 ) : Component(ComponentType.WORLD_POSITION)

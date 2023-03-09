@@ -10,5 +10,7 @@ enum class ComponentType {
     WORLD_POSITION,
     HUD_POSITION,
     TEXT,
-    TEXTURE
+    TEXTURE,
+    PLAYER,
+    MOVEABLE
 }
