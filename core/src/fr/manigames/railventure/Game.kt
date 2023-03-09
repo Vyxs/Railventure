@@ -1,45 +1,97 @@
 package fr.manigames.railventure
 
-import com.badlogic.gdx.ApplicationAdapter
+import com.badlogic.gdx.ApplicationListener
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.utils.ScreenUtils
+import com.badlogic.gdx.utils.viewport.StretchViewport
+import fr.manigames.railventure.api.core.Assets
+import fr.manigames.railventure.api.core.R
+import fr.manigames.railventure.api.entity.EntityBuilder
+import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.graphics.display.Ratio
+import fr.manigames.railventure.api.graphics.font.Color
+import fr.manigames.railventure.common.system.RenderSystem
+import fr.manigames.railventure.api.system.System
+import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.common.component.HudPositionComponent
+import fr.manigames.railventure.common.component.TextComponent
+import fr.manigames.railventure.common.component.TileRenderComponent
+import fr.manigames.railventure.test.CameraController
+import fr.manigames.railventure.test.TestSystem
+import java.util.logging.Logger
 
-class Game : ApplicationAdapter() {
+class Game : ApplicationListener {
 
     companion object {
-        const val GAME_WIDTH = 400f
-        const val GAME_HEIGHT = 240f
+        const val DEBUG = true
+        val GAME_WIDTH = Ratio.R_1280_720.width
+        val GAME_HEIGHT = Ratio.R_1280_720.height
     }
 
     private lateinit var camera: OrthographicCamera
-    private lateinit var batch: SpriteBatch
-
-    private var tkt: Texture? = null
+    private lateinit var viewport: StretchViewport
+    private val assets = Assets()
+    private lateinit var world: World
+    private val systems: LinkedHashSet<System> = linkedSetOf()
+    private val logger: Logger = Logger.getLogger(Game::class.java.name)
 
     override fun create() {
-        batch = SpriteBatch()
+        world = World()
         camera = OrthographicCamera()
-        camera.setToOrtho(false, GAME_WIDTH, GAME_HEIGHT)
-        tkt = Texture("texture/misc/tkt.png")
+        viewport = StretchViewport(GAME_WIDTH, GAME_HEIGHT, camera)
+        systems.addAll(
+            listOf(
+                RenderSystem(world, assets, camera)
+            )
+        )
+        if (DEBUG) {
+            systems.add(TestSystem(world, assets, camera, viewport, logger))
+        }
+        init()
+    }
+
+    private fun init() {
+        systems.forEach(System::init)
+        assets.load(R::assetLoadingFunction)
+        camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
+        assets.finishLoading()
+
+        world.addEntity(EntityBuilder.make(), TileRenderComponent(TileType.RAIL_V, 50, 50))
+        world.addEntity(EntityBuilder.make(), TextComponent("Hello ECS World!", Color(0.2f, 0.1f, 0.7f, 1f)), HudPositionComponent(100f, 600f))
+    }
+
+    override fun resize(width: Int, height: Int) {
+        viewport.update(width, height)
+        systems.forEach { system ->
+            system.resize(width, height)
+        }
     }
 
     override fun render() {
-        ScreenUtils.clear(0f, 0f, 0f, 1f)
         update()
-        batch.projectionMatrix = camera.combined
-        batch.begin()
-        batch.draw(tkt, GAME_WIDTH / 2 - 16, GAME_HEIGHT / 2 - 16)
-        batch.end()
+        systems.forEach { system ->
+            system.render(0f)
+        }
+    }
+
+    override fun pause() {
+        systems.forEach(System::pause)
+    }
+
+    override fun resume() {
+        systems.forEach(System::resume)
     }
 
     private fun update() {
-        camera.update()
+        assets.update()
+        systems.forEach { system ->
+            system.update(1f)
+        }
     }
 
     override fun dispose() {
-        batch.dispose()
-        tkt!!.dispose()
+        assets.dispose()
+        systems.forEach(System::dispose)
     }
 }
