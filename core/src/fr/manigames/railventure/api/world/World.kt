@@ -102,7 +102,7 @@ class World {
      * @return A list of entities with the component
      **/
     fun getEntitiesWithComponents(vararg components: ComponentType): Set<Map.Entry<Entity, List<Component>>> {
-        return entities.filter { entry -> entry.value.any { components.contains(it.componentType) } }.entries
+        return entities.filter { entry -> entry.value.map { it.componentType }.containsAll(components.toList()) }.entries
     }
 
     /**
@@ -120,7 +120,7 @@ class World {
      * @return A list of entities with the component
      **/
     fun getEntitiesWithComponents(componentList: List<ComponentType>): Set<Map.Entry<Entity, List<Component>>> {
-        return entities.filter { entry -> entry.value.any { componentList.contains(it.componentType) } }.entries
+        return entities.filter { entry -> entry.value.map { it.componentType }.containsAll(componentList) }.entries
     }
 
     /**
