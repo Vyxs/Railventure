@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.math.MathUtils
 
 class CameraController(
@@ -50,6 +51,9 @@ class CameraController(
         if (camera is OrthographicCamera) {
             camera.zoom += amountY * 0.05f
             camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1f)
+        } else if (camera is PerspectiveCamera) {
+            camera.translate(0f, 0f, amountY * 3f)
+            camera.position.z = MathUtils.clamp(camera.position.z, 40f, camera.far)
         }
         return true
     }

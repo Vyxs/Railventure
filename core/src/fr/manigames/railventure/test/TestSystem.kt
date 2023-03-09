@@ -1,6 +1,7 @@
 package fr.manigames.railventure.test
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.R
@@ -19,7 +20,7 @@ import java.util.logging.Logger
 class TestSystem(
     world: World,
     private val assets: Assets,
-    private val camera: OrthographicCamera,
+    private val camera: PerspectiveCamera,
     private val viewport: StretchViewport,
     private val logger: Logger
 ) : System(world) {
@@ -29,7 +30,6 @@ class TestSystem(
 
     override fun init() {
         debugRenderer = DebugRenderer(camera)
-        camera.zoom = 0.25f
         cameraController = CameraController(camera)
         cameraController.init()
 

@@ -3,6 +3,7 @@ package fr.manigames.railventure
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
@@ -29,7 +30,7 @@ class Game : ApplicationListener {
         val GAME_HEIGHT = Ratio.R_1280_720.height
     }
 
-    private lateinit var camera: OrthographicCamera
+    private lateinit var camera: PerspectiveCamera
     private lateinit var viewport: StretchViewport
     private val assets = Assets()
     private lateinit var world: World
@@ -38,7 +39,7 @@ class Game : ApplicationListener {
 
     override fun create() {
         world = World()
-        camera = OrthographicCamera()
+        camera = PerspectiveCamera(67f, GAME_WIDTH, GAME_HEIGHT)
         viewport = StretchViewport(GAME_WIDTH, GAME_HEIGHT, camera)
         systems.addAll(
             listOf(
@@ -54,7 +55,13 @@ class Game : ApplicationListener {
     private fun init() {
         systems.forEach(System::init)
         assets.load(R::assetLoadingFunction)
-        camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
+
+        camera.position.set(50f, 50f, 260f)
+        camera.lookAt(50f, 50f,0f)
+        camera.rotate(30f, 1f, 0f, 0f)
+        camera.near = 0f
+        camera.far = 300f
+       // camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         assets.finishLoading()
 
         world.addEntity(EntityBuilder.make(), TileRenderComponent(TileType.RAIL_V, 50, 50))

@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.math.Vector3
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 
@@ -24,7 +26,8 @@ class DebugRenderer(
 
     fun render() {
         renderGrid()
-        renderCameraPosition()
+        if (camera is OrthographicCamera)
+            renderCameraPosition()
         renderDebugInfo()
     }
 
@@ -43,6 +46,7 @@ class DebugRenderer(
         font.draw(spriteBatch, "Camera world position: ${camera.position.x / Metric.TILE_SIZE}, ${camera.position.y / Metric.TILE_SIZE}", 10f, 40f)
         font.draw(spriteBatch, "Camera direction: ${camera.direction}", 10f, 60f)
         font.draw(spriteBatch, "Camera viewport: ${camera.viewportWidth}, ${camera.viewportHeight}", 10f, 80f)
+
         if (camera is OrthographicCamera) {
             font.draw(spriteBatch, "Camera zoom: ${camera.zoom}", 10f, 100f)
         }
@@ -64,7 +68,7 @@ class DebugRenderer(
         val startX = camera.position.x - camera.viewportWidth / 2 - offset
         val startY = camera.position.y - camera.viewportHeight / 2 - offset
         val endX = camera.position.x + camera.viewportWidth / 2 + offset
-        val endY = camera.position.y + camera.viewportHeight / 2 + offset
+        val endY = camera.position.y + camera.viewportHeight + offset
         val startXGrid = (startX / tileSize).toInt()
         val startYGrid = (startY / tileSize).toInt()
         val endXGrid = (endX / tileSize).toInt()
