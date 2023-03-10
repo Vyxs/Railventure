@@ -1,15 +1,14 @@
-package fr.manigames.railventure.common.system
+package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.ScreenUtils
-import fr.manigames.railventure.common.renderer.TileRenderer
+import fr.manigames.railventure.client.renderer.TileRenderer
 import fr.manigames.railventure.api.component.ComponentType
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.core.Assets
-import fr.manigames.railventure.common.renderer.HudRenderer
+import fr.manigames.railventure.client.renderer.HudRenderer
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.common.component.*
-import fr.manigames.railventure.common.renderer.DebugRenderer
 
 class RenderSystem(
     world: World,

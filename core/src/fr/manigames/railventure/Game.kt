@@ -1,24 +1,19 @@
 package fr.manigames.railventure
 
 import com.badlogic.gdx.ApplicationListener
-import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.Gdx
+
 import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.R
-import fr.manigames.railventure.api.entity.EntityBuilder
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.graphics.display.Ratio
-import fr.manigames.railventure.api.graphics.font.Color
-import fr.manigames.railventure.common.system.RenderSystem
+import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.common.component.HudPositionComponent
-import fr.manigames.railventure.common.component.TextComponent
-import fr.manigames.railventure.common.component.TileRenderComponent
-import fr.manigames.railventure.test.CameraController
+import fr.manigames.railventure.client.system.PlayerCameraSystem
+import fr.manigames.railventure.client.system.PlayerControllerSystem
+import fr.manigames.railventure.common.system.PhysicSystem
 import fr.manigames.railventure.test.TestSystem
 import java.util.logging.Logger
 
@@ -26,6 +21,8 @@ class Game : ApplicationListener {
 
     companion object {
         const val DEBUG = true
+        const val USE_PLAYER_CAMERA = true
+
         val GAME_WIDTH = Ratio.R_1280_720.width
         val GAME_HEIGHT = Ratio.R_1280_720.height
     }
@@ -43,11 +40,16 @@ class Game : ApplicationListener {
         viewport = StretchViewport(GAME_WIDTH, GAME_HEIGHT, camera)
         systems.addAll(
             listOf(
-                RenderSystem(world, assets, camera)
+                RenderSystem(world, assets, camera),
+                PhysicSystem(world),
+                PlayerControllerSystem(world)
             )
         )
         if (DEBUG) {
-            systems.add(TestSystem(world, assets, camera, viewport, logger))
+            systems.add(TestSystem(world, assets, camera, viewport, logger, !USE_PLAYER_CAMERA))
+        }
+        if (USE_PLAYER_CAMERA) {
+            systems.add(PlayerCameraSystem(world, camera))
         }
         init()
     }
@@ -63,9 +65,6 @@ class Game : ApplicationListener {
         camera.far = 300f
        // camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         assets.finishLoading()
-
-        world.addEntity(EntityBuilder.make(), TileRenderComponent(TileType.RAIL_V, 50, 50))
-        world.addEntity(EntityBuilder.make(), TextComponent("Hello ECS World!", Color(0.2f, 0.1f, 0.7f, 1f)), HudPositionComponent(100f, 600f))
     }
 
     override fun resize(width: Int, height: Int) {
@@ -78,7 +77,7 @@ class Game : ApplicationListener {
     override fun render() {
         update()
         systems.forEach { system ->
-            system.render(0f)
+            system.render(Gdx.graphics.deltaTime)
         }
     }
 
@@ -93,7 +92,7 @@ class Game : ApplicationListener {
     private fun update() {
         assets.update()
         systems.forEach { system ->
-            system.update(1f)
+            system.update(Gdx.graphics.deltaTime)
         }
     }
 

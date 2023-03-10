@@ -6,12 +6,11 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.R
 import fr.manigames.railventure.api.entity.EntityBuilder
-import fr.manigames.railventure.api.gameobject.TileType
-import fr.manigames.railventure.api.graphics.font.Color
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.common.component.*
-import fr.manigames.railventure.common.renderer.DebugRenderer
+import fr.manigames.railventure.common.composition.PlayerComposition
+import fr.manigames.railventure.client.renderer.DebugRenderer
 import java.util.logging.Logger
 
 /**
@@ -22,33 +21,44 @@ class TestSystem(
     private val assets: Assets,
     private val camera: PerspectiveCamera,
     private val viewport: StretchViewport,
-    private val logger: Logger
+    private val logger: Logger,
+    private val useDebugCamera: Boolean
 ) : System(world) {
 
     private lateinit var cameraController: CameraController
     private lateinit var debugRenderer: DebugRenderer
 
     override fun init() {
-        debugRenderer = DebugRenderer(camera)
+        debugRenderer = DebugRenderer(camera, world)
         cameraController = CameraController(camera)
-        cameraController.init()
+        if (useDebugCamera) {
+            cameraController.init()
+        }
 
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2, 2))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2, 3))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2, 4))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_BOT_RIGHT), WorldPositionComponent(2, 5))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(3, 5))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(4, 5))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(5, 5))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_BOT_LEFT), WorldPositionComponent(6, 5))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(6, 4))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(6, 3))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(6, 2))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_TOP_LEFT), WorldPositionComponent(6, 1))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(5, 1))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(4, 1))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(3, 1))
-        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_TOP_RIGHT), WorldPositionComponent(2, 1))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2f, 2f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2f, 3f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(2f, 4f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_BOT_RIGHT), WorldPositionComponent(2f, 5f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(3f, 5f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(4f, 5f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(5f, 5f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_BOT_LEFT), WorldPositionComponent(6f, 5f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(6f, 4f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(6f, 3f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_V), WorldPositionComponent(6f, 2f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_TOP_LEFT), WorldPositionComponent(6f, 1f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(5f, 1f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(4f, 1f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H), WorldPositionComponent(3f, 1f))
+        world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_TOP_RIGHT), WorldPositionComponent(2f, 1f))
+
+        world.addEntity(EntityBuilder.make(), PlayerComposition(
+            worldPosition = WorldPositionComponent(2f, 2f),
+            moveable = MoveableComponent(
+                maxSpeed = 5f,
+                maxAngularSpeed = 1f
+            )
+        ).toComponents())
     }
 
     override fun render(delta: Float) {
@@ -56,7 +66,8 @@ class TestSystem(
     }
 
     override fun update(delta: Float) {
-        cameraController.update(1f)
+        if (useDebugCamera)
+            cameraController.update(1f)
     }
 
     override fun pause() {

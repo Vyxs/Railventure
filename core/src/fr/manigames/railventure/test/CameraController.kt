@@ -14,6 +14,8 @@ class CameraController(
 
     fun init() {
         Gdx.input.inputProcessor = this
+        if (camera is OrthographicCamera)
+            camera.zoom = 0.25f
     }
 
     fun update(delta: Float) {
@@ -47,7 +49,6 @@ class CameraController(
     override fun mouseMoved(screenX: Int, screenY: Int): Boolean = false
 
     override fun scrolled(amountX: Float, amountY: Float): Boolean {
-
         if (camera is OrthographicCamera) {
             camera.zoom += amountY * 0.05f
             camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1f)

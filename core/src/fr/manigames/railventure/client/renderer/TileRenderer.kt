@@ -1,4 +1,4 @@
-package fr.manigames.railventure.common.renderer
+package fr.manigames.railventure.client.renderer
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
@@ -19,10 +19,10 @@ class TileRenderer(private val asset: Assets) : Renderer {
         }
     }
 
-    fun renderTexture(texture: String, worldX: Int, worldY: Int) {
+    fun renderTexture(texture: String, worldX: Float, worldY: Float) {
         asset.getTexture(texture)?.let { tex ->
             batch.begin()
-            batch.draw(tex, worldX.toFloat() * Metric.TILE_SIZE, worldY.toFloat() * Metric.TILE_SIZE, Metric.TILE_SIZE, Metric.TILE_SIZE)
+            batch.draw(tex, worldX * Metric.TILE_SIZE, worldY * Metric.TILE_SIZE, Metric.TILE_SIZE, Metric.TILE_SIZE)
             batch.end()
         }
     }
