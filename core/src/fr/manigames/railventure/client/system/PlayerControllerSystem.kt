@@ -29,35 +29,28 @@ class PlayerControllerSystem(world: World) : System(world) {
     private fun handleInput() {
         player?.let { entity ->
             val moveableComponent = world.getComponent<MoveableComponent>(entity, ComponentType.MOVEABLE)
-            var velocity = moveableComponent.velocity.cpy()
             val left = Gdx.input.isKeyPressed(Keys.LEFT)
             val right = Gdx.input.isKeyPressed(Keys.RIGHT)
             val up = Gdx.input.isKeyPressed(Keys.UP)
             val down = Gdx.input.isKeyPressed(Keys.DOWN)
             val rotation = 90f
+            val hasInput = (left || right || up || down)
 
-            if (left && up) {
-                velocity = (45 + rotation).angleToNormalizedVector()
-            } else if (left && down) {
-                velocity = (135 + rotation).angleToNormalizedVector()
-            } else if (right && up) {
-                velocity = (315 + rotation).angleToNormalizedVector()
-            } else if (right && down) {
-                velocity = (225 + rotation).angleToNormalizedVector()
-            } else if (left) {
-                velocity = (90 + rotation).angleToNormalizedVector()
-            } else if (right) {
-                velocity = (270 + rotation).angleToNormalizedVector()
-            } else if (up) {
-                velocity = (0 + rotation).angleToNormalizedVector()
-            } else if (down) {
-                velocity = (180 + rotation).angleToNormalizedVector()
+            val angle = when {
+                left && up -> 45f
+                left && down -> 135f
+                right && up -> 315f
+                right && down -> 225f
+                left -> 90f
+                right -> 270f
+                down -> 180f
+                else -> 0f
             }
 
             world.updateComponents(entity, MoveableComponent(
                 moveableComponent.speed,
-                velocity,
-                if (left || right || up || down) PHYSIC_PLAYER_ACCELERATION else 0f,
+                if (hasInput) (angle + rotation).angleToNormalizedVector() else moveableComponent.velocity,
+                if (hasInput) PHYSIC_PLAYER_ACCELERATION else 0f,
                 moveableComponent.orientation,
                 moveableComponent.angularSpeed,
                 moveableComponent.angularAcceleration,
