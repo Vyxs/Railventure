@@ -2,6 +2,8 @@ package fr.manigames.railventure.api.util
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
+import kotlin.math.cos
+import kotlin.math.sin
 
 object MathUtil {
 
@@ -24,5 +26,19 @@ object MathUtil {
      **/
     fun Float.toRoundedString(): String {
         return String.format("%.2f", this)
+    }
+
+    /**
+     * Converts an angle in degrees to a normalized vector.
+     **/
+    fun Number.angleToNormalizedVector(): Vector2 {
+        return Vector2(cos(this.toDouble().toRadians()).toFloat(), sin(this.toDouble().toRadians()).toFloat()).nor()
+    }
+
+    /**
+     * Convert degrees to radians.
+     **/
+    fun Number.toRadians(): Double {
+        return this.toDouble() * Math.PI / 180
     }
 }
