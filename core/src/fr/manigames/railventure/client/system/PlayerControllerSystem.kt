@@ -29,7 +29,6 @@ class PlayerControllerSystem(world: World) : System(world) {
     private fun handleInput() {
         player?.let { entity ->
             val moveableComponent = world.getComponent<MoveableComponent>(entity, ComponentType.MOVEABLE)
-            var accelerate = false
             var velocity = moveableComponent.velocity.cpy()
             val left = Gdx.input.isKeyPressed(Keys.LEFT)
             val right = Gdx.input.isKeyPressed(Keys.RIGHT)
@@ -39,34 +38,26 @@ class PlayerControllerSystem(world: World) : System(world) {
 
             if (left && up) {
                 velocity = (45 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (left && down) {
                 velocity = (135 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (right && up) {
                 velocity = (315 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (right && down) {
                 velocity = (225 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (left) {
                 velocity = (90 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (right) {
                 velocity = (270 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (up) {
                 velocity = (0 + rotation).angleToNormalizedVector()
-                accelerate = true
             } else if (down) {
                 velocity = (180 + rotation).angleToNormalizedVector()
-                accelerate = true
             }
 
             world.updateComponents(entity, MoveableComponent(
                 moveableComponent.speed,
                 velocity,
-                if (accelerate) PHYSIC_PLAYER_ACCELERATION else 0f,
+                if (left || right || up || down) PHYSIC_PLAYER_ACCELERATION else 0f,
                 moveableComponent.orientation,
                 moveableComponent.angularSpeed,
                 moveableComponent.angularAcceleration,
