@@ -185,4 +185,16 @@ class World {
     fun hasComponents(entity: Entity, componentList: List<ComponentType>): Boolean {
         return entities[entity]!!.any { componentList.contains(it.componentType) }
     }
+
+    /**
+     * Update components of an entity. The components will be added if they don't exist, and updated if they exist.
+     **/
+    fun updateComponents(entity: Entity, vararg components: Component) {
+        components.forEach { component ->
+            if (hasComponents(entity, component.componentType)) {
+                removeComponent(entity, component.componentType)
+            }
+            addComponent(entity, component)
+        }
+    }
 }
