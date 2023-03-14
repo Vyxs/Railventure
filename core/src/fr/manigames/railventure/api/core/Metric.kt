@@ -11,4 +11,6 @@ object Metric {
     const val PHYSIC_PLAYER_ACCELERATION = 1f
     const val PHYSIC_MIN_DELTA = 0.001f
 
+    const val MAP_CHUNK_SIZE = 64
+    const val MAP_TILE_LAYER = 4
 }
