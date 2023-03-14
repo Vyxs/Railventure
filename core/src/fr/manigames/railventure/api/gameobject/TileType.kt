@@ -19,5 +19,9 @@ enum class TileType(val assetKey: String, val code: Int) {
     RAIL_T_TOP(R.Texture.RAIL_T_TOP, 12),
     RAIL_T_BOT(R.Texture.RAIL_T_BOT, 13),
     RAIL_T_LEFT(R.Texture.RAIL_T_LEFT, 14),
-    RAIL_T_RIGHT(R.Texture.RAIL_T_RIGHT, 15),
+    RAIL_T_RIGHT(R.Texture.RAIL_T_RIGHT, 15),;
+
+    companion object {
+        fun fromCode(code: Int): TileType = values().firstOrNull { it.code == code } ?: AIR
+    }
 }

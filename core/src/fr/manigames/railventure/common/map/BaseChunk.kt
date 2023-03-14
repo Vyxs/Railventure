@@ -7,7 +7,7 @@ import fr.manigames.railventure.api.map.TileLayer
 
 open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
 
-    protected val tiles = Array(MAP_CHUNK_SIZE) { Array(MAP_CHUNK_SIZE) { TileLayer() } }
+    private val tiles = Array(MAP_CHUNK_SIZE) { Array(MAP_CHUNK_SIZE) { TileLayer() } }
 
     /**
      * Get the tile at the given position
@@ -22,6 +22,15 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
     }
 
     /**
+     * Get the tiles of the chunk
+     *
+     * @return the tiles of the chunk
+     */
+    override fun getTiles(): Array<Array<TileLayer>> {
+        return tiles
+    }
+
+    /**
      * Set the tile at the given position
      *
      * @param x the x position
@@ -33,14 +42,7 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
         tiles[x][y][z] = tileType.code
     }
 
-    /**
-     * Get the tiles of the chunk
-     *
-     * @return the tiles of the chunk
-     */
-    override fun getTiles(): Array<Array<TileLayer>> {
-        return tiles
-    }
+
 
     /**
      * Set the tiles of the chunk
