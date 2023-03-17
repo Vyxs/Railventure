@@ -106,8 +106,16 @@ class DebugRenderer(
         stringsToRender.add("Camera direction: ${camera.direction.toRoundedString()}")
         stringsToRender.add("Camera viewport: ${camera.viewportWidth.toRoundedString()}, ${camera.viewportHeight.toRoundedString()}")
 
-        if (camera is OrthographicCamera)
+        if (camera is OrthographicCamera) {
+            val chunkVisibleHorizontalCount = PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom)
+            val chunkVisibleVerticalCount = PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom)
+            val chunkVisibleCount = PosUtil.getChunkVisible(camera.position.x.toInt(), camera.position.y.toInt(), camera.viewportWidth, camera.viewportHeight, camera.zoom)
+
             stringsToRender.add("Camera zoom: ${camera.zoom.toRoundedString()}")
+            stringsToRender.add("Camera chunk visible horizontal: $chunkVisibleHorizontalCount")
+            stringsToRender.add("Camera chunk visible vertical: $chunkVisibleVerticalCount")
+            stringsToRender.add("Camera chunk visible: $chunkVisibleCount")
+        }
 
         world?.let {
             world.getEntitiesWithComponents(ComponentType.PLAYER).forEach { entry ->
