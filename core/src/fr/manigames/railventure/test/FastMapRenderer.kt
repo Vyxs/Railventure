@@ -95,7 +95,6 @@ class FastMapRenderer(
     }
 
     private fun getPixmapAtCorrectScale(texture: Texture): Pixmap {
-        fr.manigames.railventure.api.debug.Logger.info("Texture is not at the correct scale (${texture.width}x${texture.height})")
         val pixmap = Pixmap(TILE_SIZE.toInt(), TILE_SIZE.toInt(), Pixmap.Format.RGBA8888)
         val texturePixmap = getPixmap(texture)
         pixmap.filter = Pixmap.Filter.NearestNeighbour
