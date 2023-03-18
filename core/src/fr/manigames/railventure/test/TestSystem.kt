@@ -27,6 +27,7 @@ class TestSystem(
     private lateinit var cameraController: CameraController
     private lateinit var debugRenderer: DebugRenderer
     private lateinit var mapRenderer: MapRenderer
+    private lateinit var mapRenderer2: FastMapRenderer
     private lateinit var map: TestMap
 
     fun getVisibleChunks(cameraX: Int, cameraY: Int, viewportWidth: Int, viewportHeight: Int): Int {
@@ -47,6 +48,7 @@ class TestSystem(
         map = TestMap()
         map.load()
         mapRenderer = MapRenderer(map, assets, camera)
+        mapRenderer2 = FastMapRenderer(map, assets, camera)
         if (useDebugCamera) {
             cameraController.init()
         }
@@ -78,7 +80,8 @@ class TestSystem(
     }
 
     override fun render(delta: Float) {
-        mapRenderer.render()
+        mapRenderer2.render()
+        //mapRenderer.render()
         debugRenderer.render()
     }
 

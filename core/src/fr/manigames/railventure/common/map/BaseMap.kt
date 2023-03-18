@@ -7,15 +7,17 @@ import fr.manigames.railventure.api.map.MapChunk
 
 open class BaseMap : Map<TileType> {
 
+    companion object {
+        fun toChunkId(x: Int, y: Int): Long {
+            return x.toLong() shl 32 or y.toLong()
+        }
+
+        fun fromChunkId(id: Long): Pair<Int, Int> {
+            return Pair((id shr 32).toInt(), id.toInt())
+        }
+    }
+
     protected val chunks: HashMap<Long, MapChunk<TileType>> = HashMap(9)
-
-    protected fun toChunkId(x: Int, y: Int): Long {
-        return x.toLong() shl 32 or y.toLong()
-    }
-
-    protected fun fromChunkId(id: Long): Pair<Int, Int> {
-        return Pair((id shr 32).toInt(), id.toInt())
-    }
 
     override fun getChunk(x: Int, y: Int): MapChunk<TileType> {
         return chunks[toChunkId(x, y)] ?: BaseChunk(x, y)
