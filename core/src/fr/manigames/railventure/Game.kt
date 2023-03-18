@@ -21,7 +21,7 @@ class Game : ApplicationListener {
 
     companion object {
         const val DEBUG = true
-        const val USE_PLAYER_CAMERA = true
+        const val USE_PLAYER_CAMERA = false
 
         val GAME_WIDTH = Metric.GAME_WIDTH
         val GAME_HEIGHT = Metric.GAME_HEIGHT

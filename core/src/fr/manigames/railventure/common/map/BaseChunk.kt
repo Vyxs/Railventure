@@ -56,4 +56,8 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
             }
         }
     }
+
+    override fun getTileWorldPosition(x: Int, y: Int): Pair<Int, Int> {
+        return Pair(this.x * MAP_CHUNK_SIZE + x, this.y * MAP_CHUNK_SIZE + y)
+    }
 }

@@ -39,4 +39,13 @@ interface MapChunk<V> {
      */
     fun setTiles(tiles: Array<Array<TileLayer>>)
 
+    /**
+     * Get the world position of the tile
+     *
+     * @param x The x position of the tile
+     * @param y The y position of the tile
+     * @return The position of the chunk
+     */
+    fun getTileWorldPosition(x: Int, y: Int): Pair<Int, Int>
+
 }
