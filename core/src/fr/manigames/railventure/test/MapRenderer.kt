@@ -20,6 +20,9 @@ import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.common.map.BaseChunk
 import fr.manigames.railventure.common.map.BaseMap
 
+/**
+ * Low performance renderer for map. Use only for debug purpose.
+ **/
 class MapRenderer(
     private val map: BaseMap,
     private val asset: Assets,
