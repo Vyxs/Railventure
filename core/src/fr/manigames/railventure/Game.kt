@@ -5,9 +5,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
+import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.R
 import fr.manigames.railventure.api.graphics.display.Ratio
-import fr.manigames.railventure.common.system.RenderSystem
+import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -22,8 +23,8 @@ class Game : ApplicationListener {
         const val DEBUG = true
         const val USE_PLAYER_CAMERA = false
 
-        val GAME_WIDTH = Ratio.R_1280_720.width
-        val GAME_HEIGHT = Ratio.R_1280_720.height
+        val GAME_WIDTH = Metric.GAME_WIDTH
+        val GAME_HEIGHT = Metric.GAME_HEIGHT
     }
 
     private lateinit var camera: OrthographicCamera

@@ -1,3 +1,6 @@
 package fr.manigames.railventure.api.entity
 
-typealias Entity = Long
+@JvmInline
+value class Entity(private val id: Long) {
+    override fun toString(): String = "Entity($id)"
+}

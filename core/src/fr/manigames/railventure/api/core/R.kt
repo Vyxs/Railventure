@@ -2,6 +2,10 @@ package fr.manigames.railventure.api.core
 
 object R {
 
+    object Strings {
+        const val APP_NAME: String = "Railventure"
+    }
+
     fun assetLoadingFunction(am: com.badlogic.gdx.assets.AssetManager) {
         am.load(Texture.RAIL_V, com.badlogic.gdx.graphics.Texture::class.java)
         am.load(Texture.RAIL_H, com.badlogic.gdx.graphics.Texture::class.java)
@@ -15,6 +19,8 @@ object R {
         am.load(Texture.RAIL_T_LEFT, com.badlogic.gdx.graphics.Texture::class.java)
         am.load(Texture.RAIL_T_RIGHT, com.badlogic.gdx.graphics.Texture::class.java)
         am.load(Texture.WAGON, com.badlogic.gdx.graphics.Texture::class.java)
+
+        am.load(Texture.GRASS, com.badlogic.gdx.graphics.Texture::class.java)
     }
 
     object Texture {
@@ -30,6 +36,8 @@ object R {
         const val RAIL_T_LEFT: String = "texture/rail/rail-t-left.png"
         const val RAIL_T_RIGHT: String = "texture/rail/rail-t-right.png"
         const val WAGON: String = "texture/wagon/wagon.png"
+
+        const val GRASS: String = "texture/tile/grass.png"
     }
 
 }

@@ -1,4 +1,4 @@
-package fr.manigames.railventure.common.renderer
+package fr.manigames.railventure.client.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
@@ -12,6 +12,7 @@ import fr.manigames.railventure.api.component.ComponentType
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.util.MathUtil.toRoundedString
+import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.common.component.MoveableComponent
 import fr.manigames.railventure.common.component.PlayerComponent
@@ -31,6 +32,7 @@ class DebugRenderer(
 
     fun render() {
         renderGrid()
+        renderChunksGrid()
         renderCameraPosition()
         renderDebugInfo()
     }
@@ -66,27 +68,64 @@ class DebugRenderer(
         shapeRenderer.end()
     }
 
+    private fun renderChunksGrid() {
+        val chunkSize = Metric.MAP_CHUNK_SIZE
+        val tileSize = Metric.TILE_SIZE
+        val size = chunkSize * tileSize
+        shapeRenderer.projectionMatrix = camera.combined
+        val offset = size
+        val startX = camera.position.x - camera.viewportWidth / 2 - offset
+        val startY = camera.position.y - camera.viewportHeight / 2 - offset
+        val endX = camera.position.x + camera.viewportWidth / 2 + offset
+        val endY = camera.position.y + camera.viewportHeight / 2 + offset
+        val startXGrid = (startX / size).toInt()
+        val startYGrid = (startY / size).toInt()
+        val endXGrid = (endX / size).toInt()
+        val endYGrid = (endY / size).toInt()
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+        shapeRenderer.color = Color.BLUE
+        for (x in startXGrid..endXGrid) {
+            shapeRenderer.line(x * size, startY, x * size, endY)
+        }
+        for (y in startYGrid..endYGrid) {
+            shapeRenderer.line(startX, y * size, endX, y * size)
+        }
+        shapeRenderer.end()
+    }
+
     private fun renderDebugInfo() {
         val screenWidth = Gdx.graphics.width.toFloat()
         val screenHeight = Gdx.graphics.height.toFloat()
-
         val stringsToRender = mutableListOf<String>()
+        val camWorldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
+        val camChunkPos = PosUtil.getChunkPosition(camera.position.x / Metric.TILE_SIZE, camera.position.y / Metric.TILE_SIZE)
 
         stringsToRender.add("Camera position: ${camera.position.toRoundedString()}")
-        stringsToRender.add("Camera world position: ${(camera.position.x / Metric.TILE_SIZE).toRoundedString()}, ${(camera.position.y / Metric.TILE_SIZE).toRoundedString()}")
+        stringsToRender.add("Camera world position: ${(camWorldPos.first).toRoundedString()}, ${(camWorldPos.second).toRoundedString()}")
+        stringsToRender.add("Camera chunk position: ${camChunkPos.first}, ${camChunkPos.second}")
         stringsToRender.add("Camera direction: ${camera.direction.toRoundedString()}")
         stringsToRender.add("Camera viewport: ${camera.viewportWidth.toRoundedString()}, ${camera.viewportHeight.toRoundedString()}")
 
-        if (camera is OrthographicCamera)
+        if (camera is OrthographicCamera) {
+            val chunkVisibleHorizontalCount = PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom)
+            val chunkVisibleVerticalCount = PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom)
+            val chunkVisibleCount = PosUtil.getChunkVisible(camera.position.x.toInt(), camera.position.y.toInt(), camera.viewportWidth, camera.viewportHeight, camera.zoom)
+
             stringsToRender.add("Camera zoom: ${camera.zoom.toRoundedString()}")
+            stringsToRender.add("Camera chunk visible horizontal: $chunkVisibleHorizontalCount")
+            stringsToRender.add("Camera chunk visible vertical: $chunkVisibleVerticalCount")
+            stringsToRender.add("Camera chunk visible: $chunkVisibleCount")
+        }
 
         world?.let {
             world.getEntitiesWithComponents(ComponentType.PLAYER).forEach { entry ->
                 if ((entry.value.first { it.componentType == ComponentType.PLAYER } as PlayerComponent).isHost) {
                     val worldPosition = entry.value.first { it.componentType == ComponentType.WORLD_POSITION } as WorldPositionComponent
                     val moveable = entry.value.first { it.componentType == ComponentType.MOVEABLE } as MoveableComponent
+                    val chunkPosition = PosUtil.getChunkPosition(worldPosition.world_x, worldPosition.world_y)
 
                     stringsToRender.add("Player position: ${worldPosition.world_x.toRoundedString()}, ${worldPosition.world_y.toRoundedString()}")
+                    stringsToRender.add("Player chunk position: ${chunkPosition.first}, ${chunkPosition.second}")
                     stringsToRender.add("Player speed: ${moveable.speed.toRoundedString()}")
                     stringsToRender.add("Player velocity: ${moveable.velocity.toRoundedString()}")
                     stringsToRender.add("Player acceleration: ${moveable.acceleration.toRoundedString()}")

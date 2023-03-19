@@ -4,3 +4,8 @@
 ## Debug keys
 - `←` `→` `↓` `↑` : Move camera
 - `Scroll` : Zoom / Dezoom
+
+## Documentation
+
+- [Game Design Document](https://docs.google.com/document/d/11n7iS0IGyN1e3w6MINMN4v4J-sQadCq4GiFhUPvfKh4/)
+- [Project Management](https://trello.com/b/kmGSew56/railventure)
