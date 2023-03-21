@@ -7,6 +7,7 @@ import fr.manigames.railventure.api.core.R
 import fr.manigames.railventure.api.entity.EntityBuilder
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.common.component.*
 import fr.manigames.railventure.common.composition.PlayerComposition
 import fr.manigames.railventure.client.renderer.DebugRenderer
@@ -21,7 +22,8 @@ class TestSystem(
     private val camera: OrthographicCamera,
     private val viewport: StretchViewport,
     private val logger: Logger,
-    private val useDebugCamera: Boolean
+    private val useDebugCamera: Boolean,
+    private val inputRegistry: GameInput
 ) : System(world) {
 
     private lateinit var cameraController: CameraController
@@ -44,7 +46,9 @@ class TestSystem(
 
     override fun init() {
         debugRenderer = DebugRenderer(camera, world)
+        inputRegistry.addInputProcessor(debugRenderer.inputProcessor)
         cameraController = CameraController(camera)
+        inputRegistry.addInputProcessor(cameraController)
         map = TestMap()
         map.load()
         mapRenderer = MapRenderer(map, assets, camera)

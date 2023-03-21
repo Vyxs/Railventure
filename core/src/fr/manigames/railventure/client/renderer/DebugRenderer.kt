@@ -1,6 +1,8 @@
 package fr.manigames.railventure.client.renderer
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -27,12 +29,17 @@ class DebugRenderer(
     private val shapeRenderer = ShapeRenderer()
     private val spriteBatch = SpriteBatch()
     private val font = BitmapFont()
+    val inputProcessor = DebugInputProcessor()
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4?) = Unit
 
     fun render() {
-        renderGrid()
-        renderChunksGrid()
+        if (inputProcessor.showDebug.not())
+            return
+        if (inputProcessor.showTileGrid)
+            renderGrid()
+        if (inputProcessor.showChunkGrid)
+            renderChunksGrid()
         renderCameraPosition()
         renderDebugInfo()
     }
@@ -158,4 +165,38 @@ class DebugRenderer(
         spriteBatch.dispose()
         font.dispose()
     }
+}
+
+class DebugInputProcessor : InputProcessor {
+
+    var showDebug = true
+        private set
+    var showTileGrid = true
+        private set
+
+    var showChunkGrid = true
+        private set
+    override fun keyDown(keycode: Int): Boolean {
+        when (keycode) {
+            Keys.F1 -> showDebug = !showDebug
+            Keys.F2 -> showTileGrid = !showTileGrid
+            Keys.F3 -> showChunkGrid = !showChunkGrid
+        }
+        return false
+    }
+
+    override fun keyUp(keycode: Int): Boolean = false
+
+    override fun keyTyped(character: Char): Boolean = false
+
+    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
+
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
+
+    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean = false
+
+    override fun mouseMoved(screenX: Int, screenY: Int): Boolean = false
+
+    override fun scrolled(amountX: Float, amountY: Float): Boolean = false
+
 }

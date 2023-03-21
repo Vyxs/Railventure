@@ -52,6 +52,6 @@ class CameraController(
             camera.zoom += amountY * 0.05f
             camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1f)
         }
-        return true
+        return false
     }
 }

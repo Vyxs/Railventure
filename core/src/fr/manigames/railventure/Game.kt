@@ -11,6 +11,7 @@ import fr.manigames.railventure.api.graphics.display.Ratio
 import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.common.system.PhysicSystem
@@ -33,6 +34,7 @@ class Game : ApplicationListener {
     private lateinit var world: World
     private val systems: LinkedHashSet<System> = linkedSetOf()
     private val logger: Logger = Logger.getLogger(Game::class.java.name)
+    private val gameInput: GameInput = GameInput()
 
     override fun create() {
         world = World()
@@ -46,7 +48,7 @@ class Game : ApplicationListener {
             )
         )
         if (DEBUG) {
-            systems.add(TestSystem(world, assets, camera, viewport, logger, !USE_PLAYER_CAMERA))
+            systems.add(TestSystem(world, assets, camera, viewport, logger, !USE_PLAYER_CAMERA, gameInput))
         }
         if (USE_PLAYER_CAMERA) {
             systems.add(PlayerCameraSystem(world, camera))
@@ -59,6 +61,7 @@ class Game : ApplicationListener {
         assets.load(R::assetLoadingFunction)
         camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         assets.finishLoading()
+        gameInput.bind()
     }
 
     override fun resize(width: Int, height: Int) {
