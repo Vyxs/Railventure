@@ -57,10 +57,10 @@ class Game : ApplicationListener {
     }
 
     private fun init() {
-        systems.forEach(System::init)
         assets.load(R::assetLoadingFunction)
-        camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         assets.finishLoading()
+        systems.forEach(System::init)
+        camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         gameInput.bind()
     }
 

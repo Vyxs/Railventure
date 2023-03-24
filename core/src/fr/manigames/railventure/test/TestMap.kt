@@ -1,18 +1,23 @@
 package fr.manigames.railventure.test
 
+import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.client.map.RenderableChunk
+import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.map.BaseChunk
 import fr.manigames.railventure.common.map.BaseMap
 import java.time.Instant
 
-class TestMap : BaseMap() {
+class TestMap(
+    assets: Assets
+) : RenderableMap(assets) {
 
     private val rand = java.security.SecureRandom()
     private val stressTest = true
 
-    fun load() {
+    fun generate() {
         val instantA = System.currentTimeMillis()
         val size = Pair(20, 20)
         for (i in -size.first..size.first) {
@@ -25,7 +30,7 @@ class TestMap : BaseMap() {
     }
 
     private fun makeChunk(x: Int, y: Int) : BaseChunk {
-        val chunk = BaseChunk(x, y)
+        val chunk = RenderableChunk(x, y)
         val tiles = setOf(TileType.RAIL_V, TileType.RAIL_H, TileType.RAIL_X, TileType.RAIL_BOT_RIGHT,
             TileType.RAIL_BOT_LEFT, TileType.RAIL_TOP_RIGHT, TileType.RAIL_TOP_LEFT, TileType.AIR,
             TileType.AIR, TileType.AIR, TileType.AIR, TileType.AIR, TileType.AIR, TileType.AIR)

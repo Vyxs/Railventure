@@ -23,7 +23,7 @@ open class BaseMap : Map<TileType> {
         return chunks[toChunkId(x, y)] ?: BaseChunk(x, y)
     }
 
-    override fun isChunkLoaded(x: Int, y: Int): Boolean {
+    override fun hasChunk(x: Int, y: Int): Boolean {
         return chunks.containsKey(toChunkId(x, y))
     }
 

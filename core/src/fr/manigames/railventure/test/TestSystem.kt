@@ -11,6 +11,7 @@ import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.common.component.*
 import fr.manigames.railventure.common.composition.PlayerComposition
 import fr.manigames.railventure.client.renderer.DebugRenderer
+import fr.manigames.railventure.client.renderer.MapRenderer
 import java.util.logging.Logger
 
 /**
@@ -29,30 +30,17 @@ class TestSystem(
     private lateinit var cameraController: CameraController
     private lateinit var debugRenderer: DebugRenderer
     private lateinit var mapRenderer: MapRenderer
-    private lateinit var mapRenderer2: FastMapRenderer
     private lateinit var map: TestMap
 
-    fun getVisibleChunks(cameraX: Int, cameraY: Int, viewportWidth: Int, viewportHeight: Int): Int {
-        val tileSize = 16
-        val chunkSize = 16
-        val viewportInTilesX = viewportWidth / tileSize
-        val viewportInTilesY = viewportHeight / tileSize
-        val chunkInViewX = (viewportInTilesX / chunkSize) + 1
-        val chunkInViewY = (viewportInTilesY / chunkSize) + 1
-        val chunkOffsetX = cameraX / (chunkSize * tileSize)
-        val chunkOffsetY = cameraY / (chunkSize * tileSize)
-        return chunkInViewX * chunkInViewY - (chunkOffsetX * chunkInViewY) - chunkOffsetY
-    }
-
     override fun init() {
+
         debugRenderer = DebugRenderer(camera, world)
         inputRegistry.addInputProcessor(debugRenderer.inputProcessor)
         cameraController = CameraController(camera)
         inputRegistry.addInputProcessor(cameraController)
-        map = TestMap()
-        map.load()
-        mapRenderer = MapRenderer(map, assets, camera)
-        mapRenderer2 = FastMapRenderer(map, assets, camera)
+        map = TestMap(assets)
+        map.generate()
+        mapRenderer = MapRenderer(map, camera)
         if (useDebugCamera) {
             cameraController.init()
         }
@@ -84,14 +72,14 @@ class TestSystem(
     }
 
     override fun render(delta: Float) {
-        mapRenderer2.render()
-        //mapRenderer.render()
+        mapRenderer.render()
         debugRenderer.render()
     }
 
     override fun update(delta: Float) {
         if (useDebugCamera)
             cameraController.update(1f)
+        mapRenderer.update()
     }
 
     override fun pause() {
@@ -107,6 +95,7 @@ class TestSystem(
     }
 
     override fun dispose() {
+        mapRenderer.dispose()
         debugRenderer.dispose()
     }
 }

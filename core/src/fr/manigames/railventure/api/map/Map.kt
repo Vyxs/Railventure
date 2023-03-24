@@ -31,7 +31,7 @@ interface Map<V> {
      * @param y The y position of the chunk
      * @return True if the chunk is loaded, false otherwise
      */
-    fun isChunkLoaded(x: Int, y: Int): Boolean
+    fun hasChunk(x: Int, y: Int): Boolean
 
     /**
      * Get the tile at the given position
