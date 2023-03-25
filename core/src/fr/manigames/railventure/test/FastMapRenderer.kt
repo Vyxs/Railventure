@@ -65,10 +65,10 @@ class FastMapRenderer(
 
     private fun prepareChunk(chunkX: Int, chunkY: Int) : Pixmap {
         val chunk = map.getChunk(chunkX, chunkY)
-        val tilesToRender:  Array<Array<TileLayer>> = chunk.getTiles()
+        val tilesToRender: Array<Array<TileLayer>>? = chunk?.getTiles()
         val chunkPixmap = Pixmap(chunkRealSize, chunkRealSize, Pixmap.Format.RGBA8888)
 
-        tilesToRender.forEachIndexed { y, column ->
+        tilesToRender?.forEachIndexed { y, column ->
             column.forEachIndexed { x, tileLayer ->
                 tileLayer.map(TileType::fromCode).forEach { tileType ->
                     asset.getTexture(tileType.assetKey)?.let {

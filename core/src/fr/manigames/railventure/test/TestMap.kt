@@ -1,18 +1,15 @@
 package fr.manigames.railventure.test
 
-import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.map.BaseChunk
-import fr.manigames.railventure.common.map.BaseMap
-import java.time.Instant
 
 class TestMap(
-    assets: Assets
-) : RenderableMap(assets) {
+    chunkLoader: (RenderableChunk) -> Unit
+) : RenderableMap(chunkLoader) {
 
     private val rand = java.security.SecureRandom()
     private val stressTest = true

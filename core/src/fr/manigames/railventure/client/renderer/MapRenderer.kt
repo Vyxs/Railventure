@@ -58,7 +58,9 @@ class MapRenderer(
                         if (map.isChunkDirty(i, j)) {
                             map.loadChunk(i, j)
                         }
-                        visibleChunks[BaseMap.toChunkId(i, j)] = map.getChunk(i, j) as RenderableChunk
+                        map.getChunk(i, j)?.let {
+                            visibleChunks[BaseMap.toChunkId(i, j)] = it as RenderableChunk
+                        }
                     }
                 }
             }

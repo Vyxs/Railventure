@@ -8,6 +8,7 @@ import fr.manigames.railventure.api.entity.EntityBuilder
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.client.input.GameInput
+import fr.manigames.railventure.client.map.ChunkLoader
 import fr.manigames.railventure.common.component.*
 import fr.manigames.railventure.common.composition.PlayerComposition
 import fr.manigames.railventure.client.renderer.DebugRenderer
@@ -31,14 +32,15 @@ class TestSystem(
     private lateinit var debugRenderer: DebugRenderer
     private lateinit var mapRenderer: MapRenderer
     private lateinit var map: TestMap
+    private lateinit var chunkLoader: ChunkLoader
 
     override fun init() {
-
+        chunkLoader = ChunkLoader(assets)
         debugRenderer = DebugRenderer(camera, world)
         inputRegistry.addInputProcessor(debugRenderer.inputProcessor)
         cameraController = CameraController(camera)
         inputRegistry.addInputProcessor(cameraController)
-        map = TestMap(assets)
+        map = TestMap(chunkLoader::loadChunk)
         map.generate()
         mapRenderer = MapRenderer(map, camera)
         if (useDebugCamera) {
