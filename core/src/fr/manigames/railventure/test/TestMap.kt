@@ -28,15 +28,19 @@ class TestMap(
 
     private fun makeChunk(x: Int, y: Int) : BaseChunk {
         val chunk = RenderableChunk(x, y)
-        val tiles = setOf(TileType.RAIL_V, TileType.RAIL_H, TileType.RAIL_X, TileType.RAIL_BOT_RIGHT,
+        val tiles0 = setOf(TileType.GRASS, TileType.DIRT, TileType.SAND, TileType.WATER)
+        val tiles1 = setOf(TileType.RAIL_V, TileType.RAIL_H, TileType.RAIL_X, TileType.RAIL_BOT_RIGHT,
             TileType.RAIL_BOT_LEFT, TileType.RAIL_TOP_RIGHT, TileType.RAIL_TOP_LEFT, TileType.AIR,
             TileType.AIR, TileType.AIR, TileType.AIR, TileType.AIR, TileType.AIR, TileType.AIR)
 
         for (i in 0 until MAP_CHUNK_SIZE) {
             for (j in 0 until MAP_CHUNK_SIZE) {
-                chunk.setTile(i, j, 0, TileType.GRASS)
-                if (stressTest)
-                    chunk.setTile(i, j, 1, tiles.elementAt(rand.nextInt(tiles.size)))
+                if (stressTest) {
+                    chunk.setTile(i, j, 0, tiles0.elementAt(rand.nextInt(tiles0.size)))
+                    chunk.setTile(i, j, 1, tiles1.elementAt(rand.nextInt(tiles1.size)))
+                } else {
+                    chunk.setTile(i, j, 0, TileType.GRASS)
+                }
             }
         }
         return chunk
