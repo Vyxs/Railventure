@@ -8,12 +8,20 @@ import fr.manigames.railventure.api.map.MapChunk
 open class BaseMap : Map<TileType> {
 
     companion object {
+
+        /**
+         * Convert a pair of chunk coordinates to a unique id. This id is used to store the chunk position in a HashMap.
+         * This handle negative coordinates.
+         */
         fun toChunkId(x: Int, y: Int): Long {
-            return x.toLong() shl 32 or y.toLong()
+            return (x.toLong() shl 32) or (y.toLong() and 0xFFFFFFFFL)
         }
 
+        /**
+         * Convert a chunk id to a pair of chunk coordinates.
+         */
         fun fromChunkId(id: Long): Pair<Int, Int> {
-            return Pair((id shr 32).toInt(), id.toInt())
+            return Pair((id shr 32).toInt(), (id and 0xFFFFFFFFL).toInt())
         }
     }
 
