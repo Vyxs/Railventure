@@ -16,14 +16,14 @@ class TestMap(
 
     fun generate() {
         val instantA = System.currentTimeMillis()
-        val size = Pair(20, 20)
+        val size = Pair(40, 40)
         for (i in -size.first..size.first) {
             for (j in -size.second..size.second) {
                 setChunk(i, j, makeChunk(i, j))
             }
         }
         val instantB = System.currentTimeMillis()
-        Logger.info("Map loaded in ${instantB - instantA}ms")
+        Logger.info("Map generated in ${instantB - instantA}ms")
     }
 
     private fun makeChunk(x: Int, y: Int) : BaseChunk {
