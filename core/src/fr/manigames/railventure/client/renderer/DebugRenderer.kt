@@ -53,13 +53,15 @@ class DebugRenderer(
     }
 
     private fun renderGrid() {
+        if (camera !is OrthographicCamera)
+            return
         shapeRenderer.projectionMatrix = camera.combined
         val tileSize = Metric.TILE_SIZE
         val offset = tileSize
-        val startX = camera.position.x - camera.viewportWidth / 2 - offset
-        val startY = camera.position.y - camera.viewportHeight / 2 - offset
-        val endX = camera.position.x + camera.viewportWidth / 2 + offset
-        val endY = camera.position.y + camera.viewportHeight / 2 + offset
+        val startX = camera.position.x - (camera.viewportWidth * camera.zoom) / 2 - offset
+        val startY = camera.position.y - (camera.viewportHeight * camera.zoom) / 2 - offset
+        val endX = camera.position.x + (camera.viewportWidth * camera.zoom) / 2 + offset
+        val endY = camera.position.y + (camera.viewportHeight * camera.zoom) / 2 + offset
         val startXGrid = (startX / tileSize).toInt()
         val startYGrid = (startY / tileSize).toInt()
         val endXGrid = (endX / tileSize).toInt()
@@ -76,15 +78,17 @@ class DebugRenderer(
     }
 
     private fun renderChunksGrid() {
+        if (camera !is OrthographicCamera)
+            return
         val chunkSize = Metric.MAP_CHUNK_SIZE
         val tileSize = Metric.TILE_SIZE
         val size = chunkSize * tileSize
         shapeRenderer.projectionMatrix = camera.combined
         val offset = size
-        val startX = camera.position.x - camera.viewportWidth / 2 - offset
-        val startY = camera.position.y - camera.viewportHeight / 2 - offset
-        val endX = camera.position.x + camera.viewportWidth / 2 + offset
-        val endY = camera.position.y + camera.viewportHeight / 2 + offset
+        val startX = (camera.position.x - (camera.viewportWidth * camera.zoom) / 2 - offset) * camera.zoom
+        val startY = (camera.position.y - (camera.viewportHeight * camera.zoom) / 2 - offset) * camera.zoom
+        val endX = (camera.position.x + (camera.viewportWidth * camera.zoom) / 2 + offset) * camera.zoom
+        val endY = (camera.position.y + (camera.viewportHeight * camera.zoom) / 2 + offset) * camera.zoom
         val startXGrid = (startX / size).toInt()
         val startYGrid = (startY / size).toInt()
         val endXGrid = (endX / size).toInt()
