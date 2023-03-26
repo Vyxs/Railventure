@@ -9,8 +9,6 @@ import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT
 import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MAX
-import fr.manigames.railventure.api.core.R
-import fr.manigames.railventure.api.graphics.display.Ratio
 import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
@@ -18,6 +16,7 @@ import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.common.system.PhysicSystem
+import fr.manigames.railventure.generated.R
 import fr.manigames.railventure.test.TestSystem
 import java.util.logging.Logger
 
@@ -60,7 +59,7 @@ class Game : ApplicationListener {
     }
 
     private fun init() {
-        assets.load(R::assetLoadingFunction)
+        assets.load(R::loadingConsumer)
         if (camera is OrthographicCamera) {
             camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         } else if (camera is PerspectiveCamera) {
