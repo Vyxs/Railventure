@@ -2,9 +2,14 @@ package fr.manigames.railventure.client.renderer
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MAX
+import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MIN
+import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM_MAX
+import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM_MIN
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
@@ -47,33 +52,41 @@ class MapRenderer(
     }
 
     private fun prepareChunkForRendering() {
-        if (camera is OrthographicCamera) {
-            val offset = 0
-            val horizontalChunkCount = PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom) + offset
-            val verticalChunkCount = PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom) + offset
+        val offset = 0
+        val horizontalChunkCount: Int = when (camera) {
+            is OrthographicCamera -> PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom) + offset
+            is PerspectiveCamera -> PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, normalizeZ(camera.position.z)) + offset
+            else -> 0
+        }
+        val verticalChunkCount = when (camera) {
+            is OrthographicCamera -> PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom) + offset
+            is PerspectiveCamera -> PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, normalizeZ(camera.position.z)) + offset
+            else -> 0
+        }
+        val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
+        val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
+        val visible = ChunkArea(
+            chunkPos.first - horizontalChunkCount, chunkPos.first + horizontalChunkCount,
+            chunkPos.second - verticalChunkCount, chunkPos.second + verticalChunkCount
+        )
 
-            val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
-            val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
-            val visible = ChunkArea(
-                chunkPos.first - horizontalChunkCount, chunkPos.first + horizontalChunkCount,
-                chunkPos.second - verticalChunkCount, chunkPos.second + verticalChunkCount
-            )
-
-            for (i in visible.x1..visible.y1) {
-                for (j in visible.x2..visible.y2) {
-                    if (visibleChunks.containsKey(BaseMap.toChunkId(i, j)).not()) {
-                        if (map.isChunkDirty(i, j)) {
-                            map.loadChunk(i, j)
-                        }
-                        map.getChunk(i, j)?.let {
-                            visibleChunks[BaseMap.toChunkId(i, j)] = it as RenderableChunk
-                        }
+        for (i in visible.x1..visible.y1) {
+            for (j in visible.x2..visible.y2) {
+                if (visibleChunks.containsKey(BaseMap.toChunkId(i, j)).not()) {
+                    if (map.isChunkDirty(i, j)) {
+                        map.loadChunk(i, j)
+                    }
+                    map.getChunk(i, j)?.let {
+                        visibleChunks[BaseMap.toChunkId(i, j)] = it as RenderableChunk
                     }
                 }
             }
-            removeUnnecessaryChunks(visible)
         }
+        removeUnnecessaryChunks(visible)
     }
+
+    private fun normalizeZ(z: Float) : Float =
+        (z - CAMERA_HEIGHT_MIN) / (CAMERA_HEIGHT_MAX - CAMERA_HEIGHT_MIN) * (CAMERA_ZOOM_MAX - CAMERA_ZOOM_MIN) + CAMERA_ZOOM_MIN
 
     private fun removeUnnecessaryChunks(visible: ChunkArea) {
         visibleChunks = visibleChunks.filter { (_, chunk) ->
@@ -82,16 +95,20 @@ class MapRenderer(
     }
 
     private fun updateCameraChunk() {
-        if (camera is OrthographicCamera) {
-            val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
-            val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
-            if (chunkPos != lastCameraChunkPosition) {
-                lastCameraChunkPosition = chunkPos
-                prepareChunkForRendering()
-            } else if (camera.zoom != lastCameraZoom) {
-                lastCameraZoom = camera.zoom
-                prepareChunkForRendering()
-            }
+        val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
+        val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
+        if (chunkPos != lastCameraChunkPosition) {
+            lastCameraChunkPosition = chunkPos
+            prepareChunkForRendering()
+        }
+        val zoom = when (camera) {
+            is OrthographicCamera -> camera.zoom
+            is PerspectiveCamera -> normalizeZ(camera.position.z)
+            else -> 1f
+        }
+        if (zoom != lastCameraZoom) {
+            lastCameraZoom = zoom
+            prepareChunkForRendering()
         }
     }
 
