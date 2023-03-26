@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        google()
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlinx.benchmark' version '0.4.6'
+}
+
+dependencies {
+    implementation project(":core")
+    compileOnly 'org.openjdk.jmh:jmh-core:1.32'
+    implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.6")
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDir "src/main/kotlin"
+        }
+    }
+}
+
+benchmark {
+    configurations {
+        main {
+            iterationTime = 300
+            iterationTimeUnit = "ms"
+        }
+    }
+    targets {
+        register("main")
+    }
+}

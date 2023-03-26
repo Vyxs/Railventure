@@ -4,5 +4,5 @@ object EntityBuilder {
 
     private var id = 0L
 
-    fun make(): Entity = id++
+    fun make(): Entity = Entity(id++)
 }

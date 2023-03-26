@@ -2,7 +2,6 @@ package fr.manigames.railventure.api.world
 
 import fr.manigames.railventure.api.component.Component
 import fr.manigames.railventure.api.component.ComponentType
-import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.entity.Entity
 
 class World {
@@ -39,22 +38,32 @@ class World {
     }
 
     /**
-     * Add a component to an entity
+     * Add a component to an entity. If the entity already has a component of the same type, it will not be added.
+     * If the entity does not exist, the component will not be added.
      *
      * @param entity The entity to add the component to
      * @param component The component to add
      **/
     fun addComponent(entity: Entity, component: Component) {
+        if (entities.containsKey(entity).not())
+            return
+        if (entities[entity]!!.any { it.componentType == component.componentType })
+            return
         entities[entity] = entities[entity]!! + component
     }
 
     /**
-     * Add components to an entity
+     * Add components to an entity. If the entity already has a component of the same type, it will not be added.
+     * If the entity does not exist, the component will not be added.
      *
      * @param entity The entity to add the components to
      * @param components The components to add
      **/
     fun addComponents(entity: Entity, components: List<Component>) {
+        if (entities.containsKey(entity).not())
+            return
+        if (entities[entity]!!.any { it.componentType in components.map { it.componentType } })
+            return
         entities[entity] = entities[entity]!! + components
     }
 
@@ -84,6 +93,8 @@ class World {
      * @param component The component type to remove
      **/
     fun removeComponent(entity: Entity, component: ComponentType) {
+        if (entities.containsKey(entity).not())
+            return
         entities[entity] = entities[entity]!!.filter { it.componentType != component }
     }
 
@@ -184,5 +195,17 @@ class World {
      **/
     fun hasComponents(entity: Entity, componentList: List<ComponentType>): Boolean {
         return entities[entity]!!.any { componentList.contains(it.componentType) }
+    }
+
+    /**
+     * Update components of an entity. The components will be added if they don't exist, and updated if they exist.
+     **/
+    fun updateComponents(entity: Entity, vararg components: Component) {
+        components.forEach { component ->
+            if (hasComponents(entity, component.componentType)) {
+                removeComponent(entity, component.componentType)
+            }
+            addComponent(entity, component)
+        }
     }
 }

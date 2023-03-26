@@ -15,7 +15,7 @@ class CameraController(
     fun init() {
         Gdx.input.inputProcessor = this
         if (camera is OrthographicCamera)
-            camera.zoom = 0.25f
+            camera.zoom = 0.1f
     }
 
     fun update(delta: Float) {
@@ -56,6 +56,6 @@ class CameraController(
             camera.translate(0f, 0f, amountY * 3f)
             camera.position.z = MathUtils.clamp(camera.position.z, 40f, camera.far)
         }
-        return true
+        return false
     }
 }

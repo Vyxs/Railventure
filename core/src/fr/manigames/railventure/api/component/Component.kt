@@ -1,5 +1,8 @@
 package fr.manigames.railventure.api.component
 
+/**
+ * A component is a part of an entity. It must be immutable.
+ **/
 abstract class Component(val componentType: ComponentType)
 
 /**
