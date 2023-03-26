@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT
 import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MAX
 import fr.manigames.railventure.api.core.R
 import fr.manigames.railventure.api.graphics.display.Ratio
@@ -61,7 +62,7 @@ class Game : ApplicationListener {
     private fun init() {
         assets.load(R::assetLoadingFunction)
 
-        camera.position.set(50f, 50f, 260f)
+        camera.position.set(50f, 50f, CAMERA_HEIGHT)
         camera.lookAt(50f, 50f,0f)
         camera.rotate(30f, 1f, 0f, 0f)
         camera.near = 0f
