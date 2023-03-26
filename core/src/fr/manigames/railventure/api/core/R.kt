@@ -21,6 +21,9 @@ object R {
         am.load(Texture.WAGON, com.badlogic.gdx.graphics.Texture::class.java)
 
         am.load(Texture.GRASS, com.badlogic.gdx.graphics.Texture::class.java)
+        am.load(Texture.DIRT, com.badlogic.gdx.graphics.Texture::class.java)
+        am.load(Texture.SAND, com.badlogic.gdx.graphics.Texture::class.java)
+        am.load(Texture.WATER, com.badlogic.gdx.graphics.Texture::class.java)
     }
 
     object Texture {
@@ -38,6 +41,9 @@ object R {
         const val WAGON: String = "texture/wagon/wagon.png"
 
         const val GRASS: String = "texture/tile/grass.png"
+        const val DIRT: String = "texture/tile/dirt.png"
+        const val SAND: String = "texture/tile/sand.png"
+        const val WATER: String = "texture/tile/water.png"
     }
 
 }

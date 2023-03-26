@@ -6,9 +6,9 @@ import fr.manigames.railventure.api.core.R
 enum class TileType(val assetKey: String, val code: Int) {
     AIR("", 0),
     GRASS (R.Texture.GRASS, 1),
-    DIRT("", 2),
-    SAND("", 3),
-    WATER("", 4),
+    DIRT(R.Texture.DIRT, 2),
+    SAND(R.Texture.SAND, 3),
+    WATER(R.Texture.WATER, 4),
     RAIL_TOP_LEFT(R.Texture.RAIL_TOP_LEFT, 5),
     RAIL_TOP_RIGHT(R.Texture.RAIL_TOP_RIGHT, 6),
     RAIL_BOT_LEFT(R.Texture.RAIL_BOT_LEFT, 7),

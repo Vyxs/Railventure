@@ -2,6 +2,8 @@ package fr.manigames.railventure.api.core
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
+import fr.manigames.railventure.api.debug.Logger
+import fr.manigames.railventure.api.gameobject.TileType
 
 class Assets {
 
@@ -55,8 +57,10 @@ class Assets {
      **/
     fun getTexture(name: String): Texture? {
         return try {
+            if (TileType.AIR.assetKey == name) return null
             assetManager.get(name, Texture::class.java)
         } catch (e: Exception) {
+            Logger.error("Texture $name not found maybe you forgot to load it ?", e)
             null
         }
     }

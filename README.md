@@ -4,6 +4,9 @@
 ## Debug keys
 - `←` `→` `↓` `↑` : Move camera
 - `Scroll` : Zoom / Dezoom
+- `F1` : Toggle debug mode
+- `F2` : Toggle tiles borders
+- `F3` : Toggle chunks borders
 
 ## Documentation
 
