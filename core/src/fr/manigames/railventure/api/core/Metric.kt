@@ -10,7 +10,7 @@ object Metric {
     // Never change this value
     private const val NATIVE_TILE_SIZE = 16f
 
-    const val TILE_SIZE = 64f
+    const val TILE_SIZE = 16f
 
     /**
      * PPM (pixel per meter).
