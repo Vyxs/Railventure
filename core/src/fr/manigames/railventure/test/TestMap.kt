@@ -14,7 +14,7 @@ class TestMap(
 
     private val rand = java.security.SecureRandom()
     private val stressTest = true
-    private val size = 100
+    private val size = 40
     private val generationProgress = AtomicReference(0f)
 
     override fun getGenerationProgress(): Float = generationProgress.get()
