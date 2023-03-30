@@ -1,8 +1,6 @@
 package fr.manigames.railventure.test
 
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.utils.viewport.StretchViewport
-import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.entity.EntityBuilder
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
@@ -19,10 +17,7 @@ import fr.manigames.railventure.generated.R
  **/
 class TestSystem(
     world: World,
-    private val assets: Assets,
     private val camera: OrthographicCamera,
-    private val viewport: StretchViewport,
-    private val logger: fr.manigames.railventure.api.debug.Logger,
     private val useDebugCamera: Boolean,
     private val inputRegistry: GameInput,
     private val map: RenderableMap,
@@ -77,18 +72,6 @@ class TestSystem(
         if (useDebugCamera)
             cameraController.update(1f)
         mapRenderer.update()
-    }
-
-    override fun pause() {
-
-    }
-
-    override fun resume() {
-
-    }
-
-    override fun resize(width: Int, height: Int) {
-
     }
 
     override fun dispose() {

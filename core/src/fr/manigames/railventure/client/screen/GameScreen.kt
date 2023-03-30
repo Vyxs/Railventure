@@ -27,7 +27,6 @@ class GameScreen : Screen {
     private val systems: LinkedHashSet<System> = linkedSetOf()
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
-    private val logger = Logger
 
     override fun init(game: Game) {
         systems.addAll(
@@ -38,7 +37,7 @@ class GameScreen : Screen {
             )
         )
         if (Game.DEBUG) {
-            systems.add(TestSystem(world, assets, camera, viewport, logger, !Game.USE_PLAYER_CAMERA, gameInput, game.map))
+            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput, game.map))
         }
         if (Game.USE_PLAYER_CAMERA) {
             systems.add(PlayerCameraSystem(world, camera))
