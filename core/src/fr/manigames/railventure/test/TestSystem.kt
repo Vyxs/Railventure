@@ -7,13 +7,12 @@ import fr.manigames.railventure.api.entity.EntityBuilder
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.client.input.GameInput
-import fr.manigames.railventure.client.map.ChunkLoader
+import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.component.*
 import fr.manigames.railventure.common.composition.PlayerComposition
 import fr.manigames.railventure.client.renderer.DebugRenderer
 import fr.manigames.railventure.client.renderer.MapRenderer
 import fr.manigames.railventure.generated.R
-import java.util.logging.Logger
 
 /**
  * Only for test purpose
@@ -23,25 +22,21 @@ class TestSystem(
     private val assets: Assets,
     private val camera: OrthographicCamera,
     private val viewport: StretchViewport,
-    private val logger: Logger,
+    private val logger: fr.manigames.railventure.api.debug.Logger,
     private val useDebugCamera: Boolean,
-    private val inputRegistry: GameInput
+    private val inputRegistry: GameInput,
+    private val map: RenderableMap,
 ) : System(world) {
 
     private lateinit var cameraController: CameraController
     private lateinit var debugRenderer: DebugRenderer
     private lateinit var mapRenderer: MapRenderer
-    private lateinit var map: TestMap
-    private lateinit var chunkLoader: ChunkLoader
 
     override fun init() {
-        chunkLoader = ChunkLoader(assets)
         debugRenderer = DebugRenderer(camera, world)
         inputRegistry.addInputProcessor(debugRenderer.inputProcessor)
         cameraController = CameraController(camera)
         inputRegistry.addInputProcessor(cameraController)
-        map = TestMap(chunkLoader::loadChunk)
-        map.generate()
         mapRenderer = MapRenderer(map, camera)
         if (useDebugCamera) {
             cameraController.init()

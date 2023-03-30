@@ -3,9 +3,30 @@ package fr.manigames.railventure.client.map
 import fr.manigames.railventure.common.map.BaseMap
 
 
-open class RenderableMap(
+abstract class RenderableMap(
     private val chunkLoader: (RenderableChunk) -> Unit
 ) : BaseMap() {
+
+    /**
+     * Return the progress of the map generation. The progress is a float between 0 and 1. If the map is already generated, the progress is 1.
+     * The progress is only relevant if [generate] is called and not if [generateChunk] is called.
+     *
+     * @return The progress of the map generation
+     */
+    abstract fun getGenerationProgress() : Float
+
+    /**
+     * Generate the map. This method must be called only once at the beginning of the game. Then you can use [generateChunk] to generate new chunks.
+     */
+    abstract fun generate()
+
+    /**
+     * Generate the chunk at the given position
+     *
+     * @param x The x position of the chunk
+     * @param y The y position of the chunk
+     */
+    open fun generateChunk(x: Int, y: Int) = Unit
 
     /**
      * Load all chunks

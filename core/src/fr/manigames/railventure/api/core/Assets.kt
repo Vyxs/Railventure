@@ -4,7 +4,11 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.debug.Logger
 
-class Assets {
+class Assets private constructor() {
+
+    companion object {
+        val instance = Assets()
+    }
 
     private val assetManager = AssetManager()
 
@@ -62,5 +66,14 @@ class Assets {
             Logger.error("Texture $name not found maybe you forgot to load it ?", e)
             null
         }
+    }
+
+    /**
+     * Check if all assets are loaded
+     *
+     * @return true if all assets are loaded
+     **/
+    fun hasFinishedLoading() : Boolean {
+        return assetManager.isFinished
     }
 }
