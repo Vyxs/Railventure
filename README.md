@@ -7,6 +7,7 @@
 - `F1` : Toggle debug mode
 - `F2` : Toggle tiles borders
 - `F3` : Toggle chunks borders
+- `F4` : Toggle gpu profiler
 
 ## Documentation
 
