@@ -71,7 +71,7 @@ class FastMapRenderer(
         tilesToRender?.forEachIndexed { y, column ->
             column.forEachIndexed { x, tileLayer ->
                 tileLayer.map(TileType::fromCode).forEach { tileType ->
-                    asset.getTexture(tileType.assetKey)?.let {
+                    asset.getTexture(tileType.texture.path)?.let {
                         drawTextureToChunkPixmap(it, chunkPixmap, x, y)
                     }
                 }

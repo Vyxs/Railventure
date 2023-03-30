@@ -12,7 +12,7 @@ class TileRenderer(private val asset: Assets) : Renderer {
     private val batch = SpriteBatch()
 
     fun renderTile(type: TileType, x: Int, y: Int) {
-        asset.getTexture(type.assetKey)?.let { texture ->
+        asset.getTexture(type.texture.path)?.let { texture ->
             batch.begin()
             batch.draw(texture, x.toFloat(), y.toFloat(), Metric.TILE_SIZE, Metric.TILE_SIZE)
             batch.end()

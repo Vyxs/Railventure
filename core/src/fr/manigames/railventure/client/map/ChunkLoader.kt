@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.gameobject.TileType
 
 class ChunkLoader(
@@ -31,7 +30,7 @@ class ChunkLoader(
         chunk.getTiles().forEachIndexed { y, column ->
             column.forEachIndexed { x, tileLayer ->
                 tileLayer.map(TileType::fromCode).forEach { tileType ->
-                    assets.getTexture(tileType.assetKey)?.let {
+                    assets.getTexture(tileType.texture.path)?.let {
                         drawTextureToChunkPixmap(tileType, it, pixmap, x, y)
                     }
                 }

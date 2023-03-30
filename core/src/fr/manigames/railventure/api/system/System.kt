@@ -18,6 +18,16 @@ abstract class System(
     open fun init() = Unit
 
     /**
+     * Called when the Game is shown.
+     */
+    open fun show() = Unit
+
+    /**
+     * Called when the Game is hidden.
+     */
+    open fun hide() = Unit
+
+    /**
      * Called when the Game should render itself.
      */
     open fun render(delta: Float) = Unit

@@ -6,6 +6,7 @@ import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.map.BaseChunk
+import java.util.concurrent.atomic.AtomicReference
 
 class TestMap(
     chunkLoader: (RenderableChunk) -> Unit
@@ -13,17 +14,27 @@ class TestMap(
 
     private val rand = java.security.SecureRandom()
     private val stressTest = true
+    private val size = 40
+    private val generationProgress = AtomicReference(0f)
 
-    fun generate() {
+    override fun getGenerationProgress(): Float = generationProgress.get()
+
+    override fun generate() {
         val instantA = System.currentTimeMillis()
-        val size = Pair(40, 40)
-        for (i in -size.first..size.first) {
-            for (j in -size.second..size.second) {
+        val area = Pair(size, size)
+        val total = (area.first * 2 + 1) * (area.second * 2 + 1) // why + 1 ? -> because we want to include the center chunk
+        var current = 0
+
+        for (i in -area.first..area.first) {
+            for (j in -area.second..area.second) {
                 setChunk(i, j, makeChunk(i, j))
+                current++
+                generationProgress.set(current.toFloat() / total)
             }
         }
+        generationProgress.set(1f)
         val instantB = System.currentTimeMillis()
-        Logger.info("Map generated in ${instantB - instantA}ms")
+        Logger.info("Map generated $total chunks in ${instantB - instantA}ms")
     }
 
     private fun makeChunk(x: Int, y: Int) : BaseChunk {
