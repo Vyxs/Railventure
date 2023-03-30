@@ -1,0 +1,31 @@
+{
+  "id": 1,
+  "texture": "textures/gui/container/inventory.png",
+  "slots": [
+    {"x": 2, "y": 2, "width": 13, "height": 13},
+    {"x": 19, "y": 2, "width": 13, "height": 13},
+    {"x": 36, "y": 2, "width": 13, "height": 13},
+    {"x": 53, "y": 2, "width": 13, "height": 13},
+    {"x": 70, "y": 2, "width": 13, "height": 13},
+    {"x": 2, "y": 19, "width": 13, "height": 13},
+    {"x": 19, "y": 19, "width": 13, "height": 13},
+    {"x": 36, "y": 19, "width": 13, "height": 13},
+    {"x": 53, "y": 19, "width": 13, "height": 13},
+    {"x": 70, "y": 19, "width": 13, "height": 13},
+    {"x": 2, "y": 36, "width": 13, "height": 13},
+    {"x": 19, "y": 36, "width": 13, "height": 13},
+    {"x": 36, "y": 36, "width": 13, "height": 13},
+    {"x": 53, "y": 36, "width": 13, "height": 13},
+    {"x": 70, "y": 36, "width": 13, "height": 13},
+    {"x": 2, "y": 53, "width": 13, "height": 13},
+    {"x": 19, "y": 53, "width": 13, "height": 13},
+    {"x": 36, "y": 53, "width": 13, "height": 13},
+    {"x": 53, "y": 53, "width": 13, "height": 13},
+    {"x": 70, "y": 53, "width": 13, "height": 13},
+    {"x": 2, "y": 70, "width": 13, "height": 13},
+    {"x": 19, "y": 70, "width": 13, "height": 13},
+    {"x": 36, "y": 70, "width": 13, "height": 13},
+    {"x": 53, "y": 70, "width": 13, "height": 13},
+    {"x": 70, "y": 70, "width": 13, "height": 13}
+  ]
+}
