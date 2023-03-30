@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.core.Metric.TILE_SIZE
+import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.map.TileLayer
@@ -24,7 +25,7 @@ class FastMapRenderer(
     private val camera: Camera
 ) : Renderer {
 
-    private val batch = SpriteBatch()
+    private val batch = Render.spriteBatch
     private val chunkRealSize = (TILE_SIZE * MAP_CHUNK_SIZE).toInt()
     private var chunks: MutableMap<Long, Texture> = mutableMapOf()
     private var dirty = true

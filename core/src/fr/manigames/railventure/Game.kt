@@ -1,8 +1,12 @@
 package fr.manigames.railventure
 
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.client.map.ChunkLoader
 import fr.manigames.railventure.client.screen.LoadingScreen
@@ -21,6 +25,7 @@ class Game : Game() {
     private val chunkLoader: ChunkLoader = ChunkLoader(Assets.instance)
 
     val map: TestMap = TestMap(chunkLoader::loadChunk)
+
     fun changeScreen(screen: Screen) {
         this.screen?.dispose()
         screen.init(this)
@@ -33,5 +38,6 @@ class Game : Game() {
 
     override fun dispose() {
         Assets.instance.dispose()
+        Render.dispose()
     }
 }

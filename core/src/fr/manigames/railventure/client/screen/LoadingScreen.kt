@@ -1,12 +1,10 @@
 package fr.manigames.railventure.client.screen
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.ScreenUtils
 import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
+import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.client.ui.ProgressBar
@@ -14,9 +12,9 @@ import fr.manigames.railventure.generated.R
 
 class LoadingScreen : Screen {
 
-    private val bitmapFont = BitmapFont()
-    private val shapeRenderer = ShapeRenderer()
-    private val batch = SpriteBatch()
+    private val bitmapFont = Render.bitmapFont
+    private val shapeRenderer = Render.shapeRenderer
+    private val batch = Render.spriteBatch
     private val assets: Assets = Assets.instance
 
     private lateinit var map: RenderableMap
@@ -54,10 +52,5 @@ class LoadingScreen : Screen {
         if (assets.hasFinishedLoading() && map.getGenerationProgress() == 1f) {
             changeScreen(GameScreen())
         }
-    }
-
-    override fun dispose() {
-        batch.dispose()
-        bitmapFont.dispose()
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
@@ -18,7 +19,7 @@ class MapRenderer(
     private val camera: Camera
 ) : Renderer {
 
-    private val batch: SpriteBatch = SpriteBatch()
+    private val batch: SpriteBatch = Render.spriteBatch
     private var visibleChunks: MutableMap<Long, RenderableChunk> = mutableMapOf()
     private val chunkSizeInPx = (Metric.TILE_SIZE * Metric.MAP_CHUNK_SIZE).toInt()
     private var firstInit = true
@@ -105,9 +106,5 @@ class MapRenderer(
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4?) {
         batch.projectionMatrix = projectionMatrix
-    }
-
-    override fun dispose() {
-        batch.dispose()
     }
 }

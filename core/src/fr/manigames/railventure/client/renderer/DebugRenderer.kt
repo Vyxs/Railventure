@@ -6,14 +6,13 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.profiling.GLProfiler
 import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.component.ComponentType
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.util.MathUtil.toRoundedString
 import fr.manigames.railventure.api.util.PosUtil
@@ -28,9 +27,10 @@ class DebugRenderer(
     private val world: World?
 ) : Renderer {
 
-    private val shapeRenderer = ShapeRenderer()
-    private val spriteBatch = SpriteBatch()
-    private val font = BitmapFont()
+    private val resetMatrix = Matrix4().setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+    private val shapeRenderer = Render.shapeRenderer
+    private val spriteBatch = Render.spriteBatch
+    private val font = Render.bitmapFont
     private val glyphLayout = GlyphLayout(font, "")
     private val glProfiler = GLProfiler(Gdx.graphics)
     val inputProcessor = DebugInputProcessor()
@@ -129,6 +129,7 @@ class DebugRenderer(
 
         renderDebugRect(strings, offset)
 
+        spriteBatch.projectionMatrix = resetMatrix
         spriteBatch.begin()
         font.color = Color.WHITE
         strings.forEachIndexed { index, string ->
@@ -201,14 +202,12 @@ class DebugRenderer(
     private fun renderDebugRect(strings: List<String>, offset: Float = 10f) {
         var width = 0f
         var height = 0f
-        val screenWidth = Gdx.graphics.width.toFloat()
-        val screenHeight = Gdx.graphics.height.toFloat()
         strings.forEach {
             glyphLayout.setText(font, it)
             width = maxOf(width, glyphLayout.width)
             height = maxOf(height, glyphLayout.height)
         }
-        shapeRenderer.projectionMatrix = Matrix4().setToOrtho2D(0f, 0f, screenWidth, screenHeight)
+        shapeRenderer.projectionMatrix = resetMatrix
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = Color(0f, 0f, 0f, 0.5f)
         shapeRenderer.rect(0f, 0f, width + offset * 2, strings.size * (height + offset) - offset)
@@ -216,9 +215,6 @@ class DebugRenderer(
     }
 
     override fun dispose() {
-        shapeRenderer.dispose()
-        spriteBatch.dispose()
-        font.dispose()
         glProfiler.disable()
     }
 }
