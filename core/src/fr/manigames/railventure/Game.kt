@@ -7,6 +7,7 @@ import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.client.map.ChunkLoader
 import fr.manigames.railventure.client.screen.LoadingScreen
+import fr.manigames.railventure.test.ProceduralMap
 import fr.manigames.railventure.test.TestMap
 
 class Game : Game() {
@@ -21,7 +22,7 @@ class Game : Game() {
 
     private val chunkLoader: ChunkLoader = ChunkLoader(Assets.instance)
 
-    val map: TestMap = TestMap(chunkLoader::loadChunk)
+    val map: ProceduralMap = ProceduralMap(chunkLoader::loadChunk)
 
     fun changeScreen(screen: Screen) {
         this.screen?.dispose()
