@@ -85,10 +85,10 @@ class DebugRenderer(
         val size = chunkSize * tileSize
         shapeRenderer.projectionMatrix = camera.combined
         val offset = size
-        val startX = (camera.position.x - (camera.viewportWidth * camera.zoom) / 2 - offset) * camera.zoom
-        val startY = (camera.position.y - (camera.viewportHeight * camera.zoom) / 2 - offset) * camera.zoom
-        val endX = (camera.position.x + (camera.viewportWidth * camera.zoom) / 2 + offset) * camera.zoom
-        val endY = (camera.position.y + (camera.viewportHeight * camera.zoom) / 2 + offset) * camera.zoom
+        val startX = camera.position.x - (camera.viewportWidth * camera.zoom) / 2 - offset
+        val startY = camera.position.y - (camera.viewportHeight * camera.zoom) / 2 - offset
+        val endX = camera.position.x + (camera.viewportWidth * camera.zoom) / 2 + offset
+        val endY = camera.position.y + (camera.viewportHeight * camera.zoom) / 2 + offset
         val startXGrid = (startX / size).toInt()
         val startYGrid = (startY / size).toInt()
         val endXGrid = (endX / size).toInt()
