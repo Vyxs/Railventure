@@ -143,8 +143,8 @@ class DebugRenderer(
         val camChunkPos = PosUtil.getChunkPosition(camera.position.x / Metric.TILE_SIZE, camera.position.y / Metric.TILE_SIZE)
         info.add("===== Camera =====")
         info.add("Camera position: ${camera.position.toRoundedString()}")
-        info.add("Camera world position: ${(camWorldPos.first).toRoundedString()}, ${(camWorldPos.second).toRoundedString()}")
-        info.add("Camera chunk position: ${camChunkPos.first}, ${camChunkPos.second}")
+        info.add("Camera world position (y, x): ${(camWorldPos.second).toRoundedString()}, ${(camWorldPos.first).toRoundedString()}")
+        info.add("Camera chunk position (y, x): ${camChunkPos.second}, ${camChunkPos.first}")
         info.add("Camera direction: ${camera.direction.toRoundedString()}")
         info.add("Camera viewport: ${camera.viewportWidth.toRoundedString()}, ${camera.viewportHeight.toRoundedString()}")
 
