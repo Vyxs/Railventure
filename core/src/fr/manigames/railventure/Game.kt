@@ -5,10 +5,10 @@ import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.client.map.ChunkLoader
+import fr.manigames.railventure.api.map.ChunkLoader
 import fr.manigames.railventure.client.screen.LoadingScreen
+import fr.manigames.railventure.test.DebugChunkLoader
 import fr.manigames.railventure.test.ProceduralMap
-import fr.manigames.railventure.test.TestMap
 
 class Game : Game() {
 
@@ -20,7 +20,7 @@ class Game : Game() {
         val GAME_HEIGHT = Metric.GAME_HEIGHT
     }
 
-    private val chunkLoader: ChunkLoader = ChunkLoader(Assets.instance)
+    private val chunkLoader: ChunkLoader = DebugChunkLoader(Assets.instance)
 
     val map: ProceduralMap = ProceduralMap(chunkLoader::loadChunk)
 
