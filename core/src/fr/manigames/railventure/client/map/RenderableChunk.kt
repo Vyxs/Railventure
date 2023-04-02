@@ -26,7 +26,7 @@ open class RenderableChunk(x: Int, y: Int) : BaseChunk(x, y) {
     /**
      * Set the chunk as clean. It should be marked as clean when it has been loaded.
      **/
-    private fun setClean() {
+    fun setClean() {
         isDirty = false
     }
 

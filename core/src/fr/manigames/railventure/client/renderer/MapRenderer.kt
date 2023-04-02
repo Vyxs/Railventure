@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
+import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.util.PosUtil
@@ -98,6 +99,7 @@ class MapRenderer(
     private fun checkDirty() {
         visibleChunks.forEach { (_, chunk) ->
             if (chunk.isDirty) {
+                Logger.info("Chunk ${chunk.x} ${chunk.y} is dirty, reloading it")
                 map.loadChunk(chunk.x, chunk.y)
             }
         }

@@ -39,9 +39,6 @@ class ProceduralMap(
         )
         val scale = 8
 
-
-        generateDefaultMap(widthInChunk, heightInChunk)
-
         generateNoiseMap(widthInChunk, heightInChunk, types, scale)
 
         generationProgress.set(1f)
@@ -80,9 +77,11 @@ class ProceduralMap(
          *
          * So we need to invert y axis
          **/
+        val offset = minOf(widthInChunk, heightInChunk) / 2
         for (y in 0 until heightInChunk) {
             for (x in 0 until widthInChunk) {
-                val chunk = RenderableChunk(x, (heightInChunk - 1) - y)
+                val chunkY = (heightInChunk - 1) - y
+                val chunk = RenderableChunk(x - offset, chunkY - offset)
                 for (tileY in 0 until MAP_CHUNK_SIZE) {
                     for (tileX in 0 until MAP_CHUNK_SIZE) {
                         val noiseX = x * MAP_CHUNK_SIZE + tileX
@@ -90,7 +89,7 @@ class ProceduralMap(
                         chunk.setTile(tileX, tileY, 0, getTileType(noiseMap, noiseY, noiseX, types))
                     }
                 }
-                setChunk(x, y, chunk)
+                setChunk(x - offset, chunkY - offset, chunk)
             }
         }
     }
@@ -126,25 +125,7 @@ class ProceduralMap(
         println(stringBuffer.toString())
     }
 
-    private fun generateDefaultMap(width: Int, height: Int) {
-        for (x in 0 until width) {
-            for (y in 0 until height) {
-                generateDefaultChunk(x, y)
-            }
-        }
-    }
-
     private fun getNoise(x: Double, y: Double, types: Int) : Int {
         return floor(abs(noise.random2D(x, y)) * types).toInt()
-    }
-
-    private fun generateDefaultChunk(x: Int, y: Int) {
-        val chunk = RenderableChunk(x, y)
-        for (tileX in 0 until MAP_CHUNK_SIZE) {
-            for (tileY in 0 until MAP_CHUNK_SIZE) {
-                chunk.setTile(tileX, tileY, 0, TileType.WATER)
-            }
-        }
-        setChunk(x, y, chunk)
     }
 }

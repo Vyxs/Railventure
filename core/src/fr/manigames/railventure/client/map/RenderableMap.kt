@@ -46,7 +46,10 @@ abstract class RenderableMap(
      **/
     fun loadChunk(x: Int, y: Int) {
         if (isChunkLoaded(x, y)) return
-        getChunk(x, y)?.let { it as RenderableChunk }?.let(chunkLoader)
+        getChunk(x, y)?.let { it as RenderableChunk }?.let {
+            chunkLoader(it)
+            it.setClean()
+        }
     }
 
     /**

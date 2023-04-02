@@ -57,6 +57,13 @@ open class BaseMap : Map<TileType> {
         } else false
     }
 
+    /**
+     * Set the chunk at the given position. You must ensure that the chunk coordinates are the same as the chunk position parameter.
+     *
+     * @param x The x position of the chunk
+     * @param y The y position of the chunk
+     * @param chunk The chunk to set
+     **/
     override fun setChunk(x: Int, y: Int, chunk: MapChunk<TileType>) {
         chunks[toChunkId(x, y)] = chunk
     }
