@@ -24,8 +24,8 @@ class ProceduralMap(
 
     override fun generate() {
 
-        val widthInChunk = 10
-        val heightInChunk = 10
+        val widthInChunk = 100
+        val heightInChunk = 100
         val types = arrayOf(
             TileType.WATER,
             TileType.SAND,
@@ -35,9 +35,13 @@ class ProceduralMap(
             TileType.GRASS,
             TileType.GRASS,
             TileType.GRASS,
+            TileType.GRASS,
+            TileType.GRASS,
+            TileType.GRASS,
+            TileType.GRASS,
             TileType.GRASS
         )
-        val scale = 8
+        val scale = 50
 
         generateNoiseMap(widthInChunk, heightInChunk, types, scale)
 
@@ -94,13 +98,23 @@ class ProceduralMap(
         }
     }
 
+    private val random = Random(seed)
+    private val rndTiles = arrayOf(TileType.GRASS, TileType.SAND, TileType.DIRT, TileType.GRASS)
+
 
     private fun getTileType(
         noiseMap: Array<IntArray>,
         y: Int,
         x: Int,
         types: Array<TileType>
-    ) = types[noiseMap[y][x]]
+    ) : TileType {
+        var id = noiseMap[y][x]
+        if (id == TileType.DIRT.code) {
+            id = random.nextInt(0, rndTiles.size)
+            id = rndTiles[id].code
+        }
+        return types[id]
+    }
 
     private fun printNoiseMap(noiseMap: Array<IntArray>) {
         val stringBuffer = StringBuffer()
