@@ -24,22 +24,30 @@ class ProceduralMap(
 
     override fun generate() {
 
-        val widthInChunk = 3
-        val heightInChunk = 3
+        val widthInChunk = 10
+        val heightInChunk = 10
+        val types = arrayOf(
+            TileType.WATER,
+            TileType.SAND,
+            TileType.SAND,
+            TileType.DIRT,
+            TileType.GRASS,
+            TileType.GRASS,
+            TileType.GRASS,
+            TileType.GRASS,
+            TileType.GRASS
+        )
+        val scale = 8
 
 
         generateDefaultMap(widthInChunk, heightInChunk)
 
-        for (x in 0 until 64)
-            setTile(x, 0, 0, TileType.GRASS)
-
-        //generateNoiseMap(widthInChunk, heightInChunk)
+        generateNoiseMap(widthInChunk, heightInChunk, types, scale)
 
         generationProgress.set(1f)
     }
 
-    private fun generateNoiseMap(widthInChunk: Int, heightInChunk: Int) {
-        val scale = 1.0
+    private fun generateNoiseMap(widthInChunk: Int, heightInChunk: Int, types: Array<TileType>, scale: Int) {
         val widthInTiles = widthInChunk * MAP_CHUNK_SIZE
         val heightInTiles = heightInChunk * MAP_CHUNK_SIZE
 
@@ -47,28 +55,53 @@ class ProceduralMap(
 
         for (y in 0 until heightInTiles) {
             for (x in 0 until widthInTiles) {
-                val nx = x / widthInTiles.toDouble() * 2 - 1
-                val ny = y / heightInTiles.toDouble() * 2 - 1
-
-                noiseMap[y][x] = getNoise(nx, ny, 3)
+                val nx = x / widthInTiles.toDouble() * scale - 1
+                val ny = y / heightInTiles.toDouble() * scale - 1
+                noiseMap[y][x] = getNoise(nx, ny, types.size)
             }
         }
 
         printNoiseMap(noiseMap)
 
-        for (y in 0 until heightInTiles) {
-            for (x in 0 until widthInTiles) {
-
-                val tileType = when (noiseMap[y][x]) {
-                    0 -> TileType.WATER
-                    1 -> TileType.GRASS
-                    2 -> TileType.DIRT
-                    else -> TileType.GRASS
+        /**
+         * In world chunk are like this:
+         *
+         * (y, x)
+         * [ 1,-1] [ 1, 0] [ 1, 1]
+         * [ 0,-1] [ 0, 0] [ 0, 1]
+         * [-1,-1] [-1, 0] [-1, 1]
+         *
+         * In noise map are like this:
+         *
+         * (y, x)
+         * [ 0, 0] [ 0, 1] [ 0, 2]
+         * [ 1, 0] [ 1, 1] [ 1, 2]
+         * [ 2, 0] [ 2, 1] [ 2, 2]
+         *
+         * So we need to invert y axis
+         **/
+        for (y in 0 until heightInChunk) {
+            for (x in 0 until widthInChunk) {
+                val chunk = RenderableChunk(x, (heightInChunk - 1) - y)
+                for (tileY in 0 until MAP_CHUNK_SIZE) {
+                    for (tileX in 0 until MAP_CHUNK_SIZE) {
+                        val noiseX = x * MAP_CHUNK_SIZE + tileX
+                        val noiseY = y * MAP_CHUNK_SIZE + tileY
+                        chunk.setTile(tileX, tileY, 0, getTileType(noiseMap, noiseY, noiseX, types))
+                    }
                 }
-                setTile(x, y, 0, tileType)
+                setChunk(x, y, chunk)
             }
         }
     }
+
+
+    private fun getTileType(
+        noiseMap: Array<IntArray>,
+        y: Int,
+        x: Int,
+        types: Array<TileType>
+    ) = types[noiseMap[y][x]]
 
     private fun printNoiseMap(noiseMap: Array<IntArray>) {
         val stringBuffer = StringBuffer()
@@ -79,6 +112,11 @@ class ProceduralMap(
                     1 -> '.'
                     2 -> 'o'
                     3 -> 'O'
+                    4 -> '0'
+                    5 -> '@'
+                    6 -> '%'
+                    7 -> '#'
+                    8 -> '&'
                     else -> ' '
                 }
                 stringBuffer.append(char)
@@ -89,8 +127,8 @@ class ProceduralMap(
     }
 
     private fun generateDefaultMap(width: Int, height: Int) {
-        for (x in -width..width) {
-            for (y in -height..height) {
+        for (x in 0 until width) {
+            for (y in 0 until height) {
                 generateDefaultChunk(x, y)
             }
         }

@@ -12,7 +12,7 @@ class DebugChunkLoader(
 
     override fun generateChunkTexture(chunk: RenderableChunk, assets: Assets) {
         val pixmap = makePixmap(chunk, assets)
-        val file = Gdx.files.local("save/chunk_${chunk.x}_${chunk.y}.png")
+        val file = Gdx.files.local("save/chunk_${chunk.y}_${chunk.x}.png")
         PixmapIO.writePNG(file, pixmap)
         applyPixmapToChunk(chunk, pixmap)
     }
