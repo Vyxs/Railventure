@@ -2,8 +2,8 @@ package fr.manigames.railventure.common.map
 
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.gameobject.TileType
-import fr.manigames.railventure.api.map.Map
-import fr.manigames.railventure.api.map.MapChunk
+import fr.manigames.railventure.api.map.base.Map
+import fr.manigames.railventure.api.map.base.MapChunk
 
 open class BaseMap : Map<TileType> {
 

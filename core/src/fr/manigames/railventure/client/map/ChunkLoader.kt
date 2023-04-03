@@ -1,14 +1,11 @@
 package fr.manigames.railventure.client.map
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.PixmapIO
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.gameobject.TileType
-import fr.manigames.railventure.api.map.ChunkLoader
-import java.nio.ByteBuffer
+import fr.manigames.railventure.api.map.base.ChunkLoader
 
 open class ChunkLoader(
     private val assets: Assets

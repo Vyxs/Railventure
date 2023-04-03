@@ -1,4 +1,4 @@
-package fr.manigames.railventure.api.map
+package fr.manigames.railventure.api.map.base
 
 /**
  * Map of the game. It contains chunks of tiles. The map is a 2D array of chunks.

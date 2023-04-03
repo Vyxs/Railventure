@@ -2,7 +2,7 @@ package fr.manigames.railventure.client.map
 
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.gameobject.TileType
-import fr.manigames.railventure.api.map.TileLayer
+import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.common.map.BaseChunk
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -19,7 +19,7 @@ open class RenderableChunk(x: Int, y: Int) : BaseChunk(x, y) {
     /**
      * Set the chunk as dirty. It should be marked as dirty when it has been modified.
      **/
-    private fun markDirty() {
+    fun markDirty() {
         isDirty = true
     }
 
