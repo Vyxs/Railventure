@@ -14,7 +14,7 @@ class TestProceduralMap(
 
         val mapConfig = ProceduralMapConfig(
             seed = 4455,
-            defaultGenerationSize = 200,
+            defaultGenerationSize = 100,
             regenerateOnConfigChange = false
         )
 

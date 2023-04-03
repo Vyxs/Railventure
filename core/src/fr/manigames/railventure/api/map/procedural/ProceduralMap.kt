@@ -7,22 +7,22 @@ import fr.manigames.railventure.client.map.RenderableMap
 import java.util.concurrent.atomic.AtomicReference
 
 abstract class ProceduralMap(
-    private var config: ProceduralMapConfig,
-    private val tileHandler: ProceduralTileHandler,
+    protected var proceduralMapConfig: ProceduralMapConfig,
+    protected val tileHandler: ProceduralTileHandler,
     chunkLoader: (RenderableChunk) -> Unit
 ) : RenderableMap(chunkLoader) {
 
-    private val altitude = OpenSimplexNoise(config.altitudeSeed) // base relief
-    private val humidity = OpenSimplexNoise(config.humiditySeed) // biome related
-    private val temperature = OpenSimplexNoise(config.temperatureSeed) // biome related
-    private val generationProgress = AtomicReference(0f)
+    private val altitude = OpenSimplexNoise(proceduralMapConfig.altitudeSeed) // base relief
+    private val humidity = OpenSimplexNoise(proceduralMapConfig.humiditySeed) // biome related
+    private val temperature = OpenSimplexNoise(proceduralMapConfig.temperatureSeed) // biome related
+    protected val generationProgress = AtomicReference(0f)
 
     /**
      * Get the config of the map.
      *
      * @return The config of the map.
      */
-    fun getConfig(): ProceduralMapConfig = config
+    fun getConfig(): ProceduralMapConfig = proceduralMapConfig
 
     /**
      * Set the config of the map. If the config has the regenerateOnConfigChange property set to true, the map will be
@@ -31,9 +31,9 @@ abstract class ProceduralMap(
      * @param config The new config of the map.
      */
     fun setConfig(config: ProceduralMapConfig) {
-        if (config == this.config)
+        if (config == this.proceduralMapConfig)
             return
-        this.config = config
+        this.proceduralMapConfig = config
         if (config.regenerateOnConfigChange)
             markAllChunksDirty()
     }
@@ -49,10 +49,10 @@ abstract class ProceduralMap(
      * Generate the map.
      */
     override fun generate() {
-        val size = config.defaultGenerationSize
+        val size = proceduralMapConfig.defaultGenerationSize
         for (x in -(size / 2) until (size / 2))
             for (y in -(size / 2) until (size / 2)) {
-                generateChunk(config.defaultGenerationPosition.first + x, config.defaultGenerationPosition.second + y)
+                generateChunk(proceduralMapConfig.defaultGenerationPosition.first + x, proceduralMapConfig.defaultGenerationPosition.second + y)
                 generationProgress.set((x + (size / 2)) / size.toFloat())
             }
         generationProgress.set(1f)
@@ -71,8 +71,8 @@ abstract class ProceduralMap(
             for (tileY in 0 until Metric.MAP_CHUNK_SIZE) {
                 val ux = size.first + tileX
                 val uy = size.second + tileY
-                val nx = ux / config.scale
-                val ny = uy / config.scale
+                val nx = ux / proceduralMapConfig.scale
+                val ny = uy / proceduralMapConfig.scale
                 val alt = altitude.random2D(nx, ny)
                 val hum = humidity.random2D(nx, ny)
                 val temp = temperature.random2D(nx, ny)
