@@ -6,6 +6,20 @@ package fr.manigames.railventure.api.map
 interface MapChunk<V> {
 
     /**
+     * Get the x position of the chunk
+     *
+     * @return The x position of the chunk
+     */
+    fun getChunkX(): Int
+
+    /**
+     * Get the y position of the chunk
+     *
+     * @return The y position of the chunk
+     */
+    fun getChunkY(): Int
+
+    /**
      * Get the tile at the given position
      *
      * @param x The x position of the tile

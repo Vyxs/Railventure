@@ -38,8 +38,10 @@ class ProceduralMap(
             TileType.GRASS,
             TileType.GRASS,
             TileType.GRASS,
-            TileType.GRASS,
-            TileType.GRASS
+            TileType.MOSSY_STONE,
+            TileType.STONE,
+            TileType.STONE,
+            TileType.STONE
         )
         val scale = 50
 
@@ -93,13 +95,15 @@ class ProceduralMap(
                         chunk.setTile(tileX, tileY, 0, getTileType(noiseMap, noiseY, noiseX, types))
                     }
                 }
-                setChunk(x - offset, chunkY - offset, chunk)
+                setChunk(chunk)
+                generationProgress.set((y * widthInChunk + x) / (widthInChunk * heightInChunk).toFloat())
             }
         }
     }
 
     private val random = Random(seed)
-    private val rndTiles = arrayOf(TileType.GRASS, TileType.SAND, TileType.DIRT, TileType.GRASS)
+    private val rndTiles = arrayOf(TileType.SAND, TileType.DIRT, TileType.DIRT)
+    private val randTkt = arrayOf(TileType.GRASS, TileType.MOSSY_STONE, TileType.MOSSY_STONE, TileType.MOSSY_STONE, TileType.STONE)
 
 
     private fun getTileType(
@@ -109,11 +113,14 @@ class ProceduralMap(
         types: Array<TileType>
     ) : TileType {
         var id = noiseMap[y][x]
-        if (id == TileType.DIRT.code) {
-            id = random.nextInt(0, rndTiles.size)
-            id = rndTiles[id].code
-        }
-        return types[id]
+        return if (types[id] == TileType.DIRT) {
+            id = rndTiles[random.nextInt(0, rndTiles.size)].code
+            TileType.fromCode(id)
+        } else if (types[id] == TileType.MOSSY_STONE) {
+            id = randTkt[random.nextInt(0, randTkt.size)].code
+            TileType.fromCode(id)
+        } else
+            types[id]
     }
 
     private fun printNoiseMap(noiseMap: Array<IntArray>) {

@@ -16,13 +16,11 @@ interface Map<V> {
     fun getChunk(x: Int, y: Int): MapChunk<V>?
 
     /**
-     * Set the chunk at the given position
+     * Set the chunk.
      *
-     * @param x The x position of the chunk
-     * @param y The y position of the chunk
      * @param chunk The chunk to set
      */
-    fun setChunk(x: Int, y: Int, chunk: MapChunk<V>)
+    fun setChunk(chunk: MapChunk<V>)
 
     /**
      * Check if the chunk at the given position is loaded

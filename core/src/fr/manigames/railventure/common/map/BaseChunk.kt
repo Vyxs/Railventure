@@ -15,6 +15,20 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
     private val tiles = Array(MAP_CHUNK_SIZE) { Array(MAP_CHUNK_SIZE) { TileLayer() } }
 
     /**
+     * Get the x position of the chunk
+     *
+     * @return the x position of the chunk
+     */
+    override fun getChunkX(): Int = x
+
+    /**
+     * Get the y position of the chunk
+     *
+     * @return the y position of the chunk
+     */
+    override fun getChunkY(): Int = y
+
+    /**
      * Get the tile at the given position
      *
      * @param x the x position

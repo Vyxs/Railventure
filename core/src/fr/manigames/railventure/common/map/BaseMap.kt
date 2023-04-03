@@ -64,7 +64,7 @@ open class BaseMap : Map<TileType> {
      * @param y The y position of the chunk
      * @param chunk The chunk to set
      **/
-    override fun setChunk(x: Int, y: Int, chunk: MapChunk<TileType>) {
-        chunks[toChunkId(x, y)] = chunk
+    override fun setChunk(chunk: MapChunk<TileType>) {
+        chunks[toChunkId(chunk.getChunkX(), chunk.getChunkY())] = chunk
     }
 }
