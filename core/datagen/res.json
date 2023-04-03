@@ -5,6 +5,8 @@
     {"name": "dirt", "path": "texture/tile/dirt.png"},
     {"name": "sand", "path": "texture/tile/sand.png"},
     {"name": "water", "path": "texture/tile/water.png"},
+    {"name": "stone", "path": "texture/tile/stone.png"},
+    {"name": "mossy_stone", "path": "texture/tile/mossy_stone.png"},
     {"name": "rail_v", "path": "texture/rail/rail-v.png"},
     {"name": "rail_h", "path": "texture/rail/rail-h.png"},
     {"name": "rail_x", "path": "texture/rail/rail-x.png"},

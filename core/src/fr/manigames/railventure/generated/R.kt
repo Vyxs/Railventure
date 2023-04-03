@@ -17,6 +17,8 @@ object R {
 		DIRT("texture/tile/dirt.png"),
 		SAND("texture/tile/sand.png"),
 		WATER("texture/tile/water.png"),
+		STONE("texture/tile/stone.png"),
+		MOSSY_STONE("texture/tile/mossy_stone.png"),
 		RAIL_V("texture/rail/rail-v.png"),
 		RAIL_H("texture/rail/rail-h.png"),
 		RAIL_X("texture/rail/rail-x.png"),
