@@ -86,7 +86,7 @@ class ProceduralMap(
         val offset = minOf(widthInChunk, heightInChunk) / 2
         for (y in 0 until heightInChunk) {
             for (x in 0 until widthInChunk) {
-                val chunkY = (heightInChunk - 1) - y
+                val chunkY = y
                 val chunk = RenderableChunk(x - offset, chunkY - offset)
                 for (tileY in 0 until MAP_CHUNK_SIZE) {
                     for (tileX in 0 until MAP_CHUNK_SIZE) {

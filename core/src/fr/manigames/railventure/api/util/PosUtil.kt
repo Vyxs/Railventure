@@ -27,6 +27,8 @@ object PosUtil {
      *         5, 14 -> 0, 0
      *         18, -2 -> 1, -1
      *
+     * The y coordinate is inverted. If you are in the chunk (x0, y0) and you want to go up, you have to go to (x0, y-1)
+     *
      * @param worldX World X coordinate
      * @param worldY World Y coordinate
      * @return Chunk position
@@ -44,7 +46,7 @@ object PosUtil {
         } else {
             (worldY / chunkSize).toInt()
         }
-        return Pair(chunkX, chunkY)
+        return Pair(chunkX, -chunkY)
     }
 
     fun getXorYChunkPosition(xory: Float): Int {

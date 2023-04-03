@@ -39,7 +39,7 @@ class ProceduralMapPlus(
         for (tileX in 0 until MAP_CHUNK_SIZE)
             for (tileY in 0 until MAP_CHUNK_SIZE) {
                 val nx = (size.first + tileX) / scale
-                val ny = size.second + tileY / scale
+                val ny = (size.second + tileY) / scale
                 val alt = altitude.random2D(nx, ny)
                 val hum = humidity.random2D(nx, ny)
                 val temp = temperature.random2D(nx, ny)

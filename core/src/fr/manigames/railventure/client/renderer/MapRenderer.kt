@@ -36,7 +36,7 @@ class MapRenderer(
         batch.begin()
         visibleChunks.forEach { (_, chunk) ->
             chunk.texture?.let {
-                batch.draw(it, chunk.x.toFloat() * chunkSizeInPx, chunk.y.toFloat() * chunkSizeInPx, chunkSizeInPx.toFloat(), chunkSizeInPx.toFloat())
+                batch.draw(it, chunk.x.toFloat() * chunkSizeInPx, -(chunk.y.toFloat() * chunkSizeInPx), chunkSizeInPx.toFloat(), chunkSizeInPx.toFloat())
             }
         }
         batch.end()
