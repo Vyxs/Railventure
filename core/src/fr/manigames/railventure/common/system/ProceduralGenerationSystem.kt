@@ -13,7 +13,7 @@ class ProceduralGenerationSystem(
     private val map: ProceduralMap
 ) : System(world) {
 
-    private val viewDistance = 1
+    private val viewDistance = 4
 
     override fun update(delta: Float) {
         val chunkToGenerate = mutableListOf<Pair<Int, Int>>()
