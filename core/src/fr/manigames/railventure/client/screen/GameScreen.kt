@@ -29,13 +29,7 @@ class GameScreen : Screen {
     private val assets: Assets = Assets.instance
 
     override fun init(game: Game) {
-        camera = if (Game.USE_ORTHOGRAPHIC_CAMERA) {
-            OrthographicCamera()
-        } else {
-            PerspectiveCamera()
-        }
-        viewport = StretchViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
-
+        setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         systems.addAll(
             listOf(
                 RenderSystem(world, assets, camera),
@@ -50,17 +44,24 @@ class GameScreen : Screen {
         if (Game.USE_PLAYER_CAMERA) {
             systems.add(PlayerCameraSystem(world, camera))
         }
-        if (camera is OrthographicCamera) {
+        systems.forEach(System::init)
+        gameInput.bind()
+    }
+
+    private fun setCamera(orthographic: Boolean) {
+        if (orthographic) {
+            camera = OrthographicCamera()
+            viewport = StretchViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
             (camera as OrthographicCamera).setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
-        } else if (camera is PerspectiveCamera) {
+        } else {
+            camera = PerspectiveCamera()
             camera.position.set(50f, 50f, Metric.CAMERA_HEIGHT)
             camera.lookAt(50f, 50f,0f)
             camera.rotate(30f, 1f, 0f, 0f)
             camera.near = 0f
             camera.far = Metric.CAMERA_HEIGHT_MAX
+            viewport = StretchViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
         }
-        systems.forEach(System::init)
-        gameInput.bind()
     }
 
     override fun show() = systems.forEach(System::show)

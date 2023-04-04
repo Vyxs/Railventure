@@ -15,7 +15,7 @@ class Game : Game() {
     companion object {
         const val DEBUG = true
         const val USE_PLAYER_CAMERA = true
-        const val USE_ORTHOGRAPHIC_CAMERA = false
+        const val USE_ORTHOGRAPHIC_CAMERA = true
 
         val GAME_WIDTH = Metric.GAME_WIDTH
         val GAME_HEIGHT = Metric.GAME_HEIGHT
