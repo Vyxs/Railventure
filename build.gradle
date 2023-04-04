@@ -50,6 +50,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation "com.badlogicgames.gdx-video:gdx-video-lwjgl:1.3.2-SNAPSHOT"
     }
 }
 
@@ -72,6 +73,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation "com.badlogicgames.gdx-video:gdx-video-android:1.3.2-SNAPSHOT"
     }
 }
 
@@ -99,6 +101,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta"
+        implementation "com.badlogicgames.gdx-video:gdx-video:1.3.2-SNAPSHOT"
     }
 }
 

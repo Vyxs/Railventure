@@ -7,7 +7,7 @@ import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.map.base.ChunkLoader
 import fr.manigames.railventure.api.map.generation.ProceduralMap
-import fr.manigames.railventure.client.screen.LoadingScreen
+import fr.manigames.railventure.client.screen.BootScreen
 import fr.manigames.railventure.test.ParallelProceduralMap
 
 class Game : Game() {
@@ -32,7 +32,7 @@ class Game : Game() {
     }
 
     override fun create() {
-        changeScreen(LoadingScreen())
+        changeScreen(BootScreen())
     }
 
     override fun dispose() {
