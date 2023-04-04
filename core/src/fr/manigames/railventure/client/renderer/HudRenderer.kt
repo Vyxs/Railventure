@@ -13,10 +13,10 @@ class HudRenderer : Renderer {
     private val defaultColor = Colors.WHITE
 
     fun renderText(text: String, x: Float, y: Float, color: Color?) {
-        var color = color ?: defaultColor
+        val c = color ?: defaultColor
 
         batch.begin()
-        font.setColor(color.r, color.g, color.b, color.a)
+        font.setColor(c.r, c.g, c.b, c.a)
         font.draw(batch, text, x, y)
         batch.end()
     }
