@@ -6,6 +6,7 @@ import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.map.base.ChunkLoader
+import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.client.screen.LoadingScreen
 import fr.manigames.railventure.test.ParallelProceduralMap
@@ -14,7 +15,7 @@ class Game : Game() {
 
     companion object {
         const val DEBUG = true
-        const val USE_PLAYER_CAMERA = false
+        const val USE_PLAYER_CAMERA = true
 
         val GAME_WIDTH = Metric.GAME_WIDTH
         val GAME_HEIGHT = Metric.GAME_HEIGHT
@@ -22,7 +23,7 @@ class Game : Game() {
 
     private val chunkLoader: ChunkLoader = fr.manigames.railventure.client.map.ChunkLoader(Assets.instance)
 
-    val map: RenderableMap = ParallelProceduralMap(chunkLoader::loadChunk)
+    val map: ProceduralMap = ParallelProceduralMap(chunkLoader::loadChunk)
 
     fun changeScreen(screen: Screen) {
         this.screen?.dispose()

@@ -59,12 +59,16 @@ abstract class ProceduralMap(
     }
 
     /**
-     * Generate a chunk.
+     * Generate a chunk. If the chunk is already generated, it will not be generated again unless the regenerate
+     * parameter is set to true.
      *
      * @param x The x position of the chunk.
      * @param y The y position of the chunk.
+     * @param regenerate If the chunk should be regenerated if it is already generated.
      */
-    override fun generateChunk(x: Int, y: Int) {
+    override fun generateChunk(x: Int, y: Int, regenerate: Boolean) {
+        if (hasChunk(x, y) && !regenerate)
+            return
         val chunk = RenderableChunk(x, y)
         val size = Pair(Metric.MAP_CHUNK_SIZE * x, Metric.MAP_CHUNK_SIZE * y)
         for (tileX in 0 until Metric.MAP_CHUNK_SIZE)

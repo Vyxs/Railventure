@@ -68,7 +68,7 @@ class ParallelProceduralMap(
                         abs(it.temperature - temperatureValue)
             } ?: ocean
 
-            if (altitude < -0.1) {
+            if (altitude < -0.2) {
                 biome = ocean
             } else if (altitude < 0 && temperature > 0) {
                 biome = tropicalOcean

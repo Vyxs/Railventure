@@ -38,4 +38,21 @@ data class ChunkArea(
     fun contains(x: Int, y: Int): Boolean {
         return x in x1..y1 && y in x2..y2
     }
+
+    companion object {
+
+        /**
+         * Create a new chunk area from the given chunk position and the distance.
+         * The distance is the number of chunks around the given chunk position.
+         * For example, if the distance is 5, the area will be 11x11 chunks.
+         *
+         * @param x The x coordinate of the chunk
+         * @param y The y coordinate of the chunk
+         * @param distance The distance around the chunk position
+         * @return The chunk area
+         **/
+        fun fromCenter(x: Int, y: Int, distance: Int): ChunkArea {
+            return ChunkArea(x - distance, y - distance, x + distance, y + distance)
+        }
+    }
 }
