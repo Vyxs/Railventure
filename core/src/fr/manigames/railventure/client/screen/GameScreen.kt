@@ -20,7 +20,7 @@ import fr.manigames.railventure.test.TestSystem
 
 class GameScreen : Screen {
 
-    private val camera: OrthographicCamera = OrthographicCamera()
+    private val camera: PerspectiveCamera = PerspectiveCamera()
     private val viewport: StretchViewport = StretchViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
     private val world: World = World()
     private val systems: LinkedHashSet<System> = linkedSetOf()
