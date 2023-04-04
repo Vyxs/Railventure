@@ -1,109 +1,41 @@
 package fr.manigames.railventure
 
-import com.badlogic.gdx.ApplicationListener
-import com.badlogic.gdx.Gdx
-
-import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT
-import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MAX
-import fr.manigames.railventure.api.core.R
-import fr.manigames.railventure.api.graphics.display.Ratio
-import fr.manigames.railventure.client.system.RenderSystem
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.client.input.GameInput
-import fr.manigames.railventure.client.system.PlayerCameraSystem
-import fr.manigames.railventure.client.system.PlayerControllerSystem
-import fr.manigames.railventure.common.system.PhysicSystem
-import fr.manigames.railventure.test.TestSystem
-import java.util.logging.Logger
+import com.badlogic.gdx.Game
+import fr.manigames.railventure.api.core.Render
+import fr.manigames.railventure.api.graphics.screen.Screen
+import fr.manigames.railventure.api.map.base.ChunkLoader
+import fr.manigames.railventure.api.map.generation.ProceduralMap
+import fr.manigames.railventure.client.screen.LoadingScreen
+import fr.manigames.railventure.test.ParallelProceduralMap
 
-class Game : ApplicationListener {
+class Game : Game() {
 
     companion object {
         const val DEBUG = true
-        const val USE_PLAYER_CAMERA = false
+        const val USE_PLAYER_CAMERA = true
 
         val GAME_WIDTH = Metric.GAME_WIDTH
         val GAME_HEIGHT = Metric.GAME_HEIGHT
     }
 
-    private lateinit var camera: PerspectiveCamera
-    private lateinit var viewport: StretchViewport
-    private val assets = Assets()
-    private lateinit var world: World
-    private val systems: LinkedHashSet<System> = linkedSetOf()
-    private val logger: Logger = Logger.getLogger(Game::class.java.name)
-    private val gameInput: GameInput = GameInput()
+    private val chunkLoader: ChunkLoader = fr.manigames.railventure.client.map.ChunkLoader(Assets.instance)
+
+    val map: ProceduralMap = ParallelProceduralMap(chunkLoader::loadChunk)
+
+    fun changeScreen(screen: Screen) {
+        this.screen?.dispose()
+        screen.init(this)
+        setScreen(screen)
+    }
 
     override fun create() {
-        world = World()
-        camera = PerspectiveCamera(67f, GAME_WIDTH, GAME_HEIGHT)
-        viewport = StretchViewport(GAME_WIDTH, GAME_HEIGHT, camera)
-        systems.addAll(
-            listOf(
-                RenderSystem(world, assets, camera),
-                PhysicSystem(world),
-                PlayerControllerSystem(world)
-            )
-        )
-        if (DEBUG) {
-            systems.add(TestSystem(world, assets, camera, viewport, logger, !USE_PLAYER_CAMERA, gameInput))
-        }
-        if (USE_PLAYER_CAMERA) {
-            systems.add(PlayerCameraSystem(world, camera))
-        }
-        init()
-    }
-
-    private fun init() {
-        assets.load(R::assetLoadingFunction)
-
-        camera.position.set(50f, 50f, CAMERA_HEIGHT)
-        camera.lookAt(50f, 50f,0f)
-        camera.rotate(30f, 1f, 0f, 0f)
-        camera.near = 0f
-        camera.far = CAMERA_HEIGHT_MAX
-       // camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
-        assets.finishLoading()
-        systems.forEach(System::init)
-        gameInput.bind()
-    }
-
-    override fun resize(width: Int, height: Int) {
-        viewport.update(width, height)
-        systems.forEach { system ->
-            system.resize(width, height)
-        }
-    }
-
-    override fun render() {
-        update()
-        systems.forEach { system ->
-            system.render(Gdx.graphics.deltaTime)
-        }
-    }
-
-    override fun pause() {
-        systems.forEach(System::pause)
-    }
-
-    override fun resume() {
-        systems.forEach(System::resume)
-    }
-
-    private fun update() {
-        assets.update()
-        systems.forEach { system ->
-            system.update(Gdx.graphics.deltaTime)
-        }
+        changeScreen(LoadingScreen())
     }
 
     override fun dispose() {
-        assets.dispose()
-        systems.forEach(System::dispose)
+        Assets.instance.dispose()
+        Render.dispose()
     }
 }

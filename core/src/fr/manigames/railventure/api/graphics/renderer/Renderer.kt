@@ -7,4 +7,5 @@ interface Renderer : Disposable {
 
     fun setProjectionMatrix(projectionMatrix: Matrix4?)
 
+    override fun dispose() = Unit
 }

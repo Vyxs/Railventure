@@ -4,16 +4,16 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.map.base.ChunkLoader
 
-class ChunkLoader(
+open class ChunkLoader(
     private val assets: Assets
-) {
+) : ChunkLoader {
 
     private val mutableMap = mutableMapOf<TileType, Pixmap>()
 
-    fun loadChunk(chunk: RenderableChunk) {
+    override fun loadChunk(chunk: RenderableChunk) {
         if (chunk.isLoading.compareAndSet(false, true)) {
             generateChunkTexture(chunk, assets)
             chunk.isLoading.set(false)
@@ -25,20 +25,42 @@ class ChunkLoader(
      *
      * @param assets The assets manager
      **/
-    private fun generateChunkTexture(chunk: RenderableChunk, assets: Assets) {
+    protected open fun generateChunkTexture(chunk: RenderableChunk, assets: Assets) {
+        val pixmap = makePixmap(chunk, assets)
+        applyPixmapToChunk(chunk, pixmap)
+    }
+
+    /**
+     * Cache the texture and dispose pixmap.
+     *
+     * @param chunk The chunk to cache the texture
+     * @param pixmap The pixmap to create the texture
+     **/
+    protected open fun applyPixmapToChunk(chunk: RenderableChunk, pixmap: Pixmap) {
+        chunk.texture = Texture(pixmap)
+        pixmap.dispose()
+    }
+
+    /**
+     * Make the chunk pixmap
+     *
+     * @param chunk The chunk to make the pixmap from
+     * @param assets The assets manager
+     * @return The chunk pixmap
+     **/
+    protected open fun makePixmap(chunk: RenderableChunk, assets: Assets) : Pixmap {
         val chunkSizeInPx = (Metric.MAP_CHUNK_SIZE * Metric.TILE_SIZE).toInt()
         val pixmap = Pixmap(chunkSizeInPx, chunkSizeInPx, Pixmap.Format.RGBA8888)
         chunk.getTiles().forEachIndexed { y, column ->
             column.forEachIndexed { x, tileLayer ->
                 tileLayer.map(TileType::fromCode).forEach { tileType ->
-                    assets.getTexture(tileType.assetKey)?.let {
+                    assets.getTexture(tileType.texture.path)?.let {
                         drawTextureToChunkPixmap(tileType, it, pixmap, x, y)
                     }
                 }
             }
         }
-        chunk.texture = Texture(pixmap)
-        pixmap.dispose()
+        return pixmap
     }
 
     /**

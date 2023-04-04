@@ -1,9 +1,84 @@
 sourceCompatibility = 1.7
 dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.6'
+    implementation 'org.codehaus.groovy:groovy-json:3.0.16'
 }
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
+
+tasks.register("generateRessourcesFromAssets", GenerateRessourcesFromAssets) {
+    group = "datagen"
+    description = "Generate R.kt from assets/datagen/res.json"
+}
+
+import groovy.json.JsonSlurper
+
+abstract class GenerateRessourcesFromAssets extends DefaultTask {
+
+    @TaskAction
+    def run() {
+        println 'Generating ressources from assets...'
+        def resFile = new File(project.projectDir, 'datagen/res.json')
+        def destDir = new File(project.projectDir, 'src/fr/manigames/railventure/generated/')
+        def res = new JsonSlurper().parse(resFile)
+        def stringBuilder = new StringBuilder()
+
+        writeBegin(stringBuilder)
+        def hasTextures = writeTextures(res, stringBuilder)
+        def hasSounds = writeSounds(res, stringBuilder)
+        writeLoadingConsumer(stringBuilder, hasTextures, hasSounds)
+        writeEnd(stringBuilder)
+
+        destDir.mkdirs()
+        new File(destDir, 'R.kt').text = stringBuilder.toString()
+    }
+
+    static def writeBegin(stringBuilder) {
+        stringBuilder.append("package fr.manigames.railventure.generated\n\n" +
+                "/*\n" +
+                "* Auto-generated file, do not edit. Use datagen/generateRessourcesFromAssets task to update this file.\n" +
+                "*/\n" +
+                "object R {\n\n" +
+                "\tinterface Resource {\n" +
+                "\t\tval path: String\n" +
+                "\t}\n\n")
+    }
+
+    static def writeTextures(res, stringBuilder) {
+        if (!(res.textures instanceof List)) return false
+        write(stringBuilder, "Texture", res.textures)
+        return true
+    }
+
+    static def writeSounds(res, stringBuilder) {
+        if (!(res.sounds instanceof List)) return false
+        write(stringBuilder, "Sound", res.sounds)
+        return true
+    }
+
+    static def write(stringBuilder, name, res) {
+        stringBuilder.append("\tenum class $name(\n\t\toverride val path: String\n\t) : Resource {\n")
+        res.each { sound ->
+            stringBuilder.append("\t\t${sound.name.toUpperCase()}(\"${sound.path}\"),\n")
+        }
+        stringBuilder.append("\t}\n\n")
+    }
+
+    static def writeLoadingConsumer(stringBuilder, hasTextures, hasSounds) {
+        stringBuilder.append("\tfun loadingConsumer(am: com.badlogic.gdx.assets.AssetManager) {\n" +
+                "${hasTextures ? getLoading("Texture", "com.badlogic.gdx.graphics.Texture::class.java") : ""}" +
+                "${hasSounds ? getLoading("Sound", "com.badlogic.gdx.audio.Sound::class.java") : ""}" +
+                "\t}\n\n")
+    }
+
+    static def getLoading(name, clazz) {
+        return "\t\t${name}.values().filter { it.path.isNotBlank() }.forEach { am.load(it.path, ${clazz}) }\n"
+    }
+
+    static def writeEnd(stringBuilder) {
+        stringBuilder.append("}")
+    }
+}

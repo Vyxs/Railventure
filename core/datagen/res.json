@@ -1,0 +1,29 @@
+{
+  "textures" : [
+    {"name": "air", "path": ""},
+    {"name": "grass", "path": "texture/tile/grass.png"},
+    {"name": "tall_grass", "path": "texture/tile/tall_grass.png"},
+    {"name": "flower_grass", "path": "texture/tile/flower_grass.png"},
+    {"name": "dirt", "path": "texture/tile/dirt.png"},
+    {"name": "sand", "path": "texture/tile/sand.png"},
+    {"name": "clear_sand", "path": "texture/tile/clear_sand.png"},
+    {"name": "water", "path": "texture/tile/water.png"},
+    {"name": "deep_water", "path": "texture/tile/deep_water.png"},
+    {"name": "stone", "path": "texture/tile/stone.png"},
+    {"name": "snowy_stone", "path": "texture/tile/snowy_stone.png"},
+    {"name": "snow", "path": "texture/tile/snow.png"},
+    {"name": "mossy_stone", "path": "texture/tile/mossy_stone.png"},
+    {"name": "rail_v", "path": "texture/rail/rail-v.png"},
+    {"name": "rail_h", "path": "texture/rail/rail-h.png"},
+    {"name": "rail_x", "path": "texture/rail/rail-x.png"},
+    {"name": "rail_top_left", "path": "texture/rail/rail-top-left.png"},
+    {"name": "rail_top_right", "path": "texture/rail/rail-top-right.png"},
+    {"name": "rail_bot_left", "path": "texture/rail/rail-bot-left.png"},
+    {"name": "rail_bot_right", "path": "texture/rail/rail-bot-right.png"},
+    {"name": "rail_t_bot", "path": "texture/rail/rail-t-bot.png"},
+    {"name": "rail_t_top", "path": "texture/rail/rail-t-top.png"},
+    {"name": "rail_t_left", "path": "texture/rail/rail-t-left.png"},
+    {"name": "rail_t_right", "path": "texture/rail/rail-t-right.png"},
+    {"name": "wagon", "path": "texture/wagon/wagon.png"}
+  ]
+}

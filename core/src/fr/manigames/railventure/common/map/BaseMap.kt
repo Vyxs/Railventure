@@ -2,8 +2,8 @@ package fr.manigames.railventure.common.map
 
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.gameobject.TileType
-import fr.manigames.railventure.api.map.Map
-import fr.manigames.railventure.api.map.MapChunk
+import fr.manigames.railventure.api.map.base.Map
+import fr.manigames.railventure.api.map.base.MapChunk
 
 open class BaseMap : Map<TileType> {
 
@@ -57,7 +57,14 @@ open class BaseMap : Map<TileType> {
         } else false
     }
 
-    override fun setChunk(x: Int, y: Int, chunk: MapChunk<TileType>) {
-        chunks[toChunkId(x, y)] = chunk
+    /**
+     * Set the chunk at the given position. You must ensure that the chunk coordinates are the same as the chunk position parameter.
+     *
+     * @param x The x position of the chunk
+     * @param y The y position of the chunk
+     * @param chunk The chunk to set
+     **/
+    override fun setChunk(chunk: MapChunk<TileType>) {
+        chunks[toChunkId(chunk.getChunkX(), chunk.getChunkY())] = chunk
     }
 }
