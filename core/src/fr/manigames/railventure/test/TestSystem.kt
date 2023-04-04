@@ -1,5 +1,6 @@
 package fr.manigames.railventure.test
 
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.PerspectiveCamera
 import fr.manigames.railventure.api.entity.EntityBuilder
 import fr.manigames.railventure.api.system.System
@@ -17,7 +18,7 @@ import fr.manigames.railventure.generated.R
  **/
 class TestSystem(
     world: World,
-    private val camera: PerspectiveCamera,
+    private val camera: Camera,
     private val useDebugCamera: Boolean,
     private val inputRegistry: GameInput,
     private val map: RenderableMap,

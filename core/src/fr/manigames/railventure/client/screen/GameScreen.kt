@@ -1,6 +1,7 @@
 package fr.manigames.railventure.client.screen
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.utils.viewport.StretchViewport
@@ -20,14 +21,21 @@ import fr.manigames.railventure.test.TestSystem
 
 class GameScreen : Screen {
 
-    private val camera: PerspectiveCamera = PerspectiveCamera()
-    private val viewport: StretchViewport = StretchViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
+    private lateinit var camera: Camera
+    private lateinit var viewport: StretchViewport
     private val world: World = World()
     private val systems: LinkedHashSet<System> = linkedSetOf()
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
 
     override fun init(game: Game) {
+        camera = if (Game.USE_ORTHOGRAPHIC_CAMERA) {
+            OrthographicCamera()
+        } else {
+            PerspectiveCamera()
+        }
+        viewport = StretchViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
+
         systems.addAll(
             listOf(
                 RenderSystem(world, assets, camera),
@@ -43,7 +51,7 @@ class GameScreen : Screen {
             systems.add(PlayerCameraSystem(world, camera))
         }
         if (camera is OrthographicCamera) {
-            camera.setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
+            (camera as OrthographicCamera).setToOrtho(false, viewport.worldWidth, viewport.worldHeight)
         } else if (camera is PerspectiveCamera) {
             camera.position.set(50f, 50f, Metric.CAMERA_HEIGHT)
             camera.lookAt(50f, 50f,0f)
