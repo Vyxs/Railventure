@@ -27,7 +27,7 @@ class TestMap(
 
         for (i in -area.first..area.first) {
             for (j in -area.second..area.second) {
-                setChunk(i, j, makeChunk(i, j))
+                setChunk(makeChunk(i, j))
                 current++
                 generationProgress.set(current.toFloat() / total)
             }

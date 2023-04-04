@@ -1,9 +1,23 @@
-package fr.manigames.railventure.api.map
+package fr.manigames.railventure.api.map.base
 
 /**
  * A chunk of the map. It contains a 2D array of tiles
  */
 interface MapChunk<V> {
+
+    /**
+     * Get the x position of the chunk
+     *
+     * @return The x position of the chunk
+     */
+    fun getChunkX(): Int
+
+    /**
+     * Get the y position of the chunk
+     *
+     * @return The y position of the chunk
+     */
+    fun getChunkY(): Int
 
     /**
      * Get the tile at the given position

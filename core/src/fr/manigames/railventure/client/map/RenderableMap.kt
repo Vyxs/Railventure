@@ -26,7 +26,7 @@ abstract class RenderableMap(
      * @param x The x position of the chunk
      * @param y The y position of the chunk
      */
-    open fun generateChunk(x: Int, y: Int) = Unit
+    open fun generateChunk(x: Int, y: Int, regenerate: Boolean = false) = Unit
 
     /**
      * Load all chunks
@@ -46,7 +46,10 @@ abstract class RenderableMap(
      **/
     fun loadChunk(x: Int, y: Int) {
         if (isChunkLoaded(x, y)) return
-        getChunk(x, y)?.let { it as RenderableChunk }?.let(chunkLoader)
+        getChunk(x, y)?.let { it as RenderableChunk }?.let {
+            chunkLoader(it)
+            it.setClean()
+        }
     }
 
     /**
@@ -64,17 +67,6 @@ abstract class RenderableMap(
      **/
     fun isChunkLoaded(x: Int, y: Int): Boolean {
         return getChunk(x, y)?.let { it as RenderableChunk }?.isLoaded() ?: false
-    }
-
-    /**
-     * Return true if the chunk at the given position is loaded. The chunk is loaded if it exists and if it has a texture.
-     *
-     * @param x The x position of the chunk
-     * @param y The y position of the chunk
-     * @return True if the chunk is loaded
-     **/
-    override fun hasChunk(x: Int, y: Int): Boolean {
-        return super.hasChunk(x, y) && getChunk(x, y)?.let { it as RenderableChunk }?.isLoaded() ?: false
     }
 
     /**

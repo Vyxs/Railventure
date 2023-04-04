@@ -1,15 +1,15 @@
 package fr.manigames.railventure.client.renderer
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 
 class TileRenderer(private val asset: Assets) : Renderer {
 
-    private val batch = SpriteBatch()
+    private val batch = Render.spriteBatch
 
     fun renderTile(type: TileType, x: Int, y: Int) {
         asset.getTexture(type.texture.path)?.let { texture ->
@@ -30,10 +30,4 @@ class TileRenderer(private val asset: Assets) : Renderer {
     override fun setProjectionMatrix(projectionMatrix: Matrix4?) {
         batch.projectionMatrix = projectionMatrix
     }
-
-    override fun dispose() {
-        batch.dispose()
-    }
-
-
 }

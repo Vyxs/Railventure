@@ -7,16 +7,15 @@ import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.system.System
 import fr.manigames.railventure.api.world.World
 import fr.manigames.railventure.client.input.GameInput
-import fr.manigames.railventure.client.map.ChunkLoader
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.common.system.PhysicSystem
+import fr.manigames.railventure.common.system.ProceduralGenerationSystem
 import fr.manigames.railventure.test.TestSystem
 
 class GameScreen : Screen {
@@ -27,18 +26,18 @@ class GameScreen : Screen {
     private val systems: LinkedHashSet<System> = linkedSetOf()
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
-    private val logger = Logger
 
     override fun init(game: Game) {
         systems.addAll(
             listOf(
                 RenderSystem(world, assets, camera),
                 PhysicSystem(world),
-                PlayerControllerSystem(world)
+                PlayerControllerSystem(world),
+                ProceduralGenerationSystem(world, game.map)
             )
         )
         if (Game.DEBUG) {
-            systems.add(TestSystem(world, assets, camera, viewport, logger, !Game.USE_PLAYER_CAMERA, gameInput, game.map))
+            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput, game.map))
         }
         if (Game.USE_PLAYER_CAMERA) {
             systems.add(PlayerCameraSystem(world, camera))
