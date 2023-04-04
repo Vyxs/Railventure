@@ -1,4 +1,4 @@
-package fr.manigames.railventure.api.map.procedural
+package fr.manigames.railventure.api.map.generation
 
 /**
  * The configuration of the procedural map

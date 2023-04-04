@@ -1,7 +1,7 @@
-package fr.manigames.railventure.api.map.procedural
+package fr.manigames.railventure.api.map.generation
 
 import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.map.generation.OpenSimplexNoise
+import fr.manigames.railventure.api.map.noise.OpenSimplexNoise
 import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
 import java.util.concurrent.atomic.AtomicReference

@@ -1,9 +1,9 @@
 package fr.manigames.railventure.test
 
 import fr.manigames.railventure.api.gameobject.TileType
-import fr.manigames.railventure.api.map.procedural.ProceduralMap
-import fr.manigames.railventure.api.map.procedural.ProceduralMapConfig
-import fr.manigames.railventure.api.map.procedural.ProceduralTileHandler
+import fr.manigames.railventure.api.map.generation.ProceduralMap
+import fr.manigames.railventure.api.map.generation.ProceduralMapConfig
+import fr.manigames.railventure.api.map.generation.ProceduralTileHandler
 import fr.manigames.railventure.client.map.RenderableChunk
 
 class TestProceduralMap(

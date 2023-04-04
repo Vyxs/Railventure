@@ -1,4 +1,4 @@
-package fr.manigames.railventure.api.map.generation
+package fr.manigames.railventure.api.map.noise
 
 /**
  * Interface for classes producing some kind of procedural noise,
