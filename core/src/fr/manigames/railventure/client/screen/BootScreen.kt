@@ -40,7 +40,11 @@ class BootScreen : Screen {
     }
 
     override fun dispose() {
-        videoPlayer.dispose()
+        try {
+            videoPlayer.dispose()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         audio.dispose()
     }
 }
