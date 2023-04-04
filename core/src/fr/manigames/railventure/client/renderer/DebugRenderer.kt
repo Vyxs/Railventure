@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.profiling.GLProfiler
@@ -14,6 +15,7 @@ import fr.manigames.railventure.api.component.ComponentType
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.renderer.Renderer
+import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
 import fr.manigames.railventure.api.util.MathUtil.toRoundedString
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.api.world.World
@@ -66,16 +68,18 @@ class DebugRenderer(
     }
 
     private fun renderGrid() {
-        if (camera !is OrthographicCamera)
-            return
         shapeRenderer.projectionMatrix = camera.combined
         val tileSize = Metric.TILE_SIZE
         val offset = tileSize
-
-        val startX = camera.position.x - (camera.viewportWidth * camera.zoom) / 2 - offset
-        val startY = camera.position.y - (camera.viewportHeight * camera.zoom) / 2 - offset
-        val endX = camera.position.x + (camera.viewportWidth * camera.zoom) / 2 + offset
-        val endY = camera.position.y + (camera.viewportHeight * camera.zoom) / 2 + offset
+        val zoom = when (camera) {
+            is OrthographicCamera -> camera.zoom
+            is PerspectiveCamera -> normalizeZ(camera.position.z)
+            else -> 1f
+        }
+        val startX = camera.position.x - (camera.viewportWidth * zoom) / 2 - offset
+        val startY = camera.position.y - (camera.viewportHeight * zoom) / 2 - offset
+        val endX = camera.position.x + (camera.viewportWidth * zoom) / 2 + offset
+        val endY = camera.position.y + (camera.viewportHeight * zoom) / 2 + offset
 
         val startXGrid = (startX / tileSize).toInt()
         val startYGrid = (startY / tileSize).toInt()
@@ -93,17 +97,20 @@ class DebugRenderer(
     }
 
     private fun renderChunksGrid() {
-        if (camera !is OrthographicCamera)
-            return
         val chunkSize = Metric.MAP_CHUNK_SIZE
         val tileSize = Metric.TILE_SIZE
         val size = chunkSize * tileSize
         shapeRenderer.projectionMatrix = camera.combined
         val offset = size
-        val startX = camera.position.x - (camera.viewportWidth * camera.zoom) / 2 - offset
-        val startY = camera.position.y - (camera.viewportHeight * camera.zoom) / 2 - offset
-        val endX = camera.position.x + (camera.viewportWidth * camera.zoom) / 2 + offset
-        val endY = camera.position.y + (camera.viewportHeight * camera.zoom) / 2 + offset
+        val zoom = when (camera) {
+            is OrthographicCamera -> camera.zoom
+            is PerspectiveCamera -> normalizeZ(camera.position.z)
+            else -> 1f
+        }
+        val startX = camera.position.x - (camera.viewportWidth * zoom) / 2 - offset
+        val startY = camera.position.y - (camera.viewportHeight * zoom) / 2 - offset
+        val endX = camera.position.x + (camera.viewportWidth * zoom) / 2 + offset
+        val endY = camera.position.y + (camera.viewportHeight * zoom) / 2 + offset
         val startXGrid = (startX / size).toInt()
         val startYGrid = (startY / size).toInt()
         val endXGrid = (endX / size).toInt()

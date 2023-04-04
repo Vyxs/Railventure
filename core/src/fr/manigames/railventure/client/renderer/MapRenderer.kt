@@ -14,6 +14,7 @@ import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
+import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
@@ -85,9 +86,6 @@ class MapRenderer(
         }
         removeUnnecessaryChunks(visible)
     }
-
-    private fun normalizeZ(z: Float) : Float =
-        (z - CAMERA_HEIGHT_MIN) / (CAMERA_HEIGHT_MAX - CAMERA_HEIGHT_MIN) * (CAMERA_ZOOM_MAX - CAMERA_ZOOM_MIN) + CAMERA_ZOOM_MIN
 
     private fun removeUnnecessaryChunks(visible: ChunkArea) {
         visibleChunks = visibleChunks.filter { (_, chunk) ->
