@@ -1,12 +1,12 @@
 package fr.manigames.railventure.ecs_benchmark
 
-import fr.manigames.railventure.api.component.ComponentType
-import fr.manigames.railventure.api.entity.Entity
-import fr.manigames.railventure.api.entity.EntityBuilder
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.common.component.TextureComponent
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import fr.manigames.railventure.api.ecs.component.ComponentType
+import fr.manigames.railventure.api.ecs.entity.Entity
+import fr.manigames.railventure.api.ecs.entity.EntityBuilder
+import fr.manigames.railventure.api.ecs.system.System
+import fr.manigames.railventure.api.ecs.world.World
+import fr.manigames.railventure.common.ecs.component.TextureComponent
+import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
 import org.openjdk.jmh.annotations.*
 import java.util.concurrent.TimeUnit
 
