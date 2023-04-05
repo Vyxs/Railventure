@@ -1,12 +1,12 @@
-package fr.manigames.railventure.common.system
+package fr.manigames.railventure.common.ecs.system
 
 import fr.manigames.railventure.api.ecs.component.ComponentType
 import fr.manigames.railventure.api.core.Metric.PHYSIC_FRICTION
 import fr.manigames.railventure.api.core.Metric.PHYSIC_MIN_DELTA
 import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.common.component.MoveableComponent
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.MoveableComponent
+import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
 
 class PhysicSystem(world: World) : System(world) {
 

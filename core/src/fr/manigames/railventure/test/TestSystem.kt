@@ -8,9 +8,12 @@ import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.component.*
-import fr.manigames.railventure.common.composition.PlayerComposition
+import fr.manigames.railventure.common.ecs.composition.PlayerComposition
 import fr.manigames.railventure.client.renderer.DebugRenderer
 import fr.manigames.railventure.client.renderer.MapRenderer
+import fr.manigames.railventure.common.ecs.component.MoveableComponent
+import fr.manigames.railventure.common.ecs.component.TextureComponent
+import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
 import fr.manigames.railventure.generated.R
 
 /**

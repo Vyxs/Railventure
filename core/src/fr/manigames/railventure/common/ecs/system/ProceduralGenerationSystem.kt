@@ -1,4 +1,4 @@
-package fr.manigames.railventure.common.system
+package fr.manigames.railventure.common.ecs.system
 
 import fr.manigames.railventure.api.ecs.component.ComponentType
 import fr.manigames.railventure.api.map.generation.ProceduralMap
@@ -6,7 +6,7 @@ import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.util.PosUtil
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
 
 class ProceduralGenerationSystem(
     world: World,

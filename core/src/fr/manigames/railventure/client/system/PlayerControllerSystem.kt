@@ -8,8 +8,8 @@ import fr.manigames.railventure.api.ecs.entity.Entity
 import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.util.MathUtil.angleToNormalizedVector
 import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.common.component.MoveableComponent
-import fr.manigames.railventure.common.component.PlayerComponent
+import fr.manigames.railventure.common.ecs.component.MoveableComponent
+import fr.manigames.railventure.common.ecs.component.PlayerComponent
 
 class PlayerControllerSystem(world: World) : System(world) {
 
@@ -56,7 +56,8 @@ class PlayerControllerSystem(world: World) : System(world) {
                 moveableComponent.angularAcceleration,
                 moveableComponent.maxSpeed,
                 moveableComponent.maxAngularSpeed
-            ))
+            )
+            )
         }
     }
 

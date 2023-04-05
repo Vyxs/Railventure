@@ -19,9 +19,9 @@ import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
 import fr.manigames.railventure.api.util.MathUtil.toRoundedString
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.common.component.MoveableComponent
-import fr.manigames.railventure.common.component.PlayerComponent
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.MoveableComponent
+import fr.manigames.railventure.common.ecs.component.PlayerComponent
+import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
 
 
 class DebugRenderer(

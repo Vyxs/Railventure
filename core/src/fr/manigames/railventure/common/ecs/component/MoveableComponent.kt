@@ -1,4 +1,4 @@
-package fr.manigames.railventure.common.component
+package fr.manigames.railventure.common.ecs.component
 
 import com.badlogic.gdx.math.Vector2
 import fr.manigames.railventure.api.ecs.component.Component

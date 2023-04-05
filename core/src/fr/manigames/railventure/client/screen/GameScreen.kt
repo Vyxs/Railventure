@@ -16,8 +16,8 @@ import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.client.system.RenderSystem
-import fr.manigames.railventure.common.system.PhysicSystem
-import fr.manigames.railventure.common.system.ProceduralGenerationSystem
+import fr.manigames.railventure.common.ecs.system.PhysicSystem
+import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
 import fr.manigames.railventure.test.TestSystem
 
 class GameScreen : Screen {

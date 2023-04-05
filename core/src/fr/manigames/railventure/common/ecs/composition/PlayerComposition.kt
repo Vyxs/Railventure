@@ -1,11 +1,11 @@
-package fr.manigames.railventure.common.composition
+package fr.manigames.railventure.common.ecs.composition
 
 import fr.manigames.railventure.api.ecs.component.Component
 import fr.manigames.railventure.api.ecs.component.Composition
-import fr.manigames.railventure.common.component.MoveableComponent
-import fr.manigames.railventure.common.component.PlayerComponent
-import fr.manigames.railventure.common.component.TextureComponent
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.MoveableComponent
+import fr.manigames.railventure.common.ecs.component.PlayerComponent
+import fr.manigames.railventure.common.ecs.component.TextureComponent
+import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
 import fr.manigames.railventure.generated.R
 import java.util.*
 
