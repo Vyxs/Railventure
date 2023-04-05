@@ -1,4 +1,4 @@
-package fr.manigames.railventure.api.component
+package fr.manigames.railventure.api.ecs.component
 
 interface Composition {
 

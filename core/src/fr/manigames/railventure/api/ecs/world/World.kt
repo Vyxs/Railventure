@@ -1,8 +1,8 @@
-package fr.manigames.railventure.api.world
+package fr.manigames.railventure.api.ecs.world
 
-import fr.manigames.railventure.api.component.Component
-import fr.manigames.railventure.api.component.ComponentType
-import fr.manigames.railventure.api.entity.Entity
+import fr.manigames.railventure.api.ecs.component.Component
+import fr.manigames.railventure.api.ecs.component.ComponentType
+import fr.manigames.railventure.api.ecs.entity.Entity
 
 class World {
 

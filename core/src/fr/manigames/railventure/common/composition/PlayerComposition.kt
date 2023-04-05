@@ -1,7 +1,7 @@
 package fr.manigames.railventure.common.composition
 
-import fr.manigames.railventure.api.component.Component
-import fr.manigames.railventure.api.component.Composition
+import fr.manigames.railventure.api.ecs.component.Component
+import fr.manigames.railventure.api.ecs.component.Composition
 import fr.manigames.railventure.common.component.MoveableComponent
 import fr.manigames.railventure.common.component.PlayerComponent
 import fr.manigames.railventure.common.component.TextureComponent

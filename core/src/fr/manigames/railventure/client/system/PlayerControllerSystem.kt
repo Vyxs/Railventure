@@ -2,12 +2,12 @@ package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
-import fr.manigames.railventure.api.component.ComponentType
+import fr.manigames.railventure.api.ecs.component.ComponentType
 import fr.manigames.railventure.api.core.Metric.PHYSIC_PLAYER_ACCELERATION
-import fr.manigames.railventure.api.entity.Entity
-import fr.manigames.railventure.api.system.System
+import fr.manigames.railventure.api.ecs.entity.Entity
+import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.util.MathUtil.angleToNormalizedVector
-import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.common.component.MoveableComponent
 import fr.manigames.railventure.common.component.PlayerComponent
 

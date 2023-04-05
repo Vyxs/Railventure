@@ -2,12 +2,12 @@ package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
-import fr.manigames.railventure.api.component.ComponentType
+import fr.manigames.railventure.api.ecs.component.ComponentType
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM
-import fr.manigames.railventure.api.entity.Entity
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.api.ecs.entity.Entity
+import fr.manigames.railventure.api.ecs.system.System
+import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.common.component.PlayerComponent
 import fr.manigames.railventure.common.component.WorldPositionComponent
 

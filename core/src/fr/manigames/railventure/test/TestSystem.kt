@@ -2,9 +2,9 @@ package fr.manigames.railventure.test
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.PerspectiveCamera
-import fr.manigames.railventure.api.entity.EntityBuilder
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.api.ecs.entity.EntityBuilder
+import fr.manigames.railventure.api.ecs.system.System
+import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.component.*
@@ -55,7 +55,8 @@ class TestSystem(
         world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_H.path), WorldPositionComponent(3f, 1f))
         world.addEntity(EntityBuilder.make(), TextureComponent(R.Texture.RAIL_TOP_RIGHT.path), WorldPositionComponent(2f, 1f))
 
-        world.addEntity(EntityBuilder.make(), PlayerComposition(
+        world.addEntity(
+            EntityBuilder.make(), PlayerComposition(
             worldPosition = WorldPositionComponent(2f, 2f),
             moveable = MoveableComponent(
                 maxSpeed = 5f,

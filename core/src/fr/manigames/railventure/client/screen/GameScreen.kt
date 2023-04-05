@@ -10,8 +10,8 @@ import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.api.ecs.system.System
+import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem

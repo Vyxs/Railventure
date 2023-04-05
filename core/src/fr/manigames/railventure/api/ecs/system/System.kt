@@ -1,6 +1,6 @@
-package fr.manigames.railventure.api.system
+package fr.manigames.railventure.api.ecs.system
 
-import fr.manigames.railventure.api.world.World
+import fr.manigames.railventure.api.ecs.world.World
 
 /**
  * A system is a part of the game logic.

@@ -1,4 +1,4 @@
-package fr.manigames.railventure.api.entity
+package fr.manigames.railventure.api.ecs.entity
 
 object EntityBuilder {
 
