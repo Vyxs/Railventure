@@ -2,10 +2,10 @@ package fr.manigames.railventure.client.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.utils.viewport.ExtendViewport
-import com.badlogic.gdx.utils.viewport.StretchViewport
 import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
@@ -19,6 +19,7 @@ import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
 import fr.manigames.railventure.test.TestSystem
+import fr.manigames.railventure.test.TestSystem3D
 
 class GameScreen : Screen {
 
@@ -41,6 +42,10 @@ class GameScreen : Screen {
         )
         if (Game.DEBUG) {
             systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput, game.map))
+
+            if (!Game.USE_ORTHOGRAPHIC_CAMERA) {
+               // systems.add(TestSystem3D(world, camera as PerspectiveCamera))
+            }
         }
         if (Game.USE_PLAYER_CAMERA) {
             systems.add(PlayerCameraSystem(world, camera))
@@ -69,6 +74,7 @@ class GameScreen : Screen {
 
     override fun render(delta: Float) {
         update()
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
         systems.forEach { system ->
             system.render(Gdx.graphics.deltaTime)
         }

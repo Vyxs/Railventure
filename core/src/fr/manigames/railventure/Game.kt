@@ -8,6 +8,7 @@ import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.map.base.ChunkLoader
 import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.client.screen.BootScreen
+import fr.manigames.railventure.client.screen.LoadingScreen
 import fr.manigames.railventure.test.ParallelProceduralMap
 
 class Game : Game() {
@@ -15,7 +16,7 @@ class Game : Game() {
     companion object {
         const val DEBUG = true
         const val USE_PLAYER_CAMERA = true
-        const val USE_ORTHOGRAPHIC_CAMERA = true
+        const val USE_ORTHOGRAPHIC_CAMERA = false
 
         val GAME_WIDTH = Metric.GAME_WIDTH
         val GAME_HEIGHT = Metric.GAME_HEIGHT
@@ -32,7 +33,7 @@ class Game : Game() {
     }
 
     override fun create() {
-        changeScreen(BootScreen())
+        changeScreen(LoadingScreen())
     }
 
     override fun dispose() {
