@@ -8,7 +8,7 @@ data class ProceduralMapConfig(
     /**
      * The seed of the map. It will be used to generate the altitude, humidity and temperature and also any other random value.
      */
-    val seed: Long,
+    val seed: Long = 0L,
 
     /**
      * The seed of the altitude generator.

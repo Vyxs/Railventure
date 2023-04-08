@@ -12,6 +12,8 @@ import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.ecs.world.World
+import fr.manigames.railventure.api.map.generation.ParallelProceduralMap
+import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
@@ -19,7 +21,6 @@ import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
 import fr.manigames.railventure.test.TestSystem
-import fr.manigames.railventure.test.TestSystem3D
 
 class GameScreen : Screen {
 
@@ -29,19 +30,21 @@ class GameScreen : Screen {
     private val systems: LinkedHashSet<System> = linkedSetOf()
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
+    private val map: ProceduralMap = ParallelProceduralMap()
 
     override fun init(game: Game) {
+
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         systems.addAll(
             listOf(
                 RenderSystem(world, assets, camera),
                 PhysicSystem(world),
                 PlayerControllerSystem(world),
-                ProceduralGenerationSystem(world, game.map)
+                ProceduralGenerationSystem(world, map)
             )
         )
         if (Game.DEBUG) {
-            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput, game.map))
+            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput, map))
 
             if (!Game.USE_ORTHOGRAPHIC_CAMERA) {
                // systems.add(TestSystem3D(world, camera as PerspectiveCamera))

@@ -3,6 +3,11 @@ package fr.manigames.railventure.api.map.generation
 import fr.manigames.railventure.api.gameobject.TileType
 
 interface ProceduralTileHandler {
+    object DEFAULT : ProceduralTileHandler {
+        override fun determineTileType(altitude: Double, humidity: Double, temperature: Double, tileX: Int, tileY: Int): TileType {
+            return TileType.GRASS
+        }
+    }
 
     /**
      * Determine the tile type from the given altitude, humidity and temperature
