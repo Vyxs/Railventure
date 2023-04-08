@@ -20,6 +20,7 @@ import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.client.system.RenderSystem
 import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
+import fr.manigames.railventure.test.ProceduralHandler
 import fr.manigames.railventure.test.TestSystem
 
 class GameScreen : Screen {
@@ -40,7 +41,7 @@ class GameScreen : Screen {
                 RenderSystem(world, assets, camera),
                 PhysicSystem(world),
                 PlayerControllerSystem(world),
-                ProceduralGenerationSystem(world, map)
+                ProceduralGenerationSystem(world, map, ProceduralHandler())
             )
         )
         if (Game.DEBUG) {
