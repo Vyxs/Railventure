@@ -22,20 +22,17 @@ class TestSystem(
     world: World,
     private val camera: Camera,
     private val useDebugCamera: Boolean,
-    private val inputRegistry: GameInput,
-    private val map: RenderableMap,
+    private val inputRegistry: GameInput
 ) : System(world) {
 
     private lateinit var cameraController: CameraController
     private lateinit var debugRenderer: DebugRenderer
-    private lateinit var mapRenderer: MapRenderer
 
     override fun init() {
         debugRenderer = DebugRenderer(camera, world)
         inputRegistry.addInputProcessor(debugRenderer.inputProcessor)
         cameraController = CameraController(camera)
         inputRegistry.addInputProcessor(cameraController)
-        mapRenderer = MapRenderer(map, camera)
         if (useDebugCamera) {
             cameraController.init()
         }
@@ -56,18 +53,15 @@ class TestSystem(
     }
 
     override fun render(delta: Float) {
-        mapRenderer.render()
         debugRenderer.render()
     }
 
     override fun update(delta: Float) {
         if (useDebugCamera)
             cameraController.update(1f)
-        mapRenderer.update()
     }
 
     override fun dispose() {
-        mapRenderer.dispose()
         debugRenderer.dispose()
     }
 }

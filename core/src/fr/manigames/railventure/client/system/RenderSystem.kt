@@ -8,33 +8,29 @@ import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.client.renderer.HudRenderer
 import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.common.component.*
+import fr.manigames.railventure.client.map.RenderableMap
+import fr.manigames.railventure.client.renderer.MapRenderer
 import fr.manigames.railventure.common.ecs.component.*
 
 class RenderSystem(
     world: World,
     private val asset: Assets,
-    private val camera: Camera
+    private val camera: Camera,
+    private val map: RenderableMap
 ) : System(world) {
 
-    private lateinit var tileRenderer: TileRenderer
     private lateinit var hudRenderer: HudRenderer
+    private lateinit var mapRenderer: MapRenderer
 
     override fun init() {
-        tileRenderer = TileRenderer(asset)
         hudRenderer = HudRenderer()
+        mapRenderer = MapRenderer(map, camera)
     }
 
     override fun render(delta: Float) {
         ScreenUtils.clear(0f, 0f, 0f, 1f)
 
-        world.getEntitiesWithComponents(ComponentType.TILE_RENDERABLE).forEach { entry ->
-            entry.value.first { it.componentType == ComponentType.TILE_RENDERABLE }.let { component ->
-                val renderComponent: TileRenderComponent = component as TileRenderComponent
-                tileRenderer.setProjectionMatrix(camera.combined)
-                tileRenderer.renderTile(renderComponent.type, renderComponent.x, renderComponent.y)
-            }
-        }
+        mapRenderer.render()
 
         world.getEntitiesWithComponents(ComponentType.HUD_POSITION, ComponentType.TEXT).forEach { entry ->
             entry.value.first { it.componentType == ComponentType.HUD_POSITION }.let { hud ->
@@ -45,21 +41,14 @@ class RenderSystem(
                 }
             }
         }
+    }
 
-        world.getEntitiesWithComponents(ComponentType.TEXTURE, ComponentType.WORLD_POSITION).forEach { entry ->
-            entry.value.first { it.componentType == ComponentType.WORLD_POSITION }.let { worldPos ->
-                val position: WorldPositionComponent = worldPos as WorldPositionComponent
-                entry.value.first { it.componentType == ComponentType.TEXTURE }.let { component ->
-                    val texture: TextureComponent = component as TextureComponent
-                    tileRenderer.setProjectionMatrix(camera.combined)
-                    tileRenderer.renderTexture(texture.texture, position.world_x, position.world_y)
-                }
-            }
-        }
+    override fun update(delta: Float) {
+        mapRenderer.update()
     }
 
     override fun dispose() {
-        tileRenderer.dispose()
+        mapRenderer.dispose()
         hudRenderer.dispose()
     }
 }

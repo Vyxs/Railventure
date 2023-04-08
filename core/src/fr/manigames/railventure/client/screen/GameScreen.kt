@@ -38,14 +38,14 @@ class GameScreen : Screen {
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         systems.addAll(
             listOf(
-                RenderSystem(world, assets, camera),
+                RenderSystem(world, assets, camera, map),
                 PhysicSystem(world),
                 PlayerControllerSystem(world),
                 ProceduralGenerationSystem(world, map, ProceduralHandler())
             )
         )
         if (Game.DEBUG) {
-            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput, map))
+            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput))
 
             if (!Game.USE_ORTHOGRAPHIC_CAMERA) {
                // systems.add(TestSystem3D(world, camera as PerspectiveCamera))
