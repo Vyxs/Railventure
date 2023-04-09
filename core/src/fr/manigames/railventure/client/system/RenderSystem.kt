@@ -1,8 +1,7 @@
 package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.utils.ScreenUtils
-import fr.manigames.railventure.client.renderer.TileRenderer
+import fr.manigames.railventure.client.renderer.EntityRenderer
 import fr.manigames.railventure.api.ecs.component.ComponentType
 import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.core.Assets
@@ -16,21 +15,47 @@ class RenderSystem(
     world: World,
     private val asset: Assets,
     private val camera: Camera,
-    private val map: RenderableMap
+    private val map: RenderableMap,
+    private val use3D: Boolean
 ) : System(world) {
 
     private lateinit var hudRenderer: HudRenderer
     private lateinit var mapRenderer: MapRenderer
+    private lateinit var tileRenderer: EntityRenderer
 
     override fun init() {
         hudRenderer = HudRenderer()
         mapRenderer = MapRenderer(map, camera)
+        tileRenderer = EntityRenderer(asset, use3D, camera)
     }
 
     override fun render(delta: Float) {
-        ScreenUtils.clear(0f, 0f, 0f, 1f)
-
         mapRenderer.render()
+
+
+        world.getEntitiesWithComponents(ComponentType.TEXTURE, ComponentType.WORLD_POSITION).forEach { entry ->
+            entry.value.first {it.componentType == ComponentType.TEXTURE}.let { tex ->
+
+                entry.value.first { it.componentType == ComponentType.WORLD_POSITION }.let { component ->
+                    val position: WorldPositionComponent = component as WorldPositionComponent
+                    val texture: TextureComponent = tex as TextureComponent
+                    // if position not in camera, don't render
+
+
+                    val size = entry.value.firstOrNull { it.componentType == ComponentType.WORLD_SIZE }?.let { component ->
+                        val size: WorldSizeComponent = component as WorldSizeComponent
+                        size
+                    }
+
+                    tileRenderer.setProjectionMatrix(camera.combined)
+                    if (size != null) {
+                        tileRenderer.renderEntity(texture.texture, position.world_x, position.world_y, size)
+                    } else {
+                        tileRenderer.renderEntity(texture.texture, position.world_x, position.world_y)
+                    }
+                }
+            }
+        }
 
         world.getEntitiesWithComponents(ComponentType.HUD_POSITION, ComponentType.TEXT).forEach { entry ->
             entry.value.first { it.componentType == ComponentType.HUD_POSITION }.let { hud ->
@@ -49,6 +74,5 @@ class RenderSystem(
 
     override fun dispose() {
         mapRenderer.dispose()
-        hudRenderer.dispose()
     }
 }

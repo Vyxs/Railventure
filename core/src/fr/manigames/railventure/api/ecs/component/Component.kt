@@ -15,5 +15,6 @@ enum class ComponentType {
     TEXT,
     TEXTURE,
     PLAYER,
-    MOVEABLE
+    MOVEABLE,
+    WORLD_SIZE
 }

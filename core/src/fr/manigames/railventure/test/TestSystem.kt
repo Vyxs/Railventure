@@ -11,6 +11,7 @@ import fr.manigames.railventure.client.renderer.MapRenderer
 import fr.manigames.railventure.common.ecs.component.MoveableComponent
 import fr.manigames.railventure.common.ecs.component.TextureComponent
 import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.WorldSizeComponent
 import fr.manigames.railventure.common.ecs.composition.PlayerComposition
 import fr.manigames.railventure.generated.R
 
@@ -44,12 +45,6 @@ class TestSystem(
                 maxAngularSpeed = 1f
             )
         ).toComponents())
-
-        world.addEntity(
-            EntityBuilder.make(),
-            TextureComponent(R.Texture.FOLIAGE_SUMMER_TREE_1.path),
-            WorldPositionComponent(0f, 0f)
-        )
     }
 
     override fun render(delta: Float) {

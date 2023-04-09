@@ -8,6 +8,7 @@ import fr.manigames.railventure.api.map.generation.Biome
 import fr.manigames.railventure.api.map.generation.BiomeType
 import fr.manigames.railventure.common.ecs.component.TextureComponent
 import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.WorldSizeComponent
 import fr.manigames.railventure.common.generation.ProceduralHandler
 import fr.manigames.railventure.generated.R
 import kotlin.math.abs
@@ -74,19 +75,21 @@ class ProceduralHandler : ProceduralHandler {
             biome = tropicalOcean
         }
 
-        if (biome == forest) {
+        val type = determineTileTypeUsingProbability(biomeTiles[biome])
+
+        if (type == TileType.GRASS) {
             rng?.let { random ->
-                /*if (random.nextFloat() > 0.009f) {
+                if (random.nextFloat() > 0.99f) {
                     world.addEntity(
                         EntityBuilder.make(),
                         TextureComponent(R.Texture.FOLIAGE_SUMMER_TREE_1.path),
-                        WorldPositionComponent(tileX.toFloat(), tileY.toFloat())
+                        WorldPositionComponent(tileX.toFloat(), tileY.toFloat()),
+                        WorldSizeComponent(width = 3, ignoreHeight = true, offsetY = 0.5f)
                     )
-                }*/
+                }
             }
         }
-
-        return determineTileTypeUsingProbability(biomeTiles[biome])
+        return type
     }
 
     private fun determineTileTypeUsingProbability(tileTypes: Array<Pair<TileType, Double>>?): TileType {

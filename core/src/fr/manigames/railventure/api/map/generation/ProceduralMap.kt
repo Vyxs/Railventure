@@ -6,7 +6,7 @@ import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
 import java.util.concurrent.atomic.AtomicReference
 
-abstract class ProceduralMap : RenderableMap() {
+open class ProceduralMap : RenderableMap() {
 
     protected var proceduralMapConfig: ProceduralMapConfig = ProceduralMapConfig()
         private set
@@ -99,7 +99,7 @@ abstract class ProceduralMap : RenderableMap() {
                 val alt = altitude.random2D(nx, ny)
                 val hum = humidity.random2D(nx, ny)
                 val temp = temperature.random2D(nx, ny)
-                chunk.setTile(tileX, tileY, 0, tileHandler.determineTileType(alt, hum, temp, ux, uy))
+                chunk.setTile(tileX, Metric.MAP_CHUNK_SIZE - 1 - tileY, 0, tileHandler.determineTileType(alt, hum, temp, ux, uy))
             }
         setChunk(chunk)
     }

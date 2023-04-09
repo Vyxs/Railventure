@@ -12,7 +12,6 @@ import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.ecs.system.System
 import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.api.map.generation.ParallelProceduralMap
 import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -31,14 +30,14 @@ class GameScreen : Screen {
     private val systems: LinkedHashSet<System> = linkedSetOf()
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
-    private val map: ProceduralMap = ParallelProceduralMap()
+    private val map = ProceduralMap()
 
     override fun init(game: Game) {
 
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         systems.addAll(
             listOf(
-                RenderSystem(world, assets, camera, map),
+                RenderSystem(world, assets, camera, map, !Game.USE_ORTHOGRAPHIC_CAMERA),
                 PhysicSystem(world),
                 PlayerControllerSystem(world),
                 ProceduralGenerationSystem(world, map, ProceduralHandler())
@@ -78,11 +77,13 @@ class GameScreen : Screen {
 
     override fun render(delta: Float) {
         update()
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
         systems.forEach { system ->
             system.render(Gdx.graphics.deltaTime)
         }
     }
+
 
     private fun update() {
         systems.forEach { system ->

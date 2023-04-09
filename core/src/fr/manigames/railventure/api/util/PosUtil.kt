@@ -46,7 +46,7 @@ object PosUtil {
         } else {
             (worldY / chunkSize).toInt()
         }
-        return Pair(chunkX, -chunkY)
+        return Pair(chunkX, chunkY)
     }
 
     fun getXorYChunkPosition(xory: Float): Int {

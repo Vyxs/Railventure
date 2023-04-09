@@ -5,6 +5,8 @@ package fr.manigames.railventure.api.core
  **/
 object Render {
 
+    val modelBatch = com.badlogic.gdx.graphics.g3d.ModelBatch()
+
     val spriteBatch = com.badlogic.gdx.graphics.g2d.SpriteBatch()
 
     val shapeRenderer = com.badlogic.gdx.graphics.glutils.ShapeRenderer()
@@ -12,6 +14,7 @@ object Render {
     val bitmapFont = com.badlogic.gdx.graphics.g2d.BitmapFont()
 
     fun dispose() {
+        modelBatch.dispose()
         spriteBatch.dispose()
         shapeRenderer.dispose()
         bitmapFont.dispose()
