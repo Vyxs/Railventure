@@ -1,42 +1,30 @@
 package fr.manigames.railventure.common.ecs.system
 
-import fr.manigames.railventure.api.ecs.component.ComponentType
+import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.IteratingSystem
+import com.github.quillraven.fleks.World.Companion.family
 import fr.manigames.railventure.api.core.Metric.PHYSIC_FRICTION
 import fr.manigames.railventure.api.core.Metric.PHYSIC_MIN_DELTA
-import fr.manigames.railventure.api.ecs.system.System
-import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.common.ecs.component.MoveableComponent
-import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.Move
+import fr.manigames.railventure.common.ecs.component.WorldPosition
 
-class PhysicSystem(world: World) : System(world) {
+class PhysicSystem : IteratingSystem(
+    family { all(Move, WorldPosition)}
+) {
 
-    override fun update(delta: Float) {
+    override fun onTickEntity(entity: Entity) {
+        val move = entity[Move]
+        val pos = entity[WorldPosition]
 
-        world.getEntitiesWithComponents(ComponentType.MOVEABLE, ComponentType.WORLD_POSITION).forEach { entry ->
-            val move = entry.value.first { it.componentType == ComponentType.MOVEABLE } as MoveableComponent
-            val pos = entry.value.first { it.componentType == ComponentType.WORLD_POSITION } as WorldPositionComponent
+        var speed = move.speed
+        speed += move.acceleration * (deltaTime + PHYSIC_MIN_DELTA)
+        speed = speed.coerceAtMost(move.maxSpeed)
+        speed -= PHYSIC_FRICTION * (deltaTime + PHYSIC_MIN_DELTA)
+        speed = speed.coerceAtLeast(0f)
+        val vec = move.velocity.cpy().nor().scl(move.speed)
 
-            var speed = move.speed
-            speed += move.acceleration * (delta + PHYSIC_MIN_DELTA)
-            speed = speed.coerceAtMost(move.maxSpeed)
-            speed -= PHYSIC_FRICTION * (delta + PHYSIC_MIN_DELTA)
-            speed = speed.coerceAtLeast(0f)
-            val vec = move.velocity.cpy().nor().scl(move.speed)
-
-            world.updateComponents(entry.key,
-                MoveableComponent(
-                    speed,
-                    move.velocity,
-                    move.acceleration,
-                    move.orientation,
-                    move.angularSpeed,
-                    move.angularAcceleration,
-                    move.maxSpeed,
-                    move.maxAngularSpeed
-                ),
-                WorldPositionComponent(pos.world_x + vec.x, pos.world_y + vec.y)
-            )
-        }
+        move.speed = speed
+        pos.world_x += vec.x
+        pos.world_y += vec.y
     }
-
 }

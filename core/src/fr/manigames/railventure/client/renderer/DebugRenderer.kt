@@ -11,22 +11,18 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.profiling.GLProfiler
 import com.badlogic.gdx.math.Matrix4
-import fr.manigames.railventure.api.ecs.component.ComponentType
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
 import fr.manigames.railventure.api.util.MathUtil.toRoundedString
 import fr.manigames.railventure.api.util.PosUtil
-import fr.manigames.railventure.api.ecs.world.World
-import fr.manigames.railventure.common.ecs.component.MoveableComponent
-import fr.manigames.railventure.common.ecs.component.PlayerComponent
-import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.Move
+import fr.manigames.railventure.common.ecs.component.WorldPosition
 
 
 class DebugRenderer(
-    private val camera: Camera,
-    private val world: World?
+    private val camera: Camera
 ) : Renderer {
 
     private val resetMatrix = Matrix4().setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
@@ -35,6 +31,9 @@ class DebugRenderer(
     private val font = Render.bitmapFont
     private val glyphLayout = GlyphLayout(font, "")
     private val glProfiler = GLProfiler(Gdx.graphics)
+    private var playerPosition: WorldPosition? = null
+    private var playerMove: Move? = null
+    var worldEntityCount: Int? = null
     val inputProcessor = DebugInputProcessor()
 
     init {
@@ -170,20 +169,21 @@ class DebugRenderer(
         }
     }
 
+    fun setMainPlayerData(position: WorldPosition, move: Move) {
+        playerPosition = position
+        playerMove = move
+    }
+
     private fun getPlayerInfo(info: MutableList<String>) {
-        world?.let {
-            world.getEntitiesWithComponents(ComponentType.PLAYER).forEach { entry ->
-                if ((entry.value.first { it.componentType == ComponentType.PLAYER } as PlayerComponent).isHost) {
-                    val worldPosition = entry.value.first { it.componentType == ComponentType.WORLD_POSITION } as WorldPositionComponent
-                    val moveable = entry.value.first { it.componentType == ComponentType.MOVEABLE } as MoveableComponent
-                    val chunkPosition = PosUtil.getChunkPosition(worldPosition.world_x, worldPosition.world_y)
-                    info.add("===== Player =====")
-                    info.add("Player position: ${worldPosition.world_x.toRoundedString()}, ${worldPosition.world_y.toRoundedString()}")
-                    info.add("Player chunk position: ${chunkPosition.first}, ${chunkPosition.second}")
-                    info.add("Player speed: ${moveable.speed.toRoundedString()}")
-                    info.add("Player velocity: ${moveable.velocity.toRoundedString()}")
-                    info.add("Player acceleration: ${moveable.acceleration.toRoundedString()}")
-                }
+        playerPosition?.let { position ->
+            playerMove?.let { move ->
+                val chunkPosition = PosUtil.getChunkPosition(position.world_x, position.world_y)
+                info.add("===== Player =====")
+                info.add("Player position: ${position.world_x.toRoundedString()}, ${position.world_y.toRoundedString()}")
+                info.add("Player chunk position: ${chunkPosition.first}, ${chunkPosition.second}")
+                info.add("Player speed: ${move.speed.toRoundedString()}")
+                info.add("Player velocity: ${move.velocity.toRoundedString()}")
+                info.add("Player acceleration: ${move.acceleration.toRoundedString()}")
             }
         }
     }
@@ -193,7 +193,7 @@ class DebugRenderer(
         info.add("FPS: ${Gdx.graphics.framesPerSecond}")
         info.add("Delta: ${Gdx.graphics.deltaTime.toRoundedString()}")
         info.add("Memory: ${(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024}MB")
-        info.add("Entities: ${world?.getEntities()?.size ?: 0}")
+        worldEntityCount?.let { info.add("World entities: $it") }
     }
 
     private fun getGpuInfo(info: MutableList<String>) {

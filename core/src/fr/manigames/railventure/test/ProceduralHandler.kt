@@ -1,14 +1,12 @@
 package fr.manigames.railventure.test
 
-import fr.manigames.railventure.api.ecs.entity.Entity
-import fr.manigames.railventure.api.ecs.entity.EntityBuilder
-import fr.manigames.railventure.api.ecs.world.World
+import com.github.quillraven.fleks.World
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.generation.Biome
 import fr.manigames.railventure.api.map.generation.BiomeType
-import fr.manigames.railventure.common.ecs.component.TextureComponent
-import fr.manigames.railventure.common.ecs.component.WorldPositionComponent
-import fr.manigames.railventure.common.ecs.component.WorldSizeComponent
+import fr.manigames.railventure.common.ecs.component.Texture
+import fr.manigames.railventure.common.ecs.component.WorldPosition
+import fr.manigames.railventure.common.ecs.component.WorldSize
 import fr.manigames.railventure.common.generation.ProceduralHandler
 import fr.manigames.railventure.generated.R
 import kotlin.math.abs
@@ -80,12 +78,11 @@ class ProceduralHandler : ProceduralHandler {
         if (type == TileType.GRASS) {
             rng?.let { random ->
                 if (random.nextFloat() > 0.99f) {
-                    world.addEntity(
-                        EntityBuilder.make(),
-                        TextureComponent(R.Texture.FOLIAGE_SUMMER_TREE_1.path),
-                        WorldPositionComponent(tileX.toFloat(), tileY.toFloat()),
-                        WorldSizeComponent(width = 3, ignoreHeight = true, offsetY = 0.5f)
-                    )
+                    world.entity {
+                        it += Texture(R.Texture.FOLIAGE_SUMMER_TREE_1.path)
+                        it += WorldPosition(tileX.toFloat(), tileY.toFloat())
+                        it += WorldSize(width = 3, ignoreHeight = true, offsetY = 0.5f)
+                    }
                 }
             }
         }
@@ -103,5 +100,4 @@ class ProceduralHandler : ProceduralHandler {
         }
         return tileTypes[0].first
     }
-
 }

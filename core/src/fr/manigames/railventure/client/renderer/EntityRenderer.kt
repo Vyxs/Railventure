@@ -4,13 +4,12 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Matrix4
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.EntityAssets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.renderer.Renderer
-import fr.manigames.railventure.common.ecs.component.WorldSizeComponent
+import fr.manigames.railventure.common.ecs.component.WorldSize
 
 class EntityRenderer(
     private val asset: Assets,
@@ -32,7 +31,7 @@ class EntityRenderer(
         batch.end()
     }
 
-    fun renderEntity(texture: String, worldX: Float, worldY: Float, size: WorldSizeComponent) {
+    fun renderEntity(texture: String, worldX: Float, worldY: Float, size: WorldSize) {
         val tex = EntityAssets.getTexture(texture)
 
         batch.begin()

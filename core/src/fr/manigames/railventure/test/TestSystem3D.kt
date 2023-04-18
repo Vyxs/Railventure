@@ -1,5 +1,5 @@
 package fr.manigames.railventure.test
-
+/*
 import com.badlogic.gdx.graphics.*
 import fr.manigames.railventure.api.ecs.system.System
 import com.badlogic.gdx.graphics.g3d.*
@@ -102,4 +102,4 @@ class TestSystem3D(
         }
         modelBatch.end()
     }
-}
+}*/

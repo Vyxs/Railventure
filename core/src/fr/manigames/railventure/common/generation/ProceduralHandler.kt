@@ -1,6 +1,6 @@
 package fr.manigames.railventure.common.generation
 
-import fr.manigames.railventure.api.ecs.world.World
+import com.github.quillraven.fleks.World
 import fr.manigames.railventure.api.gameobject.TileType
 
 interface ProceduralHandler {

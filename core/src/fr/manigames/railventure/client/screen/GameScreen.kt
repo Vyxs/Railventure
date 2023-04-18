@@ -6,55 +6,109 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.World
+import com.github.quillraven.fleks.world
 import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.api.ecs.system.System
-import fr.manigames.railventure.api.ecs.world.World
 import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.client.input.GameInput
+import fr.manigames.railventure.client.renderer.DebugRenderer
+import fr.manigames.railventure.client.renderer.EntityRenderer
+import fr.manigames.railventure.client.renderer.MapRenderer
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.client.system.RenderSystem
+import fr.manigames.railventure.common.ecs.component.Move
+import fr.manigames.railventure.common.ecs.component.Player
+import fr.manigames.railventure.common.ecs.component.Texture
+import fr.manigames.railventure.common.ecs.component.WorldPosition
 import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
-import fr.manigames.railventure.test.ProceduralHandler
+import fr.manigames.railventure.common.generation.ProceduralHandler
+import fr.manigames.railventure.generated.R
+import fr.manigames.railventure.test.CameraController
 import fr.manigames.railventure.test.TestSystem
+import java.util.*
+
 
 class GameScreen : Screen {
 
-    private lateinit var camera: Camera
-    private lateinit var viewport: ExtendViewport
-    private val world: World = World()
-    private val systems: LinkedHashSet<System> = linkedSetOf()
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
     private val map = ProceduralMap()
-
+    private val proceduralHandler: ProceduralHandler = fr.manigames.railventure.test.ProceduralHandler()
+    private lateinit var world: World
+    private lateinit var camera: Camera
+    private lateinit var viewport: ExtendViewport
+    private lateinit var mapRenderer: MapRenderer
+    private lateinit var entityRenderer: EntityRenderer
+    private lateinit var debugRenderer: DebugRenderer
+    private lateinit var debugCameraController: CameraController
+    private var mainPlayer: Entity? = null
     override fun init(game: Game) {
-
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
-        systems.addAll(
-            listOf(
-                RenderSystem(world, assets, camera, map, !Game.USE_ORTHOGRAPHIC_CAMERA),
-                PhysicSystem(world),
-                PlayerControllerSystem(world),
-                ProceduralGenerationSystem(world, map, ProceduralHandler())
-            )
-        )
+        mapRenderer = MapRenderer(map, camera)
+        entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
+        debugRenderer = DebugRenderer(camera)
+        debugCameraController = CameraController(camera)
         if (Game.DEBUG) {
-            systems.add(TestSystem(world, camera, !Game.USE_PLAYER_CAMERA, gameInput))
+            gameInput.addInputProcessor(debugRenderer.inputProcessor)
+            gameInput.addInputProcessor(debugCameraController)
 
-            if (!Game.USE_ORTHOGRAPHIC_CAMERA) {
-               // systems.add(TestSystem3D(world, camera as PerspectiveCamera))
+            if (!Game.USE_PLAYER_CAMERA)
+                debugCameraController.init()
+        }
+
+        world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
+            injectables {
+                add(camera)
+                add(mapRenderer)
+                add(entityRenderer)
+                add(map)
+                add(proceduralHandler)
+                add(debugRenderer)
+                add(debugCameraController)
+                add("useDebugCamera", !Game.USE_PLAYER_CAMERA)
+            }
+
+            systems {
+                add(RenderSystem())
+                add(PhysicSystem())
+                add(PlayerControllerSystem())
+                add(ProceduralGenerationSystem())
+
+                if (Game.DEBUG) add(TestSystem())
+                if (Game.USE_PLAYER_CAMERA) add(PlayerCameraSystem())
             }
         }
-        if (Game.USE_PLAYER_CAMERA) {
-            systems.add(PlayerCameraSystem(world, camera))
-        }
-        systems.forEach(System::init)
         gameInput.bind()
+        mainPlayer = world.entity {
+            it += Player("Dev", UUID.randomUUID(), isReady = true, isHost = true)
+            it += WorldPosition(2f, 2f)
+            it += Move(maxSpeed = 5f, maxAngularSpeed = 1f)
+            it += Texture(R.Texture.WAGON.path)
+        }
+    }
+
+    override fun render(delta: Float) {
+        super.render(delta)
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+        world.update(delta)
+    }
+
+    override fun resize(width: Int, height: Int) {
+        viewport.update(width, height)
+    }
+
+    override fun dispose() {
+        world.dispose()
+        mapRenderer.dispose()
+        entityRenderer.dispose()
+        debugRenderer.dispose()
     }
 
     private fun setCamera(orthographic: Boolean) {
@@ -72,37 +126,4 @@ class GameScreen : Screen {
             viewport = ExtendViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
         }
     }
-
-    override fun show() = systems.forEach(System::show)
-
-    override fun render(delta: Float) {
-        update()
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
-        systems.forEach { system ->
-            system.render(Gdx.graphics.deltaTime)
-        }
-    }
-
-
-    private fun update() {
-        systems.forEach { system ->
-            system.update(Gdx.graphics.deltaTime)
-        }
-    }
-
-    override fun resize(width: Int, height: Int) {
-        viewport.update(width, height)
-        systems.forEach { system ->
-            system.resize(width, height)
-        }
-    }
-
-    override fun pause() = systems.forEach(System::pause)
-
-    override fun resume() = systems.forEach(System::resume)
-
-    override fun hide() = systems.forEach(System::hide)
-
-    override fun dispose() = systems.forEach(System::dispose)
 }
