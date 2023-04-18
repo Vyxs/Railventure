@@ -1,6 +1,7 @@
 package fr.manigames.railventure.test
 
 import com.github.quillraven.fleks.World
+import fr.manigames.railventure.api.gameobject.EntityType
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.generation.Biome
 import fr.manigames.railventure.api.map.generation.BiomeType
@@ -45,6 +46,71 @@ class ProceduralHandler : ProceduralHandler {
     val maxTemperature = biomes.maxOf { it.temperature } * offset
     val minTemperature = biomes.minOf { it.temperature } * -offset
 
+    val grassGroup = arrayOf(
+        EntityType.FOLIAGE_SUMMER_BUSH_1,
+        EntityType.FOLIAGE_SUMMER_BUSH_2,
+        EntityType.FOLIAGE_SUMMER_BUSH_3,
+        EntityType.FOLIAGE_SUMMER_BUSH_4,
+        EntityType.FOLIAGE_SUMMER_BUSH_5,
+        EntityType.FOLIAGE_SUMMER_BUSH_6,
+        EntityType.FOLIAGE_SUMMER_BUSH_7,
+        EntityType.FOLIAGE_SUMMER_BUSH_8,
+        EntityType.FOLIAGE_SUMMER_TREE_1,
+        EntityType.FOLIAGE_SUMMER_TREE_2,
+        EntityType.FOLIAGE_SUMMER_TREE_3,
+        EntityType.FOLIAGE_SUMMER_TREE_4,
+        EntityType.FOLIAGE_SUMMER_TREE_5,
+        EntityType.FOLIAGE_SUMMER_TREE_6,
+        EntityType.FOLIAGE_SUMMER_FLOWER_1,
+        EntityType.FOLIAGE_SUMMER_FLOWER_2,
+        EntityType.FOLIAGE_SUMMER_FLOWER_3,
+        EntityType.FOLIAGE_SUMMER_FLOWER_4
+    )
+
+    val tallGrassGroup = arrayOf(
+        EntityType.FOLIAGE_SUMMER_TALL_BUSH_1,
+        EntityType.FOLIAGE_SUMMER_TALL_BUSH_2,
+        EntityType.FOLIAGE_SUMMER_TALL_BUSH_3,
+        EntityType.FOLIAGE_SUMMER_TALL_BUSH_4,
+        EntityType.FOLIAGE_SUMMER_TALL_BUSH_5,
+        EntityType.FOLIAGE_SUMMER_TALL_BUSH_6
+    )
+
+    val flowerGroup = arrayOf(
+        EntityType.FOLIAGE_SUMMER_FLOWER_1,
+        EntityType.FOLIAGE_SUMMER_FLOWER_2,
+        EntityType.FOLIAGE_SUMMER_FLOWER_3,
+        EntityType.FOLIAGE_SUMMER_FLOWER_4
+    )
+
+    val dirtGroup = arrayOf(
+        EntityType.FOLIAGE_AUTUMN_TREE_1,
+        EntityType.FOLIAGE_AUTUMN_TREE_2,
+        EntityType.FOLIAGE_AUTUMN_TREE_3,
+        EntityType.FOLIAGE_AUTUMN_TREE_4,
+        EntityType.FOLIAGE_AUTUMN_TREE_5,
+        EntityType.FOLIAGE_AUTUMN_TREE_6
+    )
+
+    val stoneGroup = arrayOf(
+        EntityType.FOLIAGE_SUMMER_CONIFER_1,
+        EntityType.FOLIAGE_SUMMER_CONIFER_2,
+        EntityType.FOLIAGE_SUMMER_CONIFER_3,
+    )
+
+    val snowGroup = arrayOf(
+        EntityType.FOLIAGE_WINTER_CONIFER_1,
+        EntityType.FOLIAGE_WINTER_CONIFER_2,
+        EntityType.FOLIAGE_WINTER_CONIFER_3,
+        EntityType.FOLIAGE_WINTER_ROCK_1,
+        EntityType.FOLIAGE_WINTER_ROCK_2,
+        EntityType.FOLIAGE_WINTER_ROCK_3,
+        EntityType.FOLIAGE_WINTER_TRUNK_1,
+        EntityType.FOLIAGE_WINTER_TRUNK_2,
+        EntityType.FOLIAGE_WINTER_TRUNK_3,
+        EntityType.FOLIAGE_WINTER_TRUNK_4,
+    )
+
     override fun determineGameObjects(
         seed: Long,
         world: World,
@@ -75,11 +141,21 @@ class ProceduralHandler : ProceduralHandler {
 
         val type = determineTileTypeUsingProbability(biomeTiles[biome])
 
-        if (type == TileType.GRASS) {
+        val texture = when (type) {
+            TileType.GRASS -> grassGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_BUSH_1).texture.path
+            TileType.TALL_GRASS -> tallGrassGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_TALL_BUSH_1).texture.path
+            TileType.FLOWER_GRASS -> flowerGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_FLOWER_1).texture.path
+            TileType.DIRT -> dirtGroup.random(rng!!, EntityType.FOLIAGE_AUTUMN_TREE_1).texture.path
+            TileType.STONE -> stoneGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_CONIFER_1).texture.path
+            TileType.SNOW -> snowGroup.random(rng!!, EntityType.FOLIAGE_WINTER_CONIFER_1).texture.path
+            else -> ""
+        }
+
+        if (texture.isNotBlank()) {
             rng?.let { random ->
-                if (random.nextFloat() > 0.99f) {
+                if (random.nextFloat() > 0.95f) {
                     world.entity {
-                        it += Texture(R.Texture.FOLIAGE_SUMMER_TREE_1.path)
+                        it += Texture(texture)
                         it += WorldPosition(tileX.toFloat(), tileY.toFloat())
                         it += WorldSize(width = 3, ignoreHeight = true, offsetY = 0.5f)
                     }
@@ -87,6 +163,10 @@ class ProceduralHandler : ProceduralHandler {
             }
         }
         return type
+    }
+
+    private fun <T> Array<T>.random(rng: Random, default: T): T {
+        return if (isEmpty()) default else get(rng.nextInt(size))
     }
 
     private fun determineTileTypeUsingProbability(tileTypes: Array<Pair<TileType, Double>>?): TileType {

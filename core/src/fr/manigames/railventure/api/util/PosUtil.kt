@@ -1,6 +1,10 @@
 package fr.manigames.railventure.api.util
 
+import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.PerspectiveCamera
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.type.math.ChunkArea
 import kotlin.math.*
 
 object PosUtil {
@@ -109,5 +113,28 @@ object PosUtil {
         val rightChunk = ceil((x + halfViewportWidth).toDouble() / chunkSize).toInt()
         val bottomChunk = ceil((y + halfViewportHeight).toDouble() / chunkSize).toInt()
         return (rightChunk - leftChunk) * (bottomChunk - topChunk)
+    }
+
+    fun getVisibleArea(camera: Camera, offset: Int = 0) : ChunkArea {
+        val horizontalChunkCount: Int = when (camera) {
+            is OrthographicCamera -> getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom) + offset
+            is PerspectiveCamera -> getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth,
+                CameraUtil.normalizeZ(camera.position.z)
+            ) + offset
+            else -> 0
+        }
+        val verticalChunkCount = when (camera) {
+            is OrthographicCamera -> getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom) + offset
+            is PerspectiveCamera -> getChunkVisibleVertical(camera.position.y, camera.viewportHeight,
+                CameraUtil.normalizeZ(camera.position.z)
+            ) + offset
+            else -> 0
+        }
+        val worldPos = getWorldPosition(camera.position.x, camera.position.y)
+        val chunkPos = getChunkPosition(worldPos.first, worldPos.second)
+        return ChunkArea(
+            chunkPos.first - horizontalChunkCount, chunkPos.first + horizontalChunkCount,
+            chunkPos.second - verticalChunkCount, chunkPos.second + verticalChunkCount
+        )
     }
 }

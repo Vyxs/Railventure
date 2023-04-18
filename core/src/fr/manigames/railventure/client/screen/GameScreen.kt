@@ -46,21 +46,12 @@ class GameScreen : Screen {
     private lateinit var mapRenderer: MapRenderer
     private lateinit var entityRenderer: EntityRenderer
     private lateinit var debugRenderer: DebugRenderer
-    private lateinit var debugCameraController: CameraController
     private var mainPlayer: Entity? = null
     override fun init(game: Game) {
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         mapRenderer = MapRenderer(map, camera)
         entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
         debugRenderer = DebugRenderer(camera)
-        debugCameraController = CameraController(camera)
-        if (Game.DEBUG) {
-            gameInput.addInputProcessor(debugRenderer.inputProcessor)
-            gameInput.addInputProcessor(debugCameraController)
-
-            if (!Game.USE_PLAYER_CAMERA)
-                debugCameraController.init()
-        }
 
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {
@@ -70,8 +61,9 @@ class GameScreen : Screen {
                 add(map)
                 add(proceduralHandler)
                 add(debugRenderer)
-                add(debugCameraController)
+                add(gameInput)
                 add("useDebugCamera", !Game.USE_PLAYER_CAMERA)
+                add("useFreeCamera", Game.USE_FREE_CAMERA)
             }
 
             systems {
@@ -121,8 +113,8 @@ class GameScreen : Screen {
             camera.position.set(50f, 50f, Metric.CAMERA_HEIGHT)
             camera.lookAt(50f, 50f,0f)
             camera.rotate(30f, 1f, 0f, 0f)
-            camera.near = 0f
-            camera.far = Metric.CAMERA_HEIGHT_MAX
+            camera.near = 1f
+            camera.far = 3000f
             viewport = ExtendViewport(Game.GAME_WIDTH, Game.GAME_HEIGHT, camera)
         }
     }

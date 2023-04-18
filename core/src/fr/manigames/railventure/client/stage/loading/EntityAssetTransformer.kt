@@ -41,8 +41,10 @@ class EntityAssetTransformer {
 
     private fun getScaledTexture(texture: Texture?): Texture? {
         if (texture == null) return null
-        val width = (Metric.TILE_SIZE * 3).toInt()
         val srcPixmap = getPixmap(texture)
+
+        val width = (srcPixmap.width.toFloat() / 5).toInt()//(Metric.TILE_SIZE * 3).toInt()
+
         val widthRatio = width / srcPixmap.width.toFloat()
         val height = srcPixmap.height.toFloat() * widthRatio
         val pixmap = getPixmapAtCorrectScale(width, height.toInt(), texture)

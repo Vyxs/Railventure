@@ -38,7 +38,6 @@ class MapRenderer(
             updateCameraChunk()
             prepareChunkForRendering()
         }
-        batch.projectionMatrix = camera.combined
         batch.begin()
         visibleChunks.forEach { (_, chunk) ->
             chunk.texture?.let {
@@ -54,23 +53,7 @@ class MapRenderer(
     }
 
     private fun prepareChunkForRendering() {
-        val offset = 0
-        val horizontalChunkCount: Int = when (camera) {
-            is OrthographicCamera -> PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom) + offset
-            is PerspectiveCamera -> PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, normalizeZ(camera.position.z)) + offset
-            else -> 0
-        }
-        val verticalChunkCount = when (camera) {
-            is OrthographicCamera -> PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom) + offset
-            is PerspectiveCamera -> PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, normalizeZ(camera.position.z)) + offset
-            else -> 0
-        }
-        val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
-        val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
-        val visible = ChunkArea(
-            chunkPos.first - horizontalChunkCount, chunkPos.first + horizontalChunkCount,
-            chunkPos.second - verticalChunkCount, chunkPos.second + verticalChunkCount
-        )
+        val visible = PosUtil.getVisibleArea(camera)
 
         for (i in visible.x1..visible.y1) {
             for (j in visible.x2..visible.y2) {
