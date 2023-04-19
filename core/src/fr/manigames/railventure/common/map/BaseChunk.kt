@@ -5,7 +5,7 @@ import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.MapChunk
 import fr.manigames.railventure.api.map.base.TileLayer
 
-open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
+open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType, TileLayer> {
 
     /**
      * The tiles of the chunk
@@ -41,6 +41,17 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
     }
 
     /**
+     * Get the tile stack at the given position
+     *
+     * @param x the x position
+     * @param y the y position
+     * @return the stack of tiles
+     **/
+    override fun getTileStack(x: Int, y: Int): TileLayer {
+        return tiles[y][x]
+    }
+
+    /**
      * Get the tiles of the chunk.
      * The first dimension is the y position
      * The second dimension is the x position
@@ -63,7 +74,16 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
         tiles[y][x][z] = tileType.code
     }
 
-
+    /**
+     * Set the tile stack at the given position
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param stack the stack of tiles
+     **/
+    override fun setTileStack(x: Int, y: Int, stack: TileLayer) {
+        tiles[y][x] = stack
+    }
 
     /**
      * Set the tiles of the chunk
@@ -76,9 +96,5 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType> {
                 this.tiles[y][x] = tiles[y][x]
             }
         }
-    }
-
-    override fun getTileWorldPosition(x: Int, y: Int): Pair<Int, Int> {
-        return Pair(this.y * MAP_CHUNK_SIZE + y, this.x * MAP_CHUNK_SIZE + x)
     }
 }

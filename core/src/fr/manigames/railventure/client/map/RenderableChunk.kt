@@ -53,6 +53,18 @@ open class RenderableChunk(x: Int, y: Int) : BaseChunk(x, y) {
         markDirty()
     }
 
+    /**
+     * Set the tile stack at the given position and mark it as dirty.
+     *
+     * @param x The x position
+     * @param y The y position
+     * @param stack The stack of tiles
+     **/
+    override fun setTileStack(x: Int, y: Int, stack: TileLayer) {
+        super.setTileStack(x, y, stack)
+        markDirty()
+    }
+
     fun unload() {
         texture?.dispose()
         texture = null

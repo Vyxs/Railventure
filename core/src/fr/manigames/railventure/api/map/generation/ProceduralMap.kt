@@ -99,7 +99,7 @@ open class ProceduralMap : RenderableMap() {
                 val alt = altitude.random2D(nx, ny)
                 val hum = humidity.random2D(nx, ny)
                 val temp = temperature.random2D(nx, ny)
-                chunk.setTile(tileX, Metric.MAP_CHUNK_SIZE - 1 - tileY, 0, tileHandler.determineTileType(alt, hum, temp, ux, uy))
+                chunk.setTileStack(tileX, Metric.MAP_CHUNK_SIZE - 1 - tileY, tileHandler.determineTileLayer(alt, hum, temp, ux, uy))
             }
         setChunk(chunk)
     }

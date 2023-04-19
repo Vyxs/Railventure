@@ -4,8 +4,9 @@ import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.Map
 import fr.manigames.railventure.api.map.base.MapChunk
+import fr.manigames.railventure.api.map.base.TileLayer
 
-open class BaseMap : Map<TileType> {
+open class BaseMap : Map<TileType, TileLayer> {
 
     companion object {
 
@@ -25,9 +26,9 @@ open class BaseMap : Map<TileType> {
         }
     }
 
-    protected val chunks: HashMap<Long, MapChunk<TileType>> = HashMap(9)
+    protected val chunks: HashMap<Long, MapChunk<TileType, TileLayer>> = HashMap(9)
 
-    override fun getChunk(x: Int, y: Int): MapChunk<TileType>? {
+    override fun getChunk(x: Int, y: Int): MapChunk<TileType, TileLayer>? {
         return chunks[toChunkId(x, y)]
     }
 
@@ -64,7 +65,7 @@ open class BaseMap : Map<TileType> {
      * @param y The y position of the chunk
      * @param chunk The chunk to set
      **/
-    override fun setChunk(chunk: MapChunk<TileType>) {
+    override fun setChunk(chunk: MapChunk<TileType, TileLayer>) {
         chunks[toChunkId(chunk.getChunkX(), chunk.getChunkY())] = chunk
     }
 }

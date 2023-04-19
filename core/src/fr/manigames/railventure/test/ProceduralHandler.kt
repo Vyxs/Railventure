@@ -1,15 +1,12 @@
 package fr.manigames.railventure.test
 
 import com.github.quillraven.fleks.World
-import fr.manigames.railventure.api.gameobject.EntityType
+import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.api.map.generation.Biome
 import fr.manigames.railventure.api.map.generation.BiomeType
-import fr.manigames.railventure.common.ecs.component.Texture
-import fr.manigames.railventure.common.ecs.component.WorldPosition
-import fr.manigames.railventure.common.ecs.component.WorldSize
 import fr.manigames.railventure.common.generation.ProceduralHandler
-import fr.manigames.railventure.generated.R
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -47,68 +44,68 @@ class ProceduralHandler : ProceduralHandler {
     val minTemperature = biomes.minOf { it.temperature } * -offset
 
     val grassGroup = arrayOf(
-        EntityType.FOLIAGE_SUMMER_BUSH_1,
-        EntityType.FOLIAGE_SUMMER_BUSH_2,
-        EntityType.FOLIAGE_SUMMER_BUSH_3,
-        EntityType.FOLIAGE_SUMMER_BUSH_4,
-        EntityType.FOLIAGE_SUMMER_BUSH_5,
-        EntityType.FOLIAGE_SUMMER_BUSH_6,
-        EntityType.FOLIAGE_SUMMER_BUSH_7,
-        EntityType.FOLIAGE_SUMMER_BUSH_8,
-        EntityType.FOLIAGE_SUMMER_TREE_1,
-        EntityType.FOLIAGE_SUMMER_TREE_2,
-        EntityType.FOLIAGE_SUMMER_TREE_3,
-        EntityType.FOLIAGE_SUMMER_TREE_4,
-        EntityType.FOLIAGE_SUMMER_TREE_5,
-        EntityType.FOLIAGE_SUMMER_TREE_6,
-        EntityType.FOLIAGE_SUMMER_FLOWER_1,
-        EntityType.FOLIAGE_SUMMER_FLOWER_2,
-        EntityType.FOLIAGE_SUMMER_FLOWER_3,
-        EntityType.FOLIAGE_SUMMER_FLOWER_4
+        TileType.FOLIAGE_SUMMER_BUSH_1,
+        TileType.FOLIAGE_SUMMER_BUSH_2,
+        TileType.FOLIAGE_SUMMER_BUSH_3,
+        TileType.FOLIAGE_SUMMER_BUSH_4,
+        TileType.FOLIAGE_SUMMER_BUSH_5,
+        TileType.FOLIAGE_SUMMER_BUSH_6,
+        TileType.FOLIAGE_SUMMER_BUSH_7,
+        TileType.FOLIAGE_SUMMER_BUSH_8,
+        TileType.FOLIAGE_SUMMER_TREE_1,
+        TileType.FOLIAGE_SUMMER_TREE_2,
+        TileType.FOLIAGE_SUMMER_TREE_3,
+        TileType.FOLIAGE_SUMMER_TREE_4,
+        TileType.FOLIAGE_SUMMER_TREE_5,
+        TileType.FOLIAGE_SUMMER_TREE_6,
+        TileType.FOLIAGE_SUMMER_FLOWER_1,
+        TileType.FOLIAGE_SUMMER_FLOWER_2,
+        TileType.FOLIAGE_SUMMER_FLOWER_3,
+        TileType.FOLIAGE_SUMMER_FLOWER_4
     )
 
     val tallGrassGroup = arrayOf(
-        EntityType.FOLIAGE_SUMMER_TALL_BUSH_1,
-        EntityType.FOLIAGE_SUMMER_TALL_BUSH_2,
-        EntityType.FOLIAGE_SUMMER_TALL_BUSH_3,
-        EntityType.FOLIAGE_SUMMER_TALL_BUSH_4,
-        EntityType.FOLIAGE_SUMMER_TALL_BUSH_5,
-        EntityType.FOLIAGE_SUMMER_TALL_BUSH_6
+        TileType.FOLIAGE_SUMMER_TALL_BUSH_1,
+        TileType.FOLIAGE_SUMMER_TALL_BUSH_2,
+        TileType.FOLIAGE_SUMMER_TALL_BUSH_3,
+        TileType.FOLIAGE_SUMMER_TALL_BUSH_4,
+        TileType.FOLIAGE_SUMMER_TALL_BUSH_5,
+        TileType.FOLIAGE_SUMMER_TALL_BUSH_6
     )
 
     val flowerGroup = arrayOf(
-        EntityType.FOLIAGE_SUMMER_FLOWER_1,
-        EntityType.FOLIAGE_SUMMER_FLOWER_2,
-        EntityType.FOLIAGE_SUMMER_FLOWER_3,
-        EntityType.FOLIAGE_SUMMER_FLOWER_4
+        TileType.FOLIAGE_SUMMER_FLOWER_1,
+        TileType.FOLIAGE_SUMMER_FLOWER_2,
+        TileType.FOLIAGE_SUMMER_FLOWER_3,
+        TileType.FOLIAGE_SUMMER_FLOWER_4
     )
 
     val dirtGroup = arrayOf(
-        EntityType.FOLIAGE_AUTUMN_TREE_1,
-        EntityType.FOLIAGE_AUTUMN_TREE_2,
-        EntityType.FOLIAGE_AUTUMN_TREE_3,
-        EntityType.FOLIAGE_AUTUMN_TREE_4,
-        EntityType.FOLIAGE_AUTUMN_TREE_5,
-        EntityType.FOLIAGE_AUTUMN_TREE_6
+        TileType.FOLIAGE_AUTUMN_TREE_1,
+        TileType.FOLIAGE_AUTUMN_TREE_2,
+        TileType.FOLIAGE_AUTUMN_TREE_3,
+        TileType.FOLIAGE_AUTUMN_TREE_4,
+        TileType.FOLIAGE_AUTUMN_TREE_5,
+        TileType.FOLIAGE_AUTUMN_TREE_6
     )
 
     val stoneGroup = arrayOf(
-        EntityType.FOLIAGE_SUMMER_CONIFER_1,
-        EntityType.FOLIAGE_SUMMER_CONIFER_2,
-        EntityType.FOLIAGE_SUMMER_CONIFER_3,
+        TileType.FOLIAGE_SUMMER_CONIFER_1,
+        TileType.FOLIAGE_SUMMER_CONIFER_2,
+        TileType.FOLIAGE_SUMMER_CONIFER_3,
     )
 
     val snowGroup = arrayOf(
-        EntityType.FOLIAGE_WINTER_CONIFER_1,
-        EntityType.FOLIAGE_WINTER_CONIFER_2,
-        EntityType.FOLIAGE_WINTER_CONIFER_3,
-        EntityType.FOLIAGE_WINTER_ROCK_1,
-        EntityType.FOLIAGE_WINTER_ROCK_2,
-        EntityType.FOLIAGE_WINTER_ROCK_3,
-        EntityType.FOLIAGE_WINTER_TRUNK_1,
-        EntityType.FOLIAGE_WINTER_TRUNK_2,
-        EntityType.FOLIAGE_WINTER_TRUNK_3,
-        EntityType.FOLIAGE_WINTER_TRUNK_4,
+        TileType.FOLIAGE_WINTER_CONIFER_1,
+        TileType.FOLIAGE_WINTER_CONIFER_2,
+        TileType.FOLIAGE_WINTER_CONIFER_3,
+        TileType.FOLIAGE_WINTER_ROCK_1,
+        TileType.FOLIAGE_WINTER_ROCK_2,
+        TileType.FOLIAGE_WINTER_ROCK_3,
+        TileType.FOLIAGE_WINTER_TRUNK_1,
+        TileType.FOLIAGE_WINTER_TRUNK_2,
+        TileType.FOLIAGE_WINTER_TRUNK_3,
+        TileType.FOLIAGE_WINTER_TRUNK_4,
     )
 
     override fun determineGameObjects(
@@ -119,7 +116,7 @@ class ProceduralHandler : ProceduralHandler {
         temperature: Double,
         tileX: Int,
         tileY: Int
-    ): TileType {
+    ): TileLayer {
         if (rng == null) {
             rng = Random(seed)
         }
@@ -139,30 +136,42 @@ class ProceduralHandler : ProceduralHandler {
             biome = tropicalOcean
         }
 
-        val type = determineTileTypeUsingProbability(biomeTiles[biome])
+        val tileLayer = TileLayer()
 
-        val texture = when (type) {
-            TileType.GRASS -> grassGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_BUSH_1).texture.path
-            TileType.TALL_GRASS -> tallGrassGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_TALL_BUSH_1).texture.path
-            TileType.FLOWER_GRASS -> flowerGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_FLOWER_1).texture.path
-            TileType.DIRT -> dirtGroup.random(rng!!, EntityType.FOLIAGE_AUTUMN_TREE_1).texture.path
-            TileType.STONE -> stoneGroup.random(rng!!, EntityType.FOLIAGE_SUMMER_CONIFER_1).texture.path
-            TileType.SNOW -> snowGroup.random(rng!!, EntityType.FOLIAGE_WINTER_CONIFER_1).texture.path
-            else -> ""
+        var type = determineTileTypeUsingProbability(biomeTiles[biome])
+
+        if (tileX == 10 && tileY == 10) {
+            type = TileType.CLEAR_SAND
+            tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SPRING_CONIFER_1.code
+        } else if (tileX == 5 && tileY == 10) {
+            type = TileType.CLEAR_SAND
+            tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SUMMER_FLOWER_4.code
+        } else if (tileX == 15 && tileY == 10) {
+            type = TileType.CLEAR_SAND
+            tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SPRING_ROCK_3.code
         }
 
-        if (texture.isNotBlank()) {
+
+        tileLayer[Metric.MAP_GROUND_LAYER] = type.code
+
+        val objectType = when (type) {
+            TileType.GRASS -> grassGroup.random(rng!!, TileType.FOLIAGE_SUMMER_BUSH_1)
+            TileType.TALL_GRASS -> tallGrassGroup.random(rng!!, TileType.FOLIAGE_SUMMER_TALL_BUSH_1)
+            TileType.FLOWER_GRASS -> flowerGroup.random(rng!!, TileType.FOLIAGE_SUMMER_FLOWER_1)
+            TileType.DIRT -> dirtGroup.random(rng!!, TileType.FOLIAGE_AUTUMN_TREE_1)
+            TileType.STONE -> stoneGroup.random(rng!!, TileType.FOLIAGE_SUMMER_CONIFER_1)
+            TileType.SNOW -> snowGroup.random(rng!!, TileType.FOLIAGE_WINTER_CONIFER_1)
+            else -> null
+        }
+
+        if (objectType != null) {
             rng?.let { random ->
                 if (random.nextFloat() > 0.95f) {
-                    world.entity {
-                        it += Texture(texture)
-                        it += WorldPosition(tileX.toFloat(), tileY.toFloat())
-                        it += WorldSize(width = 3, ignoreHeight = true, offsetY = 0.5f)
-                    }
+                    tileLayer[Metric.MAP_OBJECT_LAYER] = objectType.code
                 }
             }
         }
-        return type
+        return tileLayer
     }
 
     private fun <T> Array<T>.random(rng: Random, default: T): T {

@@ -6,6 +6,7 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.api.map.generation.*
 import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.util.PosUtil
@@ -54,11 +55,6 @@ class ProceduralGenerationSystem(
         }
     }
 
-    override fun determineTileType(
-        altitude: Double,
-        humidity: Double,
-        temperature: Double,
-        tileX: Int,
-        tileY: Int
-    ): TileType = handler.determineGameObjects(mapConfig.seed, world, altitude, humidity, temperature, tileX, tileY)
+    override fun determineTileLayer(alt: Double, hum: Double, temp: Double, ux: Int, uy: Int): TileLayer =
+        handler.determineGameObjects(mapConfig.seed, world, alt, hum, temp, ux, uy)
 }

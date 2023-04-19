@@ -3,54 +3,37 @@ package fr.manigames.railventure.client.renderer
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Matrix4
-import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MAX
-import fr.manigames.railventure.api.core.Metric.CAMERA_HEIGHT_MIN
-import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM_MAX
-import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM_MIN
-import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
-import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
+import fr.manigames.railventure.api.util.CameraUtil
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
 import fr.manigames.railventure.common.map.BaseMap
 
-class MapRenderer(
+abstract class MapRenderer(
     private val map: RenderableMap,
-    private val camera: Camera
+    protected val camera: Camera
 ) : Renderer {
 
-    private val batch: SpriteBatch = Render.spriteBatch
-    private var visibleChunks: MutableMap<Long, RenderableChunk> = mutableMapOf()
-    private val chunkSizeInPx = (Metric.TILE_SIZE * Metric.MAP_CHUNK_SIZE).toInt()
     private var firstInit = true
     private var lastCameraChunkPosition = Pair(0, 0)
     private var lastCameraZoom = 0f
+    protected var visibleChunks: MutableMap<Long, RenderableChunk> = mutableMapOf()
+        private set
 
-    fun render() {
+    open fun render() {
+        updateCameraChunk()
         if (firstInit) {
             firstInit = false
-            updateCameraChunk()
             prepareChunkForRendering()
+        } else {
+            checkDirty()
         }
-        batch.begin()
-        visibleChunks.forEach { (_, chunk) ->
-            chunk.texture?.let {
-                batch.draw(it, chunk.x.toFloat() * chunkSizeInPx, chunk.y.toFloat() * chunkSizeInPx, chunkSizeInPx.toFloat(), chunkSizeInPx.toFloat())
-            }
-        }
-        batch.end()
     }
 
-    fun update() {
-        checkDirty()
-        updateCameraChunk()
-    }
+    open fun onChunksChange() = Unit
 
     private fun prepareChunkForRendering() {
         val visible = PosUtil.getVisibleArea(camera)
@@ -79,18 +62,16 @@ class MapRenderer(
     private fun updateCameraChunk() {
         val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
         val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
-        if (chunkPos != lastCameraChunkPosition) {
-            lastCameraChunkPosition = chunkPos
-            prepareChunkForRendering()
-        }
         val zoom = when (camera) {
             is OrthographicCamera -> camera.zoom
-            is PerspectiveCamera -> normalizeZ(camera.position.z)
+            is PerspectiveCamera -> CameraUtil.normalizeZ(camera.position.z)
             else -> 1f
         }
-        if (zoom != lastCameraZoom) {
+        if (chunkPos != lastCameraChunkPosition || zoom != lastCameraZoom) {
+            lastCameraChunkPosition = chunkPos
             lastCameraZoom = zoom
             prepareChunkForRendering()
+            onChunksChange()
         }
     }
 
@@ -99,11 +80,8 @@ class MapRenderer(
             if (chunk.isDirty) {
                 Logger.info("Chunk ${chunk.x} ${chunk.y} is dirty, reloading it")
                 map.loadChunk(chunk.x, chunk.y)
+                onChunksChange()
             }
         }
-    }
-
-    override fun setProjectionMatrix(projectionMatrix: Matrix4?) {
-        batch.projectionMatrix = projectionMatrix
     }
 }

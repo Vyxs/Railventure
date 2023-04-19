@@ -1,11 +1,11 @@
 package fr.manigames.railventure.api.map.generation
 
-import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.map.base.TileLayer
 
 interface ProceduralTileHandler {
     object DEFAULT : ProceduralTileHandler {
-        override fun determineTileType(altitude: Double, humidity: Double, temperature: Double, tileX: Int, tileY: Int): TileType {
-            return TileType.GRASS
+        override fun determineTileLayer(alt: Double, hum: Double, temp: Double, ux: Int, uy: Int): TileLayer {
+            return TileLayer.empty()
         }
     }
 
@@ -19,5 +19,5 @@ interface ProceduralTileHandler {
      * @param tileY The y position of the tile in the world (unscaled)
      * @return The tile type
      */
-    fun determineTileType(altitude: Double, humidity: Double, temperature: Double, tileX: Int, tileY: Int): TileType
+    fun determineTileLayer(alt: Double, hum: Double, temp: Double, ux: Int, uy: Int): TileLayer
 }

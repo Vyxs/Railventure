@@ -3,8 +3,11 @@ package fr.manigames.railventure.api.map.base
 /**
  * Map of the game. It contains chunks of tiles. The map is a 2D array of chunks.
  * Each chunk is a 2D array of tiles.
+ *
+ * @param V The type of the tile
+ * @param S The type of the tileStack
  **/
-interface Map<V> {
+interface Map<V, S> {
 
     /**
      * Get the chunk at the given position
@@ -13,14 +16,14 @@ interface Map<V> {
      * @param y The y position of the chunk
      * @return The chunk at the given position
      */
-    fun getChunk(x: Int, y: Int): MapChunk<V>?
+    fun getChunk(x: Int, y: Int): MapChunk<V, S>?
 
     /**
      * Set the chunk.
      *
      * @param chunk The chunk to set
      */
-    fun setChunk(chunk: MapChunk<V>)
+    fun setChunk(chunk: MapChunk<V, S>)
 
     /**
      * Check if the chunk at the given position is loaded

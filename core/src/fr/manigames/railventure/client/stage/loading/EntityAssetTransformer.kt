@@ -4,9 +4,8 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.EntityAssets
-import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.debug.Logger
-import fr.manigames.railventure.api.gameobject.EntityType
+import fr.manigames.railventure.api.gameobject.TileType
 import java.util.concurrent.atomic.AtomicReference
 
 class EntityAssetTransformer {
@@ -20,9 +19,10 @@ class EntityAssetTransformer {
 
     fun transform() {
         isTransforming.set(true)
-        val total = EntityType.values().size
+        val startFrom = 24
+        val total = TileType.values().size - startFrom
         var current = 0
-        EntityType.values().forEach { type ->
+        TileType.values().filter { it.code >= startFrom }.forEach { type ->
             type.texture.path.let {
                 val tex = Assets.instance.getTexture(it)
                 val scaledTex = getScaledTexture(tex)

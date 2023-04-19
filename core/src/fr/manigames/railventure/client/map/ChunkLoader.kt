@@ -53,7 +53,8 @@ open class ChunkLoader(
         val pixmap = Pixmap(chunkSizeInPx, chunkSizeInPx, Pixmap.Format.RGBA8888)
         chunk.getTiles().forEachIndexed { y, column ->
             column.forEachIndexed { x, tileLayer ->
-                tileLayer.map(TileType::fromCode).forEach { tileType ->
+                tileLayer[Metric.MAP_GROUND_LAYER].let { code ->
+                    val tileType = TileType.fromCode(code)
                     assets.getTexture(tileType.texture.path)?.let {
                         drawTextureToChunkPixmap(tileType, it, pixmap, x, y)
                     }

@@ -17,7 +17,8 @@ import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.renderer.DebugRenderer
 import fr.manigames.railventure.client.renderer.EntityRenderer
-import fr.manigames.railventure.client.renderer.MapRenderer
+import fr.manigames.railventure.client.renderer.GroundMapRenderer
+import fr.manigames.railventure.client.renderer.ObjectMapRenderer
 import fr.manigames.railventure.client.system.PlayerCameraSystem
 import fr.manigames.railventure.client.system.PlayerControllerSystem
 import fr.manigames.railventure.client.system.RenderSystem
@@ -29,7 +30,6 @@ import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
 import fr.manigames.railventure.common.generation.ProceduralHandler
 import fr.manigames.railventure.generated.R
-import fr.manigames.railventure.test.CameraController
 import fr.manigames.railventure.test.TestSystem
 import java.util.*
 
@@ -43,20 +43,23 @@ class GameScreen : Screen {
     private lateinit var world: World
     private lateinit var camera: Camera
     private lateinit var viewport: ExtendViewport
-    private lateinit var mapRenderer: MapRenderer
+    private lateinit var groundMapRenderer: GroundMapRenderer
+    private lateinit var objectMapRenderer: ObjectMapRenderer
     private lateinit var entityRenderer: EntityRenderer
     private lateinit var debugRenderer: DebugRenderer
     private var mainPlayer: Entity? = null
     override fun init(game: Game) {
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
-        mapRenderer = MapRenderer(map, camera)
+        groundMapRenderer = GroundMapRenderer(map, camera)
+        objectMapRenderer = ObjectMapRenderer(map, camera, !Game.USE_ORTHOGRAPHIC_CAMERA)
         entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
         debugRenderer = DebugRenderer(camera)
 
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {
                 add(camera)
-                add(mapRenderer)
+                add(groundMapRenderer)
+                add(objectMapRenderer)
                 add(entityRenderer)
                 add(map)
                 add(proceduralHandler)
@@ -98,7 +101,7 @@ class GameScreen : Screen {
 
     override fun dispose() {
         world.dispose()
-        mapRenderer.dispose()
+        groundMapRenderer.dispose()
         entityRenderer.dispose()
         debugRenderer.dispose()
     }
