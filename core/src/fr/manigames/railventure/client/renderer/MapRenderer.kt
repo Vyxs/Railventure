@@ -3,9 +3,11 @@ package fr.manigames.railventure.client.renderer
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.math.Vector2
 import fr.manigames.railventure.api.debug.Logger
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
+import fr.manigames.railventure.api.type.math.Vector2Int
 import fr.manigames.railventure.api.util.CameraUtil
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.client.map.RenderableChunk
@@ -18,7 +20,7 @@ abstract class MapRenderer(
 ) : Renderer {
 
     private var firstInit = true
-    private var lastCameraChunkPosition = Pair(0, 0)
+    private var lastCameraChunkPosition = Vector2Int(0, 0)
     private var lastCameraZoom = 0f
     protected var visibleChunks: MutableMap<Long, RenderableChunk> = mutableMapOf()
         private set
@@ -61,7 +63,7 @@ abstract class MapRenderer(
 
     private fun updateCameraChunk() {
         val worldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
-        val chunkPos = PosUtil.getChunkPosition(worldPos.first, worldPos.second)
+        val chunkPos = PosUtil.getChunkPosition(worldPos.x, worldPos.y)
         val zoom = when (camera) {
             is OrthographicCamera -> camera.zoom
             is PerspectiveCamera -> CameraUtil.normalizeZ(camera.position.z)

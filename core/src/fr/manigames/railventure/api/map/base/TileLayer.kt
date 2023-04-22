@@ -13,12 +13,40 @@ value class TileLayer(val layers: IntArray = IntArray(MAP_TILE_LAYER) { 0 }) {
         layers[z] = value
     }
 
-    fun forEach(consumer: (Int) -> Unit) {
+    inline fun forEach(consumer: (Int) -> Unit) {
         layers.forEach(consumer)
+    }
+
+    inline fun forEachInverse(consumer: (Int) -> Unit) {
+        layers.reversed().forEach(consumer)
+    }
+
+    inline fun first(predicate: (Int) -> Boolean): Int {
+        return layers.first(predicate)
+    }
+
+    inline fun firstOrNull(predicate: (Int) -> Boolean): Int? {
+        return layers.firstOrNull(predicate)
+    }
+
+    inline fun firstInverse(predicate: (Int) -> Boolean): Int {
+        return layers.reversed().first(predicate)
+    }
+
+    inline fun firstInverseOrNull(predicate: (Int) -> Boolean): Int? {
+        return layers.reversed().firstOrNull(predicate)
     }
 
     inline fun <R> map(transformer: (Int) -> R): List<R> {
         return layers.map(transformer)
+    }
+
+    operator fun iterator(): Iterator<Int> {
+        return layers.iterator()
+    }
+
+    fun reversed(): IntArray {
+        return layers.reversedArray()
     }
 
     companion object {

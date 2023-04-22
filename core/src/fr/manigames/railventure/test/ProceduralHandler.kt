@@ -151,7 +151,6 @@ class ProceduralHandler : ProceduralHandler {
             tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SPRING_ROCK_3.code
         }
 
-
         tileLayer[Metric.MAP_GROUND_LAYER] = type.code
 
         val objectType = when (type) {
@@ -171,6 +170,29 @@ class ProceduralHandler : ProceduralHandler {
                 }
             }
         }
+        tileLayer[Metric.MAP_OBJECT_LAYER] = when {
+            (tileY == 1 || tileY == 5) && tileX in -17..0 -> TileType.RAIL_H.code
+            (tileX == 1 || tileX == -18) && tileY in 2..4 -> TileType.RAIL_V.code
+            tileX == 1 && tileY == 1 -> TileType.RAIL_TOP_LEFT.code
+            tileX == 1 && tileY == 5 -> TileType.RAIL_BOT_LEFT.code
+            tileX == -18 && tileY == 1 -> TileType.RAIL_TOP_RIGHT.code
+            tileX == -18 && tileY == 5 -> TileType.RAIL_BOT_RIGHT.code
+            else -> tileLayer[Metric.MAP_OBJECT_LAYER]
+        }
+
+        // y ; x
+        tileLayer[Metric.MAP_OBJECT_LAYER] = when {
+            tileY == 0 && tileX == 0 -> TileType.DEBUG_TILE_0_0.code
+            tileY == 0 && tileX == 15 -> TileType.DEBUG_TILE_0_15.code
+            tileY == 15 && tileX == 0 -> TileType.DEBUG_TILE_15_0.code
+            tileY == 15 && tileX == 15 -> TileType.DEBUG_TILE_15_15.code
+            tileY == 16 && tileX == 16 -> TileType.DEBUG_TILE_0_0.code
+            tileY == 16 && tileX == 31 -> TileType.DEBUG_TILE_0_15.code
+            tileY == 31 && tileX == 16 -> TileType.DEBUG_TILE_15_0.code
+            tileY == 31 && tileX == 31 -> TileType.DEBUG_TILE_15_15.code
+            else -> tileLayer[Metric.MAP_OBJECT_LAYER]
+        }
+
         return tileLayer
     }
 
@@ -179,7 +201,7 @@ class ProceduralHandler : ProceduralHandler {
     }
 
     private fun determineTileTypeUsingProbability(tileTypes: Array<Pair<TileType, Double>>?): TileType {
-        val random = Math.random()
+        val random = rng!!.nextDouble()
         var sum = 0.0
         for (tileType in tileTypes!!) {
             sum += tileType.second

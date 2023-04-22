@@ -11,7 +11,10 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.profiling.GLProfiler
 import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.math.Vector3
 import fr.manigames.railventure.api.core.Metric
+import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
+import fr.manigames.railventure.api.core.Metric.TILE_SIZE
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
@@ -19,10 +22,13 @@ import fr.manigames.railventure.api.util.MathUtil.toRoundedString
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.common.ecs.component.Move
 import fr.manigames.railventure.common.ecs.component.WorldPosition
+import fr.manigames.railventure.common.map.BaseMap
+import java.math.RoundingMode
 
 
 class DebugRenderer(
-    private val camera: Camera
+    private val camera: Camera,
+    private val map: BaseMap
 ) : Renderer {
 
     private val resetMatrix = Matrix4().setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
@@ -33,10 +39,14 @@ class DebugRenderer(
     private val glProfiler = GLProfiler(Gdx.graphics)
     private var playerPosition: WorldPosition? = null
     private var playerMove: Move? = null
+    private var pointerX = 0
+    private var pointerY = 0
+    private val posFormat = java.text.DecimalFormat("#")
     var worldEntityCount: Int? = null
     val inputProcessor = DebugInputProcessor()
 
     init {
+        posFormat.roundingMode = RoundingMode.DOWN
         inputProcessor.setGpuInfoListener {
             if (it) glProfiler.enable()
             else glProfiler.disable()
@@ -47,6 +57,8 @@ class DebugRenderer(
     override fun setProjectionMatrix(projectionMatrix: Matrix4?) = Unit
 
     fun render() {
+        pointerX = Gdx.input.x
+        pointerY = Gdx.input.y
         if (inputProcessor.showDebug.not())
             return
         if (inputProcessor.showTileGrid)
@@ -68,7 +80,7 @@ class DebugRenderer(
 
     private fun renderGrid() {
         shapeRenderer.projectionMatrix = camera.combined
-        val tileSize = Metric.TILE_SIZE
+        val tileSize = TILE_SIZE
         val offset = tileSize
         val zoom = when (camera) {
             is OrthographicCamera -> camera.zoom
@@ -96,8 +108,8 @@ class DebugRenderer(
     }
 
     private fun renderChunksGrid() {
-        val chunkSize = Metric.MAP_CHUNK_SIZE
-        val tileSize = Metric.TILE_SIZE
+        val chunkSize = MAP_CHUNK_SIZE
+        val tileSize = TILE_SIZE
         val size = chunkSize * tileSize
         shapeRenderer.projectionMatrix = camera.combined
         val offset = size
@@ -133,6 +145,7 @@ class DebugRenderer(
         getPlayerInfo(info)
         getGameInfo(info)
         getGpuInfo(info)
+        getUserInfo(info)
 
         val strings = info.reversed()
 
@@ -147,25 +160,46 @@ class DebugRenderer(
         spriteBatch.end()
     }
 
+    private fun getUserInfo(info: MutableList<String>) {
+        info.add("===== Pointer =====")
+        info.add("Window position (x, y): $pointerX, $pointerY")
+        camera.unproject(Vector3(pointerX.toFloat(), pointerY.toFloat(), 0f)).let {
+            val x = it.x / TILE_SIZE
+            val y = it.y / TILE_SIZE
+            val chunkPos = PosUtil.getChunkPosition(x, y)
+            val posInChunk = PosUtil.getPosInChunk(x, y)
+
+            info.add("World position (y, x): ${y.toRoundedString()}, ${x.toRoundedString()}")
+            info.add("Chunk position (y, x): ${chunkPos.y}, ${chunkPos.x}")
+            info.add("Position in chunk (y, x): ${posInChunk.y}, ${posInChunk.x}")
+            try {
+                val hoveredTile = map.getFirstNonAirTile(x, y)
+                info.add("Hovered tile: $hoveredTile")
+            } catch (e: Exception) {
+                println("Error: $e")
+            }
+        }
+    }
+
     private fun getCameraInfo(info: MutableList<String>) {
         val camWorldPos = PosUtil.getWorldPosition(camera.position.x, camera.position.y)
-        val camChunkPos = PosUtil.getChunkPosition(camera.position.x / Metric.TILE_SIZE, camera.position.y / Metric.TILE_SIZE)
+        val camChunkPos = PosUtil.getChunkPosition(camera.position.x / TILE_SIZE, camera.position.y / TILE_SIZE)
         info.add("===== Camera =====")
-        info.add("Camera position: ${camera.position.toRoundedString()}")
-        info.add("Camera world position (y, x): ${(camWorldPos.second).toRoundedString()}, ${(camWorldPos.first).toRoundedString()}")
-        info.add("Camera chunk position (y, x): ${camChunkPos.second}, ${camChunkPos.first}")
-        info.add("Camera direction: ${camera.direction.toRoundedString()}")
-        info.add("Camera viewport: ${camera.viewportWidth.toRoundedString()}, ${camera.viewportHeight.toRoundedString()}")
+        info.add("Position: ${camera.position.toRoundedString()}")
+        info.add("World position (y, x): ${(camWorldPos.y).toRoundedString()}, ${(camWorldPos.x).toRoundedString()}")
+        info.add("Chunk position (y, x): ${camChunkPos.y}, ${camChunkPos.x}")
+        info.add("Direction: ${camera.direction.toRoundedString()}")
+        info.add("Viewport: ${camera.viewportWidth.toRoundedString()}, ${camera.viewportHeight.toRoundedString()}")
 
         if (camera is OrthographicCamera) {
             val chunkVisibleHorizontalCount = PosUtil.getChunkVisibleHorizontal(camera.position.x, camera.viewportWidth, camera.zoom)
             val chunkVisibleVerticalCount = PosUtil.getChunkVisibleVertical(camera.position.y, camera.viewportHeight, camera.zoom)
             val chunkVisibleCount = PosUtil.getChunkVisible(camera.position.x.toInt(), camera.position.y.toInt(), camera.viewportWidth, camera.viewportHeight, camera.zoom)
 
-            info.add("Camera zoom: ${camera.zoom.toRoundedString()}")
-            info.add("Camera chunk visible horizontal: $chunkVisibleHorizontalCount")
-            info.add("Camera chunk visible vertical: $chunkVisibleVerticalCount")
-            info.add("Camera chunk visible: $chunkVisibleCount")
+            info.add("Zoom: ${camera.zoom.toRoundedString()}")
+            info.add("Chunk visible horizontal: $chunkVisibleHorizontalCount")
+            info.add("Chunk visible vertical: $chunkVisibleVerticalCount")
+            info.add("Chunk visible: $chunkVisibleCount")
         }
     }
 
@@ -179,11 +213,11 @@ class DebugRenderer(
             playerMove?.let { move ->
                 val chunkPosition = PosUtil.getChunkPosition(position.world_x, position.world_y)
                 info.add("===== Player =====")
-                info.add("Player position: ${position.world_x.toRoundedString()}, ${position.world_y.toRoundedString()}")
-                info.add("Player chunk position: ${chunkPosition.first}, ${chunkPosition.second}")
-                info.add("Player speed: ${move.speed.toRoundedString()}")
-                info.add("Player velocity: ${move.velocity.toRoundedString()}")
-                info.add("Player acceleration: ${move.acceleration.toRoundedString()}")
+                info.add("Position (y, x): ${position.world_y.toRoundedString()}, ${position.world_x.toRoundedString()}")
+                info.add("Chunk position (y, x): ${chunkPosition.y}, ${chunkPosition.x}")
+                info.add("Speed: ${move.speed.toRoundedString()}")
+                info.add("Velocity: ${move.velocity.toRoundedString()}")
+                info.add("Acceleration: ${move.acceleration.toRoundedString()}")
             }
         }
     }
@@ -272,5 +306,4 @@ class DebugInputProcessor : InputProcessor {
     fun setGpuInfoListener(function: (Boolean) -> Unit) {
         gpuInfoListener = function
     }
-
 }

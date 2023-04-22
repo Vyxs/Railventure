@@ -49,8 +49,8 @@ data class ChunkArea(
      * @return True if the area contains the world position
      **/
     fun containsTile(worldX: Float, worldY: Float): Boolean {
-        val (chunkX, chunkY) = PosUtil.getChunkPosition(worldX, worldY)
-        return contains(chunkX, chunkY)
+        val pos = PosUtil.getChunkPosition(worldX, worldY)
+        return contains(pos.x, pos.y)
     }
 
     companion object {

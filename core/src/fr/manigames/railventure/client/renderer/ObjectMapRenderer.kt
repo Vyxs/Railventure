@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy
 import com.badlogic.gdx.graphics.g3d.decals.PluggableGroupStrategy
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
+import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.EntityAssets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
@@ -86,17 +87,22 @@ class ObjectMapRenderer(
             val chunkYOffset = chunk.y * MAP_CHUNK_SIZE
 
             chunk.getTiles().forEachIndexed { y, column ->
-                val adjustedY = MAP_CHUNK_SIZE - 1 - y
 
                 column.forEachIndexed { x, layer ->
                     val tile = TileType.fromCode(layer[Metric.MAP_OBJECT_LAYER])
                     if (tile == TileType.AIR) return@forEachIndexed
 
-                    val tex = EntityAssets.getTexture(tile.texture.path) ?: return@forEachIndexed
-                    val rx = (chunkXOffset + x) * TILE_SIZE - ((tex.width) / 2) + TILE_SIZE / 2
-                    val ry = (chunkYOffset + adjustedY) * TILE_SIZE + TILE_SIZE / 2
-
-                    render2d.add(Render2d(tex, rx, ry))
+                    var tex = EntityAssets.getTexture(tile.texture.path)
+                    if (tex == null) {
+                        tex = Assets.instance.getTexture(tile.texture.path) ?: return@forEachIndexed
+                        val rx = (chunkXOffset + x) * TILE_SIZE
+                        val ry = (chunkYOffset + y) * TILE_SIZE
+                        render2d.add(Render2d(tex, rx, ry))
+                    } else {
+                        val rx = (chunkXOffset + x) * TILE_SIZE - ((tex.width) / 2) + TILE_SIZE / 2
+                        val ry = (chunkYOffset + y) * TILE_SIZE + TILE_SIZE / 2
+                        render2d.add(Render2d(tex, rx, ry))
+                    }
                 }
             }
         }

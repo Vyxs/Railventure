@@ -51,7 +51,7 @@ open class ChunkLoader(
     protected open fun makePixmap(chunk: RenderableChunk, assets: Assets) : Pixmap {
         val chunkSizeInPx = (Metric.MAP_CHUNK_SIZE * Metric.TILE_SIZE).toInt()
         val pixmap = Pixmap(chunkSizeInPx, chunkSizeInPx, Pixmap.Format.RGBA8888)
-        chunk.getTiles().forEachIndexed { y, column ->
+        chunk.getTiles().reversed().forEachIndexed { y, column ->
             column.forEachIndexed { x, tileLayer ->
                 tileLayer[Metric.MAP_GROUND_LAYER].let { code ->
                     val tileType = TileType.fromCode(code)

@@ -3,8 +3,10 @@ package fr.manigames.railventure.api.util
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.math.Vector2
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.type.math.ChunkArea
+import fr.manigames.railventure.api.type.math.Vector2Int
 import kotlin.math.*
 
 object PosUtil {
@@ -16,12 +18,8 @@ object PosUtil {
      * @param y Chunk Y coordinate
      * @return World position
      **/
-    fun getWorldPosition(x: Float, y: Float): Pair<Float, Float> {
-        return Pair(x / Metric.TILE_SIZE, y / Metric.TILE_SIZE)
-    }
-
-    fun getXorYWorldPosition(xory: Float): Float {
-        return xory / Metric.TILE_SIZE
+    fun getWorldPosition(x: Float, y: Float): Vector2 {
+        return Vector2(x / Metric.TILE_SIZE, y / Metric.TILE_SIZE)
     }
 
     /**
@@ -37,7 +35,7 @@ object PosUtil {
      * @param worldY World Y coordinate
      * @return Chunk position
      **/
-    fun getChunkPosition(worldX: Float, worldY: Float): Pair<Int, Int> {
+    fun getChunkPosition(worldX: Float, worldY: Float): Vector2Int {
         val chunkSize = Metric.MAP_CHUNK_SIZE
 
         val chunkX = if (worldX < 0) {
@@ -50,17 +48,7 @@ object PosUtil {
         } else {
             (worldY / chunkSize).toInt()
         }
-        return Pair(chunkX, chunkY)
-    }
-
-    fun getXorYChunkPosition(xory: Float): Int {
-        val chunkSize = Metric.MAP_CHUNK_SIZE
-
-        return if (xory < 0) {
-            (xory / chunkSize).toInt() - 1
-        } else {
-            (xory / chunkSize).toInt()
-        }
+        return Vector2Int(chunkX, chunkY)
     }
 
     /**
@@ -131,10 +119,25 @@ object PosUtil {
             else -> 0
         }
         val worldPos = getWorldPosition(camera.position.x, camera.position.y)
-        val chunkPos = getChunkPosition(worldPos.first, worldPos.second)
+        val chunkPos = getChunkPosition(worldPos.x, worldPos.y)
         return ChunkArea(
-            chunkPos.first - horizontalChunkCount, chunkPos.first + horizontalChunkCount,
-            chunkPos.second - verticalChunkCount, chunkPos.second + verticalChunkCount
+            chunkPos.x - horizontalChunkCount, chunkPos.x + horizontalChunkCount,
+            chunkPos.y - verticalChunkCount, chunkPos.y + verticalChunkCount
         )
+    }
+
+    fun getPosInChunk(worldX: Float, worldY: Float): Vector2Int {
+        val chunkSize = Metric.MAP_CHUNK_SIZE
+        val tileX = if (worldX < 0) {
+            (worldX % chunkSize).toInt() + chunkSize - 1
+        } else {
+            (worldX % chunkSize).toInt()
+        }
+        val tileY = if (worldY < 0) {
+            (worldY % chunkSize).toInt() + chunkSize - 1
+        } else {
+            (worldY % chunkSize).toInt()
+        }
+        return Vector2Int(tileX, tileY)
     }
 }

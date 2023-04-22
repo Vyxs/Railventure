@@ -20,9 +20,11 @@ class EntityAssetTransformer {
     fun transform() {
         isTransforming.set(true)
         val startFrom = 24
-        val total = TileType.values().size - startFrom
+        val endTo = 95
+        val size = TileType.values().size
+        val total = 62
         var current = 0
-        TileType.values().filter { it.code >= startFrom }.forEach { type ->
+        TileType.values().filter { it.code in startFrom until endTo }.forEach { type ->
             type.texture.path.let {
                 val tex = Assets.instance.getTexture(it)
                 val scaledTex = getScaledTexture(tex)
@@ -43,7 +45,7 @@ class EntityAssetTransformer {
         if (texture == null) return null
         val srcPixmap = getPixmap(texture)
 
-        val width = (srcPixmap.width.toFloat() / 5).toInt()//(Metric.TILE_SIZE * 3).toInt()
+        val width = (srcPixmap.width.toFloat() / 5).toInt()
 
         val widthRatio = width / srcPixmap.width.toFloat()
         val height = srcPixmap.height.toFloat() * widthRatio

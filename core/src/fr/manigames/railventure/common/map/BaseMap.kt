@@ -5,6 +5,7 @@ import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.Map
 import fr.manigames.railventure.api.map.base.MapChunk
 import fr.manigames.railventure.api.map.base.TileLayer
+import fr.manigames.railventure.api.util.PosUtil
 
 open class BaseMap : Map<TileType, TileLayer> {
 
@@ -38,6 +39,28 @@ open class BaseMap : Map<TileType, TileLayer> {
 
     override fun getTile(tileX: Int, tileY: Int, tileZ: Int): TileType? {
         return getChunk(tileX / MAP_CHUNK_SIZE, tileY / MAP_CHUNK_SIZE)?.getTile(tileX % MAP_CHUNK_SIZE, tileY % MAP_CHUNK_SIZE, tileZ)
+    }
+
+    /**
+     * Get the first non-air tile at the given position. If the chunk is not loaded, it will return null.
+     *
+     * @param tileX The x position of the tile
+     * @param tileY The y position of the tile
+     * @return The first non-air tile at the given position, or null if the chunk is not loaded
+     **/
+    fun getFirstNonAirTile(tileX: Float, tileY: Float): TileType? {
+        val (chunkX, chunkY) = PosUtil.getChunkPosition(tileX, tileY)
+        val chunk = getChunk(chunkX, chunkY) ?: return null
+
+        val (posX, posY) = PosUtil.getPosInChunk(tileX, tileY)
+        val tileStack = chunk.getTileStack(posX, posY)
+
+        for (tileCode in tileStack.reversed()) {
+            if (tileCode != TileType.AIR.code) {
+                return TileType.fromCode(tileCode)
+            }
+        }
+        return null
     }
 
     /**

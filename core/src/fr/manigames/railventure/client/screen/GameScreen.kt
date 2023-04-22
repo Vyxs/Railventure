@@ -53,7 +53,7 @@ class GameScreen : Screen {
         groundMapRenderer = GroundMapRenderer(map, camera)
         objectMapRenderer = ObjectMapRenderer(map, camera, !Game.USE_ORTHOGRAPHIC_CAMERA)
         entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
-        debugRenderer = DebugRenderer(camera)
+        debugRenderer = DebugRenderer(camera, map)
 
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {

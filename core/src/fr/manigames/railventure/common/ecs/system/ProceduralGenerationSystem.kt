@@ -43,7 +43,7 @@ class ProceduralGenerationSystem(
 
         val pos = entity[WorldPosition]
         val chunkPosition = PosUtil.getChunkPosition(pos.world_x, pos.world_y)
-        val area = ChunkArea.fromCenter(chunkPosition.first, chunkPosition.second, viewDistance)
+        val area = ChunkArea.fromCenter(chunkPosition.x, chunkPosition.y, viewDistance)
 
         area.toChunkPositions().forEach { chunkPos ->
             if (!map.hasChunk(chunkPos.first, chunkPos.second)) {

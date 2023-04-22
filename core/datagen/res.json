@@ -26,6 +26,11 @@
     {"name": "rail_t_right", "path": "texture/rail/rail-t-right.png"},
     {"name": "wagon", "path": "texture/wagon/wagon.png"},
 
+    {"name": "tile_0_0", "path": "texture/debug/tile_0_0.png"},
+    {"name": "tile_0_15", "path": "texture/debug/tile_0_15.png"},
+    {"name": "tile_15_0", "path": "texture/debug/tile_15_0.png"},
+    {"name": "tile_15_15", "path": "texture/debug/tile_15_15.png"},
+
     {"name": "foliage_autumn_tall_bush_1", "path": "texture/foliage/autumn/tall_bush_1.png"},
     {"name": "foliage_autumn_tall_bush_2", "path": "texture/foliage/autumn/tall_bush_2.png"},
     {"name": "foliage_autumn_tall_bush_3", "path": "texture/foliage/autumn/tall_bush_3.png"},

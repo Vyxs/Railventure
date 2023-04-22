@@ -2,31 +2,36 @@ package fr.manigames.railventure.api.gameobject
 
 import fr.manigames.railventure.generated.R
 
-enum class TileType(val texture: R.Resource, val code: Int) {
-    AIR(R.Texture.AIR, 0),
-    GRASS (R.Texture.GRASS, 1),
-    DIRT(R.Texture.DIRT, 2),
-    SAND(R.Texture.SAND, 3),
-    WATER(R.Texture.WATER, 4),
-    RAIL_TOP_LEFT(R.Texture.RAIL_TOP_LEFT, 5),
-    RAIL_TOP_RIGHT(R.Texture.RAIL_TOP_RIGHT, 6),
-    RAIL_BOT_LEFT(R.Texture.RAIL_BOT_LEFT, 7),
-    RAIL_BOT_RIGHT(R.Texture.RAIL_BOT_RIGHT, 8),
-    RAIL_H(R.Texture.RAIL_H, 9),
-    RAIL_V(R.Texture.RAIL_V, 10),
-    RAIL_X(R.Texture.RAIL_X, 11),
-    RAIL_T_TOP(R.Texture.RAIL_T_TOP, 12),
-    RAIL_T_BOT(R.Texture.RAIL_T_BOT, 13),
-    RAIL_T_LEFT(R.Texture.RAIL_T_LEFT, 14),
-    RAIL_T_RIGHT(R.Texture.RAIL_T_RIGHT, 15),
-    STONE(R.Texture.STONE, 16),
-    MOSSY_STONE(R.Texture.MOSSY_STONE, 17),
-    CLEAR_SAND(R.Texture.CLEAR_SAND, 18),
-    DEEP_WATER(R.Texture.DEEP_WATER, 19),
-    FLOWER_GRASS(R.Texture.FLOWER_GRASS, 20),
-    SNOW(R.Texture.SNOW, 21),
-    SNOWY_STONE(R.Texture.SNOWY_STONE, 22),
-    TALL_GRASS(R.Texture.TALL_GRASS, 23),
+enum class RenderType {
+    TILE,
+    ENTITY
+}
+
+enum class TileType(val texture: R.Resource, val code: Int, val renderType: RenderType = RenderType.ENTITY) {
+    AIR(R.Texture.AIR, 0, RenderType.TILE),
+    GRASS (R.Texture.GRASS, 1, RenderType.TILE),
+    DIRT(R.Texture.DIRT, 2, RenderType.TILE),
+    SAND(R.Texture.SAND, 3, RenderType.TILE),
+    WATER(R.Texture.WATER, 4, RenderType.TILE),
+    RAIL_TOP_LEFT(R.Texture.RAIL_TOP_LEFT, 5, RenderType.TILE),
+    RAIL_TOP_RIGHT(R.Texture.RAIL_TOP_RIGHT, 6, RenderType.TILE),
+    RAIL_BOT_LEFT(R.Texture.RAIL_BOT_LEFT, 7, RenderType.TILE),
+    RAIL_BOT_RIGHT(R.Texture.RAIL_BOT_RIGHT, 8, RenderType.TILE),
+    RAIL_H(R.Texture.RAIL_H, 9, RenderType.TILE),
+    RAIL_V(R.Texture.RAIL_V, 10, RenderType.TILE),
+    RAIL_X(R.Texture.RAIL_X, 11, RenderType.TILE),
+    RAIL_T_TOP(R.Texture.RAIL_T_TOP, 12, RenderType.TILE),
+    RAIL_T_BOT(R.Texture.RAIL_T_BOT, 13, RenderType.TILE),
+    RAIL_T_LEFT(R.Texture.RAIL_T_LEFT, 14, RenderType.TILE),
+    RAIL_T_RIGHT(R.Texture.RAIL_T_RIGHT, 15, RenderType.TILE),
+    STONE(R.Texture.STONE, 16, RenderType.TILE),
+    MOSSY_STONE(R.Texture.MOSSY_STONE, 17, RenderType.TILE),
+    CLEAR_SAND(R.Texture.CLEAR_SAND, 18, RenderType.TILE),
+    DEEP_WATER(R.Texture.DEEP_WATER, 19, RenderType.TILE),
+    FLOWER_GRASS(R.Texture.FLOWER_GRASS, 20, RenderType.TILE),
+    SNOW(R.Texture.SNOW, 21, RenderType.TILE),
+    SNOWY_STONE(R.Texture.SNOWY_STONE, 22, RenderType.TILE),
+    TALL_GRASS(R.Texture.TALL_GRASS, 23, RenderType.TILE),
 
     FOLIAGE_AUTUMN_TALL_BUSH_1(R.Texture.FOLIAGE_AUTUMN_TALL_BUSH_1, 24),
     FOLIAGE_AUTUMN_TALL_BUSH_2(R.Texture.FOLIAGE_AUTUMN_TALL_BUSH_2, 25),
@@ -89,7 +94,12 @@ enum class TileType(val texture: R.Resource, val code: Int) {
     FOLIAGE_WINTER_TRUNK_1(R.Texture.FOLIAGE_WINTER_TRUNK_1, 91),
     FOLIAGE_WINTER_TRUNK_2(R.Texture.FOLIAGE_WINTER_TRUNK_2, 92),
     FOLIAGE_WINTER_TRUNK_3(R.Texture.FOLIAGE_WINTER_TRUNK_3, 93),
-    FOLIAGE_WINTER_TRUNK_4(R.Texture.FOLIAGE_WINTER_TRUNK_4, 94);
+    FOLIAGE_WINTER_TRUNK_4(R.Texture.FOLIAGE_WINTER_TRUNK_4, 94),
+
+    DEBUG_TILE_0_0(R.Texture.TILE_0_0, 95),
+    DEBUG_TILE_0_15(R.Texture.TILE_0_15, 96),
+    DEBUG_TILE_15_0(R.Texture.TILE_15_0, 97),
+    DEBUG_TILE_15_15(R.Texture.TILE_15_15, 98);
 
     companion object {
         fun fromCode(code: Int): TileType = values().firstOrNull { it.code == code } ?: AIR
