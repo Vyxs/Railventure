@@ -62,6 +62,7 @@ class ObjectMapRenderer(
     }
 
     private fun render2D() {
+        batch.projectionMatrix = camera.combined
         batch.begin()
         render2d.forEach {
             batch.draw(it.texture, it.x, it.y)
@@ -135,9 +136,5 @@ class ObjectMapRenderer(
                 }
             }
         }
-    }
-
-    override fun setProjectionMatrix(projectionMatrix: Matrix4?) {
-        batch.projectionMatrix = projectionMatrix
     }
 }

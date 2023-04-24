@@ -10,6 +10,7 @@ import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.client.renderer.EntityRenderer
 import fr.manigames.railventure.client.renderer.GroundMapRenderer
+import fr.manigames.railventure.client.renderer.GuiRenderer
 import fr.manigames.railventure.client.renderer.ObjectMapRenderer
 import fr.manigames.railventure.common.ecs.component.*
 
@@ -17,6 +18,7 @@ class RenderSystem(
     private val camera: Camera = inject(),
     private val groundMapRenderer: GroundMapRenderer = inject(),
     private val objectMapRenderer: ObjectMapRenderer = inject(),
+    private val guiRenderer: GuiRenderer = inject(),
     private val entityRenderer: EntityRenderer = inject()
 ) : IteratingSystem(
     family { all(Texture, WorldPosition)},
@@ -27,14 +29,13 @@ class RenderSystem(
 
     override fun onUpdate() {
         visibleChunks = PosUtil.getVisibleArea(camera)
-        groundMapRenderer.setProjectionMatrix(camera.combined)
         groundMapRenderer.render()
-
-        objectMapRenderer.setProjectionMatrix(camera.combined)
         objectMapRenderer.render()
-
+        guiRenderer.render()
         super.onUpdate()
         entityRenderer.flush()
+
+
     }
 
     override fun onTickEntity(entity: Entity) {

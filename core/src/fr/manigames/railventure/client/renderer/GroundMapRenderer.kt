@@ -17,6 +17,7 @@ class GroundMapRenderer(
 
     override fun render() {
         super.render()
+        batch.projectionMatrix = camera.combined
         batch.begin()
         visibleChunks.forEach { (_, chunk) ->
             chunk.texture?.let {
@@ -24,9 +25,5 @@ class GroundMapRenderer(
             }
         }
         batch.end()
-    }
-
-    override fun setProjectionMatrix(projectionMatrix: Matrix4?) {
-        batch.projectionMatrix = projectionMatrix
     }
 }

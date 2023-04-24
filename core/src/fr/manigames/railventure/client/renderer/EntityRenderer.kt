@@ -1,25 +1,22 @@
 package fr.manigames.railventure.client.renderer
 
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.graphics.g2d.PolygonRegion
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy
 import com.badlogic.gdx.graphics.g3d.decals.Decal
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
-import com.badlogic.gdx.math.EarClippingTriangulator
 import com.badlogic.gdx.math.Matrix4
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.EntityAssets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Render
-import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.common.ecs.component.WorldSize
 
 class EntityRenderer(
     private val asset: Assets,
     private val use3D: Boolean,
     private val camera: Camera
-    ) : Renderer {
+    ) {
 
     private val batch = Render.spriteBatch
 
@@ -72,7 +69,7 @@ class EntityRenderer(
         decalBatch.flush()
     }
 
-    override fun setProjectionMatrix(projectionMatrix: Matrix4?) {
+    fun setProjectionMatrix(projectionMatrix: Matrix4?) {
         batch.projectionMatrix = projectionMatrix
     }
 }

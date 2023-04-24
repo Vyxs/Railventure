@@ -3,9 +3,7 @@ package fr.manigames.railventure.client.renderer
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.PerspectiveCamera
-import com.badlogic.gdx.math.Vector2
 import fr.manigames.railventure.api.debug.Logger
-import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.type.math.Vector2Int
 import fr.manigames.railventure.api.util.CameraUtil
@@ -17,7 +15,7 @@ import fr.manigames.railventure.common.map.BaseMap
 abstract class MapRenderer(
     private val map: RenderableMap,
     protected val camera: Camera
-) : Renderer {
+) {
 
     private var firstInit = true
     private var lastCameraChunkPosition = Vector2Int(0, 0)

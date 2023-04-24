@@ -12,11 +12,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.profiling.GLProfiler
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
-import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.core.Metric.TILE_SIZE
 import fr.manigames.railventure.api.core.Render
-import fr.manigames.railventure.api.graphics.renderer.Renderer
 import fr.manigames.railventure.api.util.CameraUtil.normalizeZ
 import fr.manigames.railventure.api.util.MathUtil.toRoundedString
 import fr.manigames.railventure.api.util.PosUtil
@@ -29,7 +27,7 @@ import java.math.RoundingMode
 class DebugRenderer(
     private val camera: Camera,
     private val map: BaseMap
-) : Renderer {
+) {
 
     private val resetMatrix = Matrix4().setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
     private val shapeRenderer = Render.shapeRenderer
@@ -54,7 +52,6 @@ class DebugRenderer(
         if (inputProcessor.showGpuInfo)
             glProfiler.enable()
     }
-    override fun setProjectionMatrix(projectionMatrix: Matrix4?) = Unit
 
     fun render() {
         pointerX = Gdx.input.x
@@ -258,7 +255,7 @@ class DebugRenderer(
         shapeRenderer.end()
     }
 
-    override fun dispose() {
+    fun dispose() {
         glProfiler.disable()
     }
 }
