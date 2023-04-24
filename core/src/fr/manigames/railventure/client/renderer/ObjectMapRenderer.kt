@@ -116,7 +116,6 @@ class ObjectMapRenderer(
             val chunkYOffset = chunk.y * MAP_CHUNK_SIZE
 
             chunk.getTiles().forEachIndexed { y, column ->
-                val adjustedY = MAP_CHUNK_SIZE - 1 - y
 
                 column.forEachIndexed { x, layer ->
                     val tile = TileType.fromCode(layer[Metric.MAP_OBJECT_LAYER])
@@ -126,7 +125,7 @@ class ObjectMapRenderer(
                     val texRegion = TextureRegion(tex)
                     val decal = Decal.newDecal(texRegion, true)
                     val rx = (chunkXOffset + x) * TILE_SIZE + TILE_SIZE / 2
-                    val ry = (chunkYOffset + adjustedY) * TILE_SIZE + TILE_SIZE / 2 + (rx % 5 + 1) * 1f // avoid z-fighting
+                    val ry = (chunkYOffset + y) * TILE_SIZE + TILE_SIZE / 2 + (rx % 5 + 1) * 1f // avoid z-fighting
 
                     decal.setDimensions(tex.width.toFloat(), tex.height.toFloat())
                     decal.setRotationY(90f)
