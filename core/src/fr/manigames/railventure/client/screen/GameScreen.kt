@@ -56,6 +56,7 @@ class GameScreen : Screen {
     private lateinit var entityRenderer: EntityRenderer
     private lateinit var debugRenderer: DebugRenderer
     private var mainPlayer: Entity? = null
+
     override fun init(game: Game) {
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         groundMapRenderer = GroundMapRenderer(map, camera)
@@ -109,30 +110,14 @@ class GameScreen : Screen {
     }
 
     private fun populateRegistries() {
-        println("Registering items..." )
-        itemLoader.load()
-        for (item in itemRegistry.getAll().toSortedMap().values) {
-            println("Item '${item.key}' registered.")
-        }
-        println("Registered ${itemRegistry.getAll().size} items.")
-        println("Registering tiles..." )
-        tileLoader.load()
-        for (tile in tileRegistry.getAll().toSortedMap().values) {
-            println("Tile '${tile.key}' registered.")
-        }
-        println("Registered ${tileRegistry.getAll().size} tiles.")
-        println("Registering tile entities..." )
-        tileEntityLoader.load()
-        for (tileEntity in tileEntityRegistry.getAll().toSortedMap().values) {
-            println("TileEntity '${tileEntity.key}' registered.")
-        }
-        println("Registered ${tileEntityRegistry.getAll().size} tile entities.")
-        println("Registering biomes..." )
-        biomeLoader.load()
-        for (biome in biomeRegistry.getAll().toSortedMap().values) {
-            println("Biome '${biome.key}' registered.")
-        }
-        println("Registered ${biomeRegistry.getAll().size} biomes.")
+        registerObjects("Item", itemLoader, itemRegistry)
+        registerObjects("Tile", tileLoader, tileRegistry)
+        registerObjects("TileEntity", tileEntityLoader, tileEntityRegistry)
+        registerObjects("Biome", biomeLoader, biomeRegistry)
+    }
+
+    private fun registerObjects(type: String, loader: JsonLoader, registry: Registry<*>) = loader.load().run {
+        println("Registering $type...\n${registry.getAll().toSortedMap().values.joinToString("\n") { "$type '${it.key}' registered." }}\nRegistered ${registry.getAll().size} $type.")
     }
 
     override fun render(delta: Float) {

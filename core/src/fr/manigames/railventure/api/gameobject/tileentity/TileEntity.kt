@@ -1,8 +1,10 @@
 package fr.manigames.railventure.api.gameobject.tileentity
 
-abstract class TileEntity {
+import fr.manigames.railventure.api.registry.RegistryObject
 
-    abstract val key: String
+abstract class TileEntity : RegistryObject {
+
+    abstract override val key: String
     abstract val name: String
     abstract val texture: SeasonWeatherTexture
     @Transient open val renderType: RenderType = RenderType.TILE

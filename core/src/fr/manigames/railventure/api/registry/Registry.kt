@@ -1,6 +1,6 @@
 package fr.manigames.railventure.api.registry
 
-abstract class Registry<T> {
+abstract class Registry<T : RegistryObject> {
 
     protected val registry: MutableMap<String, T> = HashMap()
 
@@ -25,4 +25,8 @@ abstract class Registry<T> {
     fun clear() {
         registry.clear()
     }
+}
+
+interface RegistryObject {
+    val key: String
 }

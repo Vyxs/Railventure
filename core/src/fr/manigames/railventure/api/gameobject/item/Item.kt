@@ -1,13 +1,15 @@
 package fr.manigames.railventure.api.gameobject.item
 
-abstract class Item {
+import fr.manigames.railventure.api.registry.RegistryObject
+
+abstract class Item : RegistryObject {
 
     companion object {
 
         const val DEFAULT_ITEM_STACK_SIZE = 64
     }
 
-    abstract val key: String
+    abstract override val key: String
     abstract val name: String
     abstract val texture: String
     @Transient open val maxStackSize: Int = DEFAULT_ITEM_STACK_SIZE

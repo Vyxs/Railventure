@@ -1,8 +1,10 @@
 package fr.manigames.railventure.api.gameobject.tile
 
-abstract class Tile {
+import fr.manigames.railventure.api.registry.RegistryObject
 
-    abstract val key: String
+abstract class Tile : RegistryObject {
+
+    abstract override val key: String
     abstract val name: String
     abstract val texture: String
     @Transient open val isWalkable: Boolean = false
