@@ -1,0 +1,9 @@
+{
+  "key": "gold",
+  "name": "Gold",
+  "texture": "texture/item/gold.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

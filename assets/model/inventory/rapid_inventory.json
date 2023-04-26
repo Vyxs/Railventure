@@ -1,6 +1,8 @@
 {
   "id": 2,
-  "texture": "textures/gui/hud/rapid_inventory.png",
+  "texture": "texture/gui/hud/rapid_inventory.png",
+  "width": 400,
+  "height": 80,
   "slots": [
     {"x": 2, "y": 2, "width": 13, "height": 13},
     {"x": 19, "y": 2, "width": 13, "height": 13},

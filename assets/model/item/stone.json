@@ -1,0 +1,9 @@
+{
+  "key": "stone",
+  "name": "Stone",
+  "texture": "texture/item/stone.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

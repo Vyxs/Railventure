@@ -1,0 +1,9 @@
+{
+  "key": "iron",
+  "name": "Iron",
+  "texture": "texture/item/iron.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

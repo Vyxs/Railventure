@@ -1,0 +1,9 @@
+{
+  "key": "uranium",
+  "name": "Uranium",
+  "texture": "texture/item/uranium.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

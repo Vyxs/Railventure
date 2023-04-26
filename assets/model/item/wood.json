@@ -1,0 +1,9 @@
+{
+  "key": "wood",
+  "name": "Wood",
+  "texture": "texture/item/wood.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

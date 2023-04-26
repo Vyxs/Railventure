@@ -13,7 +13,9 @@ import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
+import fr.manigames.railventure.api.loader.ItemLoader
 import fr.manigames.railventure.api.map.generation.ProceduralMap
+import fr.manigames.railventure.api.registry.ItemRegistry
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.renderer.*
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -37,6 +39,8 @@ class GameScreen : Screen {
     private val assets: Assets = Assets.instance
     private val map = ProceduralMap()
     private val proceduralHandler: ProceduralHandler = fr.manigames.railventure.test.ProceduralHandler()
+    private val itemRegistry: ItemRegistry = ItemRegistry()
+    private val itemLoader: ItemLoader = ItemLoader(itemRegistry)
     private lateinit var world: World
     private lateinit var camera: Camera
     private lateinit var viewport: ExtendViewport
@@ -54,9 +58,22 @@ class GameScreen : Screen {
         entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
         debugRenderer = DebugRenderer(camera, map)
 
+        populateRegistries()
+        initEcs()
 
+        gameInput.bind()
+        mainPlayer = world.entity {
+            it += Player("Dev", UUID.randomUUID(), isReady = true, isHost = true)
+            it += WorldPosition(2f, 2f)
+            it += Move(maxSpeed = 5f, maxAngularSpeed = 1f)
+            it += Texture(R.Texture.WAGON.path)
+        }
+    }
+
+    private fun initEcs() {
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {
+                add(itemRegistry)
                 add(camera)
                 add(groundMapRenderer)
                 add(objectMapRenderer)
@@ -80,12 +97,12 @@ class GameScreen : Screen {
                 if (Game.USE_PLAYER_CAMERA) add(PlayerCameraSystem())
             }
         }
-        gameInput.bind()
-        mainPlayer = world.entity {
-            it += Player("Dev", UUID.randomUUID(), isReady = true, isHost = true)
-            it += WorldPosition(2f, 2f)
-            it += Move(maxSpeed = 5f, maxAngularSpeed = 1f)
-            it += Texture(R.Texture.WAGON.path)
+    }
+
+    private fun populateRegistries() {
+        itemLoader.load()
+        for (item in itemRegistry.getAll().values) {
+            println("Item '${item.name}' with key '${item.key}' loaded and registered.")
         }
     }
 

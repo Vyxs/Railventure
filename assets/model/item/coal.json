@@ -1,0 +1,9 @@
+{
+  "key": "coal",
+  "name": "Coal",
+  "texture": "texture/item/coal.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

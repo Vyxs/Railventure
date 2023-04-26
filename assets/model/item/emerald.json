@@ -1,0 +1,9 @@
+{
+  "key": "emerald",
+  "name": "Emerald",
+  "texture": "texture/item/emerald.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}
