@@ -1,0 +1,9 @@
+{
+  "key": "saphir",
+  "name": "Saphir",
+  "texture": "texture/item/saphir.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

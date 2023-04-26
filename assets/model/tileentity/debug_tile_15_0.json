@@ -1,0 +1,9 @@
+{
+  "key": "debug_tile_15_0",
+  "name": "debug_tile_15_0",
+  "texture": {
+    "base": {
+      "base": "texture/debug/tile_15_0.png"
+    }
+  }
+}

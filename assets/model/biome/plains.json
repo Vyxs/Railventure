@@ -1,0 +1,9 @@
+{
+  "key": "plains",
+  "name": "Plains",
+  "temperature": 20,
+  "humidity": 60,
+  "altitude": 1500,
+  "color": 65280,
+  "type": "TERRESTRIAL"
+}

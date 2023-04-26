@@ -1,0 +1,16 @@
+{
+  "key": "rail_curved",
+  "name": "Curved Rail",
+  "texture": {
+    "base": {
+      "base": "texture/rail/rail-top-left.png",
+      "north": "texture/rail/rail-top-left.png",
+      "east": "texture/rail/rail-top-right.png",
+      "south": "texture/rail/rail-bot-right.png",
+      "west": "texture/rail/rail-bot-left.png"
+    }
+  },
+  "renderType": "SLAB",
+  "isOrientable": true,
+  "isHarvestable": true
+}

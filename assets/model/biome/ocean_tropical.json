@@ -1,0 +1,9 @@
+{
+  "key": "ocean_tropical",
+  "name": "Tropical Ocean",
+  "temperature": 30,
+  "humidity": 100,
+  "altitude": 1000,
+  "color": 2237183,
+  "type": "AQUATIC"
+}

@@ -2,50 +2,33 @@ package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
-import fr.manigames.railventure.api.component.ComponentType
+import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.IteratingSystem
+import com.github.quillraven.fleks.World.Companion.family
+import com.github.quillraven.fleks.World.Companion.inject
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Metric.CAMERA_ZOOM
-import fr.manigames.railventure.api.entity.Entity
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.common.component.PlayerComponent
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import fr.manigames.railventure.common.ecs.component.Player
+import fr.manigames.railventure.common.ecs.component.WorldPosition
 
 class PlayerCameraSystem(
-    world: World,
-    private val camera: Camera
-) : System(world) {
+    private val camera: Camera = inject()
+) : IteratingSystem(
+    family { all(Player, WorldPosition) }
+) {
 
-    private var player: Entity? = null
-
-    override fun init() {
+    init {
         if (camera is OrthographicCamera)
             camera.zoom = CAMERA_ZOOM
-        findPlayer()
     }
+    override fun onTickEntity(entity: Entity) {
+        val player = entity[Player]
+        val position = entity[WorldPosition]
 
-    override fun update(delta: Float) {
-        if (player == null)
-            findPlayer()
-        if (player != null)
-            handleCamera()
-        camera.update()
-    }
-
-    private fun handleCamera() {
-        player?.let {
-            world.getComponent<WorldPositionComponent>(it, ComponentType.WORLD_POSITION).let { posComponent ->
-                camera.position.x = posComponent.world_x * Metric.TILE_SIZE + Metric.TILE_SIZE / 2
-                camera.position.y = posComponent.world_y * Metric.TILE_SIZE + Metric.TILE_SIZE / 2
-            }
-        }
-    }
-
-    private fun findPlayer() {
-        world.getEntitiesWithComponents(ComponentType.PLAYER).forEach { entry ->
-            if ((entry.value.first { it.componentType == ComponentType.PLAYER } as PlayerComponent).isHost) {
-                player = entry.key
-            }
+        if (player.isHost) {
+            camera.position.x = position.world_x * Metric.TILE_SIZE + Metric.TILE_SIZE / 2
+            camera.position.y = position.world_y * Metric.TILE_SIZE + Metric.TILE_SIZE / 2
+            camera.update()
         }
     }
 }

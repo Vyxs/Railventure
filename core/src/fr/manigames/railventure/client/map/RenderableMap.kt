@@ -3,9 +3,20 @@ package fr.manigames.railventure.client.map
 import fr.manigames.railventure.common.map.BaseMap
 
 
-abstract class RenderableMap(
-    private val chunkLoader: (RenderableChunk) -> Unit
-) : BaseMap() {
+abstract class RenderableMap : BaseMap() {
+
+    protected var chunkLoader: (RenderableChunk) -> Unit = {}
+        private set
+
+
+    /**
+     * Set the chunk loader. The chunk loader is a function that will be called to load a chunk.
+     *
+     * @param chunkLoader The chunk loader
+     */
+    fun setChunkLoader(chunkLoader: (RenderableChunk) -> Unit) {
+        this.chunkLoader = chunkLoader
+    }
 
     /**
      * Return the progress of the map generation. The progress is a float between 0 and 1. If the map is already generated, the progress is 1.

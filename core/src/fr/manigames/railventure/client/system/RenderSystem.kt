@@ -1,64 +1,59 @@
 package fr.manigames.railventure.client.system
 
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.utils.ScreenUtils
-import fr.manigames.railventure.client.renderer.TileRenderer
-import fr.manigames.railventure.api.component.ComponentType
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.core.Assets
-import fr.manigames.railventure.client.renderer.HudRenderer
-import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.common.component.*
+import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.IteratingSystem
+import com.github.quillraven.fleks.World.Companion.family
+import com.github.quillraven.fleks.World.Companion.inject
+import com.github.quillraven.fleks.collection.compareEntity
+import fr.manigames.railventure.api.type.math.ChunkArea
+import fr.manigames.railventure.api.util.PosUtil
+import fr.manigames.railventure.client.renderer.EntityRenderer
+import fr.manigames.railventure.client.renderer.GroundMapRenderer
+import fr.manigames.railventure.client.renderer.GuiRenderer
+import fr.manigames.railventure.client.renderer.ObjectMapRenderer
+import fr.manigames.railventure.common.ecs.component.*
 
 class RenderSystem(
-    world: World,
-    private val asset: Assets,
-    private val camera: Camera
-) : System(world) {
+    private val camera: Camera = inject(),
+    private val groundMapRenderer: GroundMapRenderer = inject(),
+    private val objectMapRenderer: ObjectMapRenderer = inject(),
+    private val guiRenderer: GuiRenderer = inject(),
+    private val entityRenderer: EntityRenderer = inject()
+) : IteratingSystem(
+    family { all(Texture, WorldPosition)},
+    comparator = compareEntity { a, b-> b[WorldPosition].world_y.compareTo(a[WorldPosition].world_y) }
+) {
 
-    private lateinit var tileRenderer: TileRenderer
-    private lateinit var hudRenderer: HudRenderer
+    private var visibleChunks: ChunkArea? = null
 
-    override fun init() {
-        tileRenderer = TileRenderer(asset)
-        hudRenderer = HudRenderer()
+    override fun onUpdate() {
+        visibleChunks = PosUtil.getVisibleArea(camera)
+        groundMapRenderer.render()
+        objectMapRenderer.render()
+        guiRenderer.render()
+        super.onUpdate()
+        entityRenderer.flush()
+
+
     }
 
-    override fun render(delta: Float) {
-        ScreenUtils.clear(0f, 0f, 0f, 1f)
+    override fun onTickEntity(entity: Entity) {
+        val texture = entity[Texture]
+        val position = entity[WorldPosition]
+        val size = entity.getOrNull(WorldSize)
 
-        world.getEntitiesWithComponents(ComponentType.TILE_RENDERABLE).forEach { entry ->
-            entry.value.first { it.componentType == ComponentType.TILE_RENDERABLE }.let { component ->
-                val renderComponent: TileRenderComponent = component as TileRenderComponent
-                tileRenderer.setProjectionMatrix(camera.combined)
-                tileRenderer.renderTile(renderComponent.type, renderComponent.x, renderComponent.y)
-            }
+        val visible = visibleChunks ?: return
+
+        if (!visible.containsTile(position.world_x, position.world_y)) {
+            return
         }
 
-        world.getEntitiesWithComponents(ComponentType.HUD_POSITION, ComponentType.TEXT).forEach { entry ->
-            entry.value.first { it.componentType == ComponentType.HUD_POSITION }.let { hud ->
-                val position: HudPositionComponent = hud as HudPositionComponent
-                entry.value.first { it.componentType == ComponentType.TEXT }.let { component ->
-                    val text: TextComponent = component as TextComponent
-                    hudRenderer.renderText(text.text, position.x, position.y, text.color)
-                }
-            }
+        entityRenderer.setProjectionMatrix(camera.combined)
+        if (size != null) {
+            entityRenderer.renderEntity(texture.texture, position.world_x, position.world_y, size)
+        } else {
+            entityRenderer.renderEntity(texture.texture, position.world_x, position.world_y)
         }
-
-        world.getEntitiesWithComponents(ComponentType.TEXTURE, ComponentType.WORLD_POSITION).forEach { entry ->
-            entry.value.first { it.componentType == ComponentType.WORLD_POSITION }.let { worldPos ->
-                val position: WorldPositionComponent = worldPos as WorldPositionComponent
-                entry.value.first { it.componentType == ComponentType.TEXTURE }.let { component ->
-                    val texture: TextureComponent = component as TextureComponent
-                    tileRenderer.setProjectionMatrix(camera.combined)
-                    tileRenderer.renderTexture(texture.texture, position.world_x, position.world_y)
-                }
-            }
-        }
-    }
-
-    override fun dispose() {
-        tileRenderer.dispose()
-        hudRenderer.dispose()
     }
 }

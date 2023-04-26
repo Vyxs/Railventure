@@ -1,0 +1,7 @@
+{
+  "key": "dirt",
+  "name": "Dirt",
+  "texture": "texture/tile/dirt.png",
+  "isWalkable": true,
+  "isSpawnable": true
+}

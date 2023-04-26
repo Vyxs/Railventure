@@ -4,8 +4,10 @@ import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.Map
 import fr.manigames.railventure.api.map.base.MapChunk
+import fr.manigames.railventure.api.map.base.TileLayer
+import fr.manigames.railventure.api.util.PosUtil
 
-open class BaseMap : Map<TileType> {
+open class BaseMap : Map<TileType, TileLayer> {
 
     companion object {
 
@@ -25,9 +27,9 @@ open class BaseMap : Map<TileType> {
         }
     }
 
-    protected val chunks: HashMap<Long, MapChunk<TileType>> = HashMap(9)
+    protected val chunks: HashMap<Long, MapChunk<TileType, TileLayer>> = HashMap(9)
 
-    override fun getChunk(x: Int, y: Int): MapChunk<TileType>? {
+    override fun getChunk(x: Int, y: Int): MapChunk<TileType, TileLayer>? {
         return chunks[toChunkId(x, y)]
     }
 
@@ -37,6 +39,28 @@ open class BaseMap : Map<TileType> {
 
     override fun getTile(tileX: Int, tileY: Int, tileZ: Int): TileType? {
         return getChunk(tileX / MAP_CHUNK_SIZE, tileY / MAP_CHUNK_SIZE)?.getTile(tileX % MAP_CHUNK_SIZE, tileY % MAP_CHUNK_SIZE, tileZ)
+    }
+
+    /**
+     * Get the first non-air tile at the given position. If the chunk is not loaded, it will return null.
+     *
+     * @param tileX The x position of the tile
+     * @param tileY The y position of the tile
+     * @return The first non-air tile at the given position, or null if the chunk is not loaded
+     **/
+    fun getFirstNonAirTile(tileX: Float, tileY: Float): TileType? {
+        val (chunkX, chunkY) = PosUtil.getChunkPosition(tileX, tileY)
+        val chunk = getChunk(chunkX, chunkY) ?: return null
+
+        val (posX, posY) = PosUtil.getPosInChunk(tileX, tileY)
+        val tileStack = chunk.getTileStack(posX, posY)
+
+        for (tileCode in tileStack.reversed()) {
+            if (tileCode != TileType.AIR.code) {
+                return TileType.fromCode(tileCode)
+            }
+        }
+        return null
     }
 
     /**
@@ -64,7 +88,7 @@ open class BaseMap : Map<TileType> {
      * @param y The y position of the chunk
      * @param chunk The chunk to set
      **/
-    override fun setChunk(chunk: MapChunk<TileType>) {
+    override fun setChunk(chunk: MapChunk<TileType, TileLayer>) {
         chunks[toChunkId(chunk.getChunkX(), chunk.getChunkY())] = chunk
     }
 }

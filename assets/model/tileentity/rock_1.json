@@ -1,0 +1,19 @@
+{
+  "key": "rock_1",
+  "name": "Rock",
+  "texture": {
+    "base": {
+      "base": "texture/foliage/spring/rock_1.png"
+    },
+    "winter": {
+      "base": "texture/foliage/winter/rock_1.png"
+    },
+    "autumn": {
+      "base": "texture/foliage/autumn/rock_1.png"
+    }
+  },
+  "renderType": "FOLIAGE",
+  "textureScale": 0.2,
+  "isSolid": true,
+  "isHarvestable": true
+}

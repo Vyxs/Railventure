@@ -1,0 +1,9 @@
+{
+  "key": "copper",
+  "name": "Copper",
+  "texture": "texture/item/copper.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

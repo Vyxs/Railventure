@@ -1,0 +1,9 @@
+{
+  "key": "diamond",
+  "name": "Diamond",
+  "texture": "texture/item/diamond.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

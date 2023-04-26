@@ -1,0 +1,9 @@
+{
+  "key": "mountain_snow",
+  "name": "Snowy Mountain",
+  "temperature": 0,
+  "humidity": 40,
+  "altitude": 2200,
+  "color": 16777215,
+  "type": "TERRESTRIAL"
+}

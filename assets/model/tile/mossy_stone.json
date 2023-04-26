@@ -1,0 +1,7 @@
+{
+  "key": "mossy_stone",
+  "name": "Mossy Stone",
+  "texture": "texture/tile/mossy_stone.png",
+  "isWalkable": true,
+  "isSpawnable": true
+}

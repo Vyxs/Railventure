@@ -1,0 +1,7 @@
+{
+  "key": "grass",
+  "name": "Grass",
+  "texture": "texture/tile/grass.png",
+  "isWalkable": true,
+  "isSpawnable": true
+}

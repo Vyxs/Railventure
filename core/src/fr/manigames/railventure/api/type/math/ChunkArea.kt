@@ -1,5 +1,7 @@
 package fr.manigames.railventure.api.type.math
 
+import fr.manigames.railventure.api.util.PosUtil
+
 data class ChunkArea(
     override val x1: Int,
     override val y1: Int,
@@ -37,6 +39,18 @@ data class ChunkArea(
      **/
     fun contains(x: Int, y: Int): Boolean {
         return x in x1..y1 && y in x2..y2
+    }
+
+    /**
+     * Check if the area contains the given world position.
+     *
+     * @param worldX The x coordinate of the world position
+     * @param worldY The y coordinate of the world position
+     * @return True if the area contains the world position
+     **/
+    fun containsTile(worldX: Float, worldY: Float): Boolean {
+        val pos = PosUtil.getChunkPosition(worldX, worldY)
+        return contains(pos.x, pos.y)
     }
 
     companion object {

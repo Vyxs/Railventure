@@ -1,0 +1,7 @@
+{
+  "key": "snowy_stone",
+  "name": "Snowy Stone",
+  "texture": "texture/tile/snowy_stone.png",
+  "isWalkable": true,
+  "isSpawnable": true
+}

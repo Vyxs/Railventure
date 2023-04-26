@@ -1,0 +1,9 @@
+{
+  "key": "rubis",
+  "name": "Rubis",
+  "texture": "texture/item/rubis.png",
+  "maxStackSize": 999,
+  "isStackable": true,
+  "isDroppable": true,
+  "isPickable": true
+}

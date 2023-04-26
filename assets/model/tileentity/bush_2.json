@@ -1,0 +1,12 @@
+{
+  "key": "bush_2",
+  "name": "Bush",
+  "texture": {
+    "base": {
+      "base": "texture/foliage/summer/bush_2.png"
+    }
+  },
+  "renderType": "FOLIAGE",
+  "textureScale": 0.2,
+  "isHarvestable": true
+}

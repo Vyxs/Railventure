@@ -1,0 +1,7 @@
+{
+  "key": "stone",
+  "name": "Stone",
+  "texture": "texture/tile/stone.png",
+  "isWalkable": true,
+  "isSpawnable": true
+}

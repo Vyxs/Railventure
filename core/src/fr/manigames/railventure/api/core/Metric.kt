@@ -39,5 +39,7 @@ object Metric {
     const val PHYSIC_MIN_DELTA = 0.001f
 
     const val MAP_CHUNK_SIZE = 16
-    const val MAP_TILE_LAYER = 4
+    const val MAP_TILE_LAYER = 2
+    const val MAP_GROUND_LAYER = 0
+    const val MAP_OBJECT_LAYER = 1
 }

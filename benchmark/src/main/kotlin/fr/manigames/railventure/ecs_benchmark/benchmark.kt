@@ -1,139 +1,139 @@
 package fr.manigames.railventure.ecs_benchmark
 
-import fr.manigames.railventure.api.component.ComponentType
-import fr.manigames.railventure.api.entity.Entity
-import fr.manigames.railventure.api.entity.EntityBuilder
-import fr.manigames.railventure.api.system.System
-import fr.manigames.railventure.api.world.World
-import fr.manigames.railventure.common.component.TextureComponent
-import fr.manigames.railventure.common.component.WorldPositionComponent
+import com.github.quillraven.fleks.*
+import com.github.quillraven.fleks.World.Companion.family
 import org.openjdk.jmh.annotations.*
 import java.util.concurrent.TimeUnit
 
-class SimpleSystem(
-    world: World
-) : System(world) {
+data class FleksPosition(var x: Float = 0f, var y: Float = 0f) : Component<FleksPosition> {
+    override fun type() = FleksPosition
 
-    override fun update(delta: Float) {
-        world.getEntitiesWithComponents(ComponentType.WORLD_POSITION).forEach { entry ->
-            val pos = entry.value.first { it.componentType == ComponentType.WORLD_POSITION } as WorldPositionComponent
-            world.updateComponents(entry.key, WorldPositionComponent(pos.world_x + 1, pos.world_y + 1))
-        }
+    companion object : ComponentType<FleksPosition>()
+}
+
+data class FleksLife(var life: Float = 0f) : Component<FleksLife> {
+    override fun type() = FleksLife
+
+    companion object : ComponentType<FleksLife>()
+}
+
+data class FleksSprite(var path: String = "", var animationTime: Float = 0f) : Component<FleksSprite> {
+    override fun type() = FleksSprite
+
+    companion object : ComponentType<FleksSprite>()
+}
+
+class FleksSystemSimple : IteratingSystem(family { all(FleksPosition) }) {
+
+    override fun onTickEntity(entity: Entity) {
+        entity[FleksPosition].x++
     }
 }
 
-class ComplexSystem1(
-    world: World
-) : System(world) {
-
+class FleksSystemComplex1 : IteratingSystem(family { all(FleksPosition).none(FleksLife).any(FleksSprite) }) {
     private var actionCalls = 0
 
-    override fun update(delta: Float) {
-        world.getEntitiesWithComponents(ComponentType.WORLD_POSITION, ComponentType.TEXTURE).forEach { entry ->
-            val pos = entry.value.first { it.componentType == ComponentType.WORLD_POSITION } as WorldPositionComponent
-            val tex = entry.value.firstOrNull { it.componentType == ComponentType.TEXTURE } as TextureComponent?
-            if (actionCalls % 2 == 0) {
-                world.updateComponents(entry.key, WorldPositionComponent(pos.world_x + 1, pos.world_y + 1))
-                world.addComponent(entry.key, TextureComponent("test2"))
-            } else {
-                world.removeComponent(entry.key, ComponentType.TEXTURE)
+    override fun onTickEntity(entity: Entity) {
+        if (actionCalls % 2 == 0) {
+            entity[FleksPosition].x++
+            entity.configure { it += FleksLife() }
+        } else {
+            entity.configure { it -= FleksPosition }
+        }
+        entity[FleksSprite].animationTime++
+        ++actionCalls
+    }
+}
+
+class FleksSystemComplex2 : IteratingSystem(family { any(FleksPosition, FleksLife, FleksSprite) }) {
+
+    override fun onTickEntity(entity: Entity) {
+        entity.configure {
+            it -= FleksLife
+            it += FleksPosition()
+        }
+    }
+}
+
+@State(Scope.Benchmark)
+open class FleksStateAddRemove {
+    lateinit var world: World
+
+    @Setup(value = Level.Iteration)
+    fun setup() {
+        world = world(NUM_ENTITIES) { }
+    }
+}
+
+@State(Scope.Benchmark)
+open class FleksStateSimple {
+    lateinit var world: World
+
+    @Setup(value = Level.Iteration)
+    fun setup() {
+        world = world(NUM_ENTITIES) {
+            systems {
+                add(FleksSystemSimple())
             }
-            world.updateComponents(entry.key, TextureComponent((tex?.texture ?: "test")))
-            actionCalls++
         }
-    }
-}
 
-class ComplexSystem2(
-    world: World
-) : System(world) {
-
-    override fun update(delta: Float) {
         repeat(NUM_ENTITIES) {
-            world.removeComponent(Entity(it.toLong()), ComponentType.TEXTURE)
-            world.addComponent(Entity(it.toLong()), TextureComponent("test"))
+            world.entity {
+                it += FleksPosition()
+            }
         }
     }
 }
 
 @State(Scope.Benchmark)
-open class RailventureStateAddRemove {
+open class FleksStateComplex {
     lateinit var world: World
 
     @Setup(value = Level.Iteration)
     fun setup() {
-        world = World()
-    }
-}
-
-@State(Scope.Benchmark)
-open class RailventureStateSimple {
-    lateinit var world: World
-    lateinit var system: SimpleSystem
-
-    @Setup(value = Level.Iteration)
-    fun setup() {
-        world = World()
-        system = SimpleSystem(world)
-        repeat(NUM_ENTITIES) {
-            world.addEntity(EntityBuilder.make(), WorldPositionComponent(0f, 0f))
+        world = world(NUM_ENTITIES) {
+            systems {
+                add(FleksSystemComplex1())
+                add(FleksSystemComplex2())
+            }
         }
-    }
 
-    fun update(delta: Float) {
-        system.update(1f)
-    }
-}
-
-@State(Scope.Benchmark)
-open class RailventureStateComplex {
-    lateinit var world: World
-    lateinit var system: ComplexSystem1
-    lateinit var system2: ComplexSystem2
-
-    @Setup(value = Level.Iteration)
-    fun setup() {
-        world = World()
-        system = ComplexSystem1(world)
-        system2 = ComplexSystem2(world)
         repeat(NUM_ENTITIES) {
-            val entity = EntityBuilder.make()
-            world.addEntity(entity, WorldPositionComponent(0f, 0f))
-            world.addEntity(entity, TextureComponent("test"))
+            world.entity {
+                it += FleksPosition()
+                it += FleksSprite()
+            }
         }
-    }
-
-    fun update(delta: Float) {
-        system.update(1f)
-        system2.update(1f)
     }
 }
 
 @Fork(value = WARMUPS)
 @Warmup(iterations = WARMUPS)
 @Measurement(iterations = ITERATIONS, time = TIME, timeUnit = TimeUnit.SECONDS)
-open class RailventureBenchmark {
+open class FleksBenchmark {
     @Benchmark
-    fun addRemove(state: RailventureStateAddRemove) {
+    fun addRemove(state: FleksStateAddRemove) {
         repeat(NUM_ENTITIES) {
-            state.world.addEntity(Entity(it.toLong()))
+            state.world.entity {
+                it += FleksPosition()
+            }
         }
         repeat(NUM_ENTITIES) {
-            state.world.removeEntity(Entity(it.toLong()))
+            state.world -= Entity(it)
         }
     }
 
     @Benchmark
-    fun simple(state: RailventureStateSimple) {
+    fun simple(state: FleksStateSimple) {
         repeat(WORLD_UPDATES) {
-            state.update(1f)
+            state.world.update(1f)
         }
     }
 
     @Benchmark
-    fun complex(state: RailventureStateComplex) {
+    fun complex(state: FleksStateComplex) {
         repeat(WORLD_UPDATES) {
-            state.update(1f)
+            state.world.update(1f)
         }
     }
 }

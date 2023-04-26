@@ -1,0 +1,9 @@
+{
+  "key": "ocean",
+  "name": "Ocean",
+  "temperature": 10,
+  "humidity": 100,
+  "altitude": 1000,
+  "color": 255,
+  "type": "AQUATIC"
+}

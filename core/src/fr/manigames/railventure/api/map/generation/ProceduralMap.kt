@@ -6,16 +6,35 @@ import fr.manigames.railventure.client.map.RenderableChunk
 import fr.manigames.railventure.client.map.RenderableMap
 import java.util.concurrent.atomic.AtomicReference
 
-abstract class ProceduralMap(
-    protected var proceduralMapConfig: ProceduralMapConfig,
-    protected val tileHandler: ProceduralTileHandler,
-    chunkLoader: (RenderableChunk) -> Unit
-) : RenderableMap(chunkLoader) {
+open class ProceduralMap : RenderableMap() {
+
+    protected var proceduralMapConfig: ProceduralMapConfig = ProceduralMapConfig()
+        private set
+    protected var tileHandler: ProceduralTileHandler = ProceduralTileHandler.DEFAULT
+        private set
 
     private val altitude = OpenSimplexNoise(proceduralMapConfig.altitudeSeed) // base relief
     private val humidity = OpenSimplexNoise(proceduralMapConfig.humiditySeed) // biome related
     private val temperature = OpenSimplexNoise(proceduralMapConfig.temperatureSeed) // biome related
     protected val generationProgress = AtomicReference(0f)
+
+    /**
+     * Set the procedural map config of the map. The procedural map config is used to generate the map.
+     *
+     * @param proceduralMapConfig The procedural map config of the map.
+     **/
+    fun setProceduralMapConfig(proceduralMapConfig: ProceduralMapConfig) {
+        this.proceduralMapConfig = proceduralMapConfig
+    }
+
+    /**
+     * Set the tile handler of the map. The tile handler is used to determine the tile type of a tile.
+     *
+     * @param tileHandler The tile handler of the map.
+     **/
+    fun setTileHandler(tileHandler: ProceduralTileHandler) {
+        this.tileHandler = tileHandler
+    }
 
     /**
      * Get the config of the map.
@@ -80,7 +99,7 @@ abstract class ProceduralMap(
                 val alt = altitude.random2D(nx, ny)
                 val hum = humidity.random2D(nx, ny)
                 val temp = temperature.random2D(nx, ny)
-                chunk.setTile(tileX, tileY, 0, tileHandler.determineTileType(alt, hum, temp, ux, uy))
+                chunk.setTileStack(tileX, tileY, tileHandler.determineTileLayer(alt, hum, temp, ux, uy))
             }
         setChunk(chunk)
     }
