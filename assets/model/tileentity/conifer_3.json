@@ -1,0 +1,16 @@
+{
+  "key": "conifer_3",
+  "name": "Fir",
+  "texture": {
+    "base": {
+      "base": "texture/foliage/spring/conifer_3.png"
+    },
+    "winter": {
+      "base": "texture/foliage/winter/conifer_3.png"
+    }
+  },
+  "renderType": "FOLIAGE",
+  "textureScale": 0.2,
+  "isSolid": true,
+  "isHarvestable": true
+}

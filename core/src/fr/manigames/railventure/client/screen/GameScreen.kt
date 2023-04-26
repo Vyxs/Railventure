@@ -14,8 +14,12 @@ import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
 import fr.manigames.railventure.api.loader.ItemLoader
+import fr.manigames.railventure.api.loader.TileEntityLoader
+import fr.manigames.railventure.api.loader.TileLoader
 import fr.manigames.railventure.api.map.generation.ProceduralMap
 import fr.manigames.railventure.api.registry.ItemRegistry
+import fr.manigames.railventure.api.registry.TileEntityRegistry
+import fr.manigames.railventure.api.registry.TileRegistry
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.renderer.*
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -41,6 +45,10 @@ class GameScreen : Screen {
     private val proceduralHandler: ProceduralHandler = fr.manigames.railventure.test.ProceduralHandler()
     private val itemRegistry: ItemRegistry = ItemRegistry()
     private val itemLoader: ItemLoader = ItemLoader(itemRegistry)
+    private val tileRegistry: TileRegistry = TileRegistry()
+    private val tileLoader: TileLoader = TileLoader(tileRegistry)
+    private val tileEntityRegistry: TileEntityRegistry = TileEntityRegistry()
+    private val tileEntityLoader: TileEntityLoader = TileEntityLoader(tileEntityRegistry)
     private lateinit var world: World
     private lateinit var camera: Camera
     private lateinit var viewport: ExtendViewport
@@ -74,6 +82,8 @@ class GameScreen : Screen {
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {
                 add(itemRegistry)
+                add(tileRegistry)
+                add(tileEntityRegistry)
                 add(camera)
                 add(groundMapRenderer)
                 add(objectMapRenderer)
@@ -100,10 +110,24 @@ class GameScreen : Screen {
     }
 
     private fun populateRegistries() {
+        println("Registering items..." )
         itemLoader.load()
-        for (item in itemRegistry.getAll().values) {
-            println("Item '${item.name}' with key '${item.key}' loaded and registered.")
+        for (item in itemRegistry.getAll().toSortedMap().values) {
+            println("Item '${item.key}' registered.")
         }
+        println("Registered ${itemRegistry.getAll().size} items.")
+        println("Registering tiles..." )
+        tileLoader.load()
+        for (tile in tileRegistry.getAll().toSortedMap().values) {
+            println("Tile '${tile.key}' registered.")
+        }
+        println("Registered ${tileRegistry.getAll().size} tiles.")
+        println("Registering tile entities..." )
+        tileEntityLoader.load()
+        for (tileEntity in tileEntityRegistry.getAll().toSortedMap().values) {
+            println("TileEntity '${tileEntity.key}' registered.")
+        }
+        println("Registered ${tileEntityRegistry.getAll().size} tile entities.")
     }
 
     override fun render(delta: Float) {

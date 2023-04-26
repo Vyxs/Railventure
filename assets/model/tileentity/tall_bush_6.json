@@ -1,0 +1,18 @@
+{
+  "key": "tall_bush_6",
+  "name": "Tall Bush",
+  "texture": {
+    "base": {
+      "base": "texture/foliage/summer/tall_bush_6.png"
+    },
+    "summer": {
+      "base": "texture/foliage/summer/tall_bush_6.png"
+    },
+    "autumn": {
+      "base": "texture/foliage/autumn/tall_bush_6.png"
+    }
+  },
+  "renderType": "FOLIAGE",
+  "textureScale": 0.2,
+  "isHarvestable": true
+}

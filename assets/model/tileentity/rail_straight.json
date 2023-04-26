@@ -1,0 +1,16 @@
+{
+  "key": "rail_straight",
+  "name": "Straight Rail",
+  "texture": {
+    "base": {
+      "base": "texture/rail/rail-h.png",
+      "north": "texture/rail/rail-v.png",
+      "east": "texture/rail/rail-h.png",
+      "south": "texture/rail/rail-v.png",
+      "west": "texture/rail/rail-h.png"
+    }
+  },
+  "renderType": "SLAB",
+  "isOrientable": true,
+  "isHarvestable": true
+}

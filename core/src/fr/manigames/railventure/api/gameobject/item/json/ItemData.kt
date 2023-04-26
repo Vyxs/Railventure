@@ -1,6 +1,6 @@
-package fr.manigames.railventure.api.item.json
+package fr.manigames.railventure.api.gameobject.item.json
 
-import fr.manigames.railventure.api.item.Item
+import fr.manigames.railventure.api.gameobject.item.Item
 
 data class ItemData(
     val key: String,

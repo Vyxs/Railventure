@@ -1,20 +1,20 @@
 package fr.manigames.railventure.api.loader
 
 import com.badlogic.gdx.Gdx
-import fr.manigames.railventure.api.gameobject.item.json.ItemInstance
 import fr.manigames.railventure.api.gameobject.tile.json.TileInstance
-import fr.manigames.railventure.api.registry.ItemRegistry
+import fr.manigames.railventure.api.gameobject.tileentity.json.TileEntityInstance
+import fr.manigames.railventure.api.registry.TileEntityRegistry
 
-class ItemLoader(
-    private val itemRegistry: ItemRegistry
+class TileEntityLoader(
+    private val tileEntityRegistry: TileEntityRegistry,
 ) : JsonLoader() {
 
     companion object {
-        private const val ITEMS_PATH = "model/item/"
+        private const val TILE_ENTITIES_PATH = "model/tileentity/"
     }
 
     override fun load() {
-        val folder = Gdx.files.internal(ITEMS_PATH)
+        val folder = Gdx.files.internal(TILE_ENTITIES_PATH)
 
         folder.list()
             .filter { it.extension() == "json" }
@@ -28,17 +28,17 @@ class ItemLoader(
             }
             .mapNotNull { (filename, json) ->
                 try {
-                    ItemInstance.fromJsonModel(json)
+                    TileEntityInstance.fromJsonModel(json)
                 } catch (e: Exception) {
-                    println("Error while loading item ${filename}: ${e.message}")
+                    println("Error while loading tileEntity ${filename}: ${e.message}")
                     null
                 }
             }
-            .forEach { item ->
+            .forEach { tileEntity ->
                 try {
-                    itemRegistry.register(item)
+                    tileEntityRegistry.register(tileEntity)
                 } catch (e: Exception) {
-                    println("Error while registering item ${item.key}: ${e.message}")
+                    println("Error while registering tileEntity ${tileEntity.key}: ${e.message}")
                 }
             }
     }

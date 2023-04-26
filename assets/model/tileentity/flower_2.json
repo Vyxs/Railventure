@@ -1,0 +1,11 @@
+{
+  "key": "flower_2",
+  "name": "Flower",
+  "texture": {
+    "base": {
+      "base": "texture/foliage/summer/flower_2.png"
+    }
+  },
+  "renderType": "FOLIAGE",
+  "textureScale": 0.2
+}

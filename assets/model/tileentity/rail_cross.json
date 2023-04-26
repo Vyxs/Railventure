@@ -1,0 +1,11 @@
+{
+  "key": "rail_cross",
+  "name": "Cross Rail",
+  "texture": {
+    "base": {
+      "base": "texture/rail/rail-x.png"
+    }
+  },
+  "renderType": "SLAB",
+  "isHarvestable": true
+}

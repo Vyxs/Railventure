@@ -1,0 +1,25 @@
+{
+  "key": "tree_5",
+  "name": "Tree",
+  "texture": {
+    "base": {
+      "base": "texture/foliage/summer/tree_5.png"
+    },
+    "summer": {
+      "base": "texture/foliage/summer/tree_5.png"
+    },
+    "autumn": {
+      "base": "texture/foliage/autumn/tree_5.png"
+    },
+    "winter": {
+      "base": "texture/foliage/winter/trunk_2.png"
+    },
+    "spring": {
+      "base": "texture/foliage/spring/trunk_2.png"
+    }
+  },
+  "renderType": "FOLIAGE",
+  "textureScale": 0.2,
+  "isSolid": true,
+  "isHarvestable": true
+}

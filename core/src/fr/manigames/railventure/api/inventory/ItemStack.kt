@@ -1,6 +1,6 @@
 package fr.manigames.railventure.api.inventory
 
-import fr.manigames.railventure.api.item.Item
+import fr.manigames.railventure.api.gameobject.item.Item
 
 class ItemStack(
     val item: Item? = null,

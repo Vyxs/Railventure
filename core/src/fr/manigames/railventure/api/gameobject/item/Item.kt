@@ -1,19 +1,12 @@
-package fr.manigames.railventure.api.item
+package fr.manigames.railventure.api.gameobject.item
 
 abstract class Item {
 
     companion object {
 
         const val DEFAULT_ITEM_STACK_SIZE = 64
-
-        private var idCounter = 0
-
-        private fun makeId(): Int {
-            return idCounter++
-        }
     }
 
-    val id: Int = makeId()
     abstract val key: String
     abstract val name: String
     abstract val texture: String

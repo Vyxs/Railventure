@@ -5,8 +5,6 @@ import fr.manigames.railventure.api.core.Metric
 import com.badlogic.gdx.Game
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.client.screen.BootScreen
-import fr.manigames.railventure.client.screen.GameScreen
 import fr.manigames.railventure.client.screen.LoadingScreen
 
 class Game : Game() {
