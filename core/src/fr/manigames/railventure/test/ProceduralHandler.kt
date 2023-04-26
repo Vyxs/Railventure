@@ -4,8 +4,10 @@ import com.github.quillraven.fleks.World
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.TileLayer
-import fr.manigames.railventure.api.map.generation.Biome
-import fr.manigames.railventure.api.map.generation.BiomeType
+import fr.manigames.railventure.api.map.biome.Biome
+import fr.manigames.railventure.api.map.biome.BiomeType
+import fr.manigames.railventure.api.map.biome.json.BiomeData
+import fr.manigames.railventure.api.map.biome.json.BiomeInstance
 import fr.manigames.railventure.common.generation.ProceduralHandler
 import kotlin.math.abs
 import kotlin.random.Random
@@ -14,14 +16,15 @@ class ProceduralHandler : ProceduralHandler {
 
     private var rng: Random? = null
 
-    val ocean = Biome(0, "Ocean", 10, 100, 0, 0x0000FF, BiomeType.AQUATIC)
-    val tropicalOcean = Biome(1, "Tropical Ocean", 30, 100, 0, 0x0000FF, BiomeType.AQUATIC)
-    val beach = Biome(2, "Beach", 25, 70, 10, 0xFFD700, BiomeType.TERRESTRIAL)
-    val desert = Biome(3, "Desert", 50, 20, 50, 0xFFD700, BiomeType.TERRESTRIAL)
-    val plains = Biome(4, "Plains", 20, 60, 100, 0x00FF00, BiomeType.TERRESTRIAL)
-    val forest = Biome(5, "Forest", 16, 80, 150, 0x228B22, BiomeType.TERRESTRIAL)
-    val mountain = Biome(6, "Mountain", 12, 60, 200, 0x808080, BiomeType.TERRESTRIAL)
-    val snowMountain = Biome(7, "Snowy Mountain", 0, 40, 220, 0xFFFFFF, BiomeType.TERRESTRIAL)
+    val ocean = BiomeInstance(BiomeData("ocean", "Ocean", 10, 100, 1000, 0x0000FF, BiomeType.AQUATIC))
+    val tropicalOcean = BiomeInstance(BiomeData("ocean_tropical", "Tropical Ocean", 30, 100, 1000, 0x2222FF, BiomeType.AQUATIC))
+    val beach = BiomeInstance(BiomeData("beach", "Beach", 25, 70, 1050, 0xFFD700, BiomeType.TERRESTRIAL))
+    val desert = BiomeInstance(BiomeData("desert", "Desert", 50, 20, 1250, 0xFFD700, BiomeType.TERRESTRIAL))
+
+    val plains = BiomeInstance(BiomeData("plains", "Plains", 20, 60, 1500, 0x00FF00, BiomeType.TERRESTRIAL))
+    val forest = BiomeInstance(BiomeData("forest", "Forest", 16, 80, 1750, 0x228B22, BiomeType.TERRESTRIAL))
+    val mountain = BiomeInstance(BiomeData("mountain", "Mountain", 12, 60, 2000, 0x808080, BiomeType.TERRESTRIAL))
+    val snowMountain = BiomeInstance(BiomeData("mountain_snowy", "Snowy Mountain", 0, 40, 2200, 0xFFFFFF, BiomeType.TERRESTRIAL))
     val biomes = arrayOf(ocean, tropicalOcean, beach, desert, plains, forest, mountain, snowMountain)
     // biome -> array of tile types and their probability
     val biomeTiles = mapOf(
@@ -37,7 +40,7 @@ class ProceduralHandler : ProceduralHandler {
     )
     val offset = 1.2
     val maxAltitude = biomes.maxOf { it.altitude } * offset
-    val minAltitude = biomes.minOf { it.altitude } * -offset
+    val minAltitude = 0.0
     val maxHumidity = biomes.maxOf { it.humidity } * offset
     val minHumidity = biomes.minOf { it.humidity } * -offset
     val maxTemperature = biomes.maxOf { it.temperature } * offset
@@ -130,11 +133,11 @@ class ProceduralHandler : ProceduralHandler {
                     abs(it.temperature - temperatureValue)
         } ?: ocean
 
-        if (altitude < -0.2) {
+      /*  if (altitude < -0.2) {
             biome = ocean
         } else if (altitude < 0 && temperature > 0) {
             biome = tropicalOcean
-        }
+        }*/
 
         val tileLayer = TileLayer()
 

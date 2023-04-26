@@ -1,4 +1,4 @@
-package fr.manigames.railventure.api.map.generation
+package fr.manigames.railventure.api.map.biome
 
 enum class BiomeType {
     TERRESTRIAL,

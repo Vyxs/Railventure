@@ -3,13 +3,19 @@ package fr.manigames.railventure.api.gameobject.item.json
 import fr.manigames.railventure.api.gameobject.item.Item
 import fr.manigames.railventure.api.serialize.json.Json
 
+class InvalidItemModelException(message: String) : Exception(message)
+
 class ItemInstance(itemData: ItemData) : Item() {
 
     companion object {
 
         fun fromJsonModel(json: String) : ItemInstance {
-            val itemData = Json().fromJson(json, ItemData::class.java)
-            return ItemInstance(itemData)
+            return try {
+                val itemData = Json().fromJson(json, ItemData::class.java)
+                ItemInstance(itemData)
+            } catch (e: Exception) {
+                throw InvalidItemModelException("Invalid item model: ${e.message}")
+            }
         }
     }
 

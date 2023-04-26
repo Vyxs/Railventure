@@ -13,13 +13,9 @@ import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.api.loader.ItemLoader
-import fr.manigames.railventure.api.loader.TileEntityLoader
-import fr.manigames.railventure.api.loader.TileLoader
+import fr.manigames.railventure.api.loader.*
 import fr.manigames.railventure.api.map.generation.ProceduralMap
-import fr.manigames.railventure.api.registry.ItemRegistry
-import fr.manigames.railventure.api.registry.TileEntityRegistry
-import fr.manigames.railventure.api.registry.TileRegistry
+import fr.manigames.railventure.api.registry.*
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.renderer.*
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -49,6 +45,8 @@ class GameScreen : Screen {
     private val tileLoader: TileLoader = TileLoader(tileRegistry)
     private val tileEntityRegistry: TileEntityRegistry = TileEntityRegistry()
     private val tileEntityLoader: TileEntityLoader = TileEntityLoader(tileEntityRegistry)
+    private val biomeRegistry: BiomeRegistry = BiomeRegistry()
+    private val biomeLoader: BiomeLoader = BiomeLoader(biomeRegistry)
     private lateinit var world: World
     private lateinit var camera: Camera
     private lateinit var viewport: ExtendViewport
@@ -84,6 +82,7 @@ class GameScreen : Screen {
                 add(itemRegistry)
                 add(tileRegistry)
                 add(tileEntityRegistry)
+                add(biomeRegistry)
                 add(camera)
                 add(groundMapRenderer)
                 add(objectMapRenderer)
@@ -128,6 +127,12 @@ class GameScreen : Screen {
             println("TileEntity '${tileEntity.key}' registered.")
         }
         println("Registered ${tileEntityRegistry.getAll().size} tile entities.")
+        println("Registering biomes..." )
+        biomeLoader.load()
+        for (biome in biomeRegistry.getAll().toSortedMap().values) {
+            println("Biome '${biome.key}' registered.")
+        }
+        println("Registered ${biomeRegistry.getAll().size} biomes.")
     }
 
     override fun render(delta: Float) {

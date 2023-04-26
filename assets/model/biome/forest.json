@@ -1,0 +1,9 @@
+{
+  "key": "forest",
+  "name": "Forest",
+  "temperature": 16,
+  "humidity": 80,
+  "altitude": 1750,
+  "color": 2263842,
+  "type": "TERRESTRIAL"
+}

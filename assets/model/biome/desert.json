@@ -1,0 +1,9 @@
+{
+  "key": "desert",
+  "name": "Desert",
+  "temperature": 50,
+  "humidity": 20,
+  "altitude": 1250,
+  "color": 16766754,
+  "type": "TERRESTRIAL"
+}

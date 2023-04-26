@@ -10,18 +10,18 @@ abstract class Item {
     abstract val key: String
     abstract val name: String
     abstract val texture: String
-    open val maxStackSize: Int = DEFAULT_ITEM_STACK_SIZE
-    open val isStackable: Boolean = false
-    open val isUsable: Boolean = false
-    open val isPlaceable: Boolean = false
-    open val isDroppable: Boolean = false
-    open val isPickable: Boolean = false
-    open val isEquippable: Boolean = false
-    open val isConsumable: Boolean = false
-    open val isCraftable: Boolean = false
-    open val isRepairable: Boolean = false
-    open val isEnchantable: Boolean = false
-    open val isEnchanted: Boolean = false
-    open val isDamaged: Boolean = false
-    open val isDamagable: Boolean = false
+    @Transient open val maxStackSize: Int = DEFAULT_ITEM_STACK_SIZE
+    @Transient open val isStackable: Boolean = false
+    @Transient open val isUsable: Boolean = false
+    @Transient open val isPlaceable: Boolean = false
+    @Transient open val isDroppable: Boolean = false
+    @Transient open val isPickable: Boolean = false
+    @Transient open val isEquippable: Boolean = false
+    @Transient open val isConsumable: Boolean = false
+    @Transient open val isCraftable: Boolean = false
+    @Transient open val isRepairable: Boolean = false
+    @Transient open val isEnchantable: Boolean = false
+    @Transient open val isEnchanted: Boolean = false
+    @Transient open val isDamaged: Boolean = false
+    @Transient open val isDamagable: Boolean = false
 }

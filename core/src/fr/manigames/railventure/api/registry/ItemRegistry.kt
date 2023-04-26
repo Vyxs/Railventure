@@ -20,5 +20,4 @@ class ItemRegistry : Registry<Item>() {
         registry[registryObject.key] = registryObject
         return registryObject.key
     }
-
 }
