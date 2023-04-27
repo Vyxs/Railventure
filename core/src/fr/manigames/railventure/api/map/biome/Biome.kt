@@ -4,7 +4,7 @@ import fr.manigames.railventure.api.registry.RegistryObject
 
 abstract class Biome : RegistryObject {
     companion object {
-        val BIOME_DEFAULT_COLOR = 0xA020F0 // purple
+        const val BIOME_DEFAULT_COLOR = 0xA020F0 // purple
     }
 
     abstract override val key: String
