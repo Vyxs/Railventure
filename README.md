@@ -1,7 +1,7 @@
 # Railventure
 Railventure is an open-world game that seamlessly blends RPG, adventure, and sandbox genres. Players take control of a customizable wagon that moves by laying down tracks, as they explore a procedurally generated world filled with resources to gather and enemies to battle. Drawing inspiration from popular titles such as Minecraft, Satisfactory, and Raft, the game delivers both a relaxing and fast-paced experience tailored to suit different playstyles.
 
-In Railventure, players can switch between a top-down 2D view and a side-scrolling 3D perspective, offering a unique and immersive gaming experience. The game will be available on multiple platforms including Android, Web, Desktop, and iOS. Dive into the world of OpenRail Explorer, and embark on an unforgettable adventure that offers endless opportunities for creativity, exploration, and fun!
+In Railventure, players can switch between a top-down 2D view and a side-scrolling 3D perspective, offering a unique and immersive gaming experience. The game will be available on multiple platforms including Android, Web, Desktop, and iOS. Dive into the world of Railventure, and embark on an unforgettable adventure that offers endless opportunities for creativity, exploration, and fun!
 # Summary
 1. [Current look](#current-look-of-railventure)
 1. [Debug keys](#debug-keys)
@@ -177,6 +177,16 @@ To add a new tileEntity to the game, you need to create a JSON file in the `asse
 - `isHarvestable` : **(boolean, optional, default : false)**
     - Indicates if the tileEntity can be harvested by the player.
 
+#### RenderType
+
+Describe how the tileEntity should be rendered.
+
+- `TILE` : The tileEntity is rendered as a tile.
+- `SLAB` : The tileEntity is rendered as a tile in 2D mode and as a slab in 3D mode (used for rails).
+- `FOLIAGE` : The tileEntity is rendered as a foliage (used for grass, flowers, etc...). In 3D mode, it is rendered on z-axis. In 2D mode, it is rendered on y-axis from the bottom.
+- `RENDER_3D` : Same as `FOLIAGE` but in 3D mode, it use a 3D model instead of a texture. (WIP)
+- `NO_RENDER` : The tileEntity is not rendered.
+
 #### SeasonWeatherTexture
 
 It holds the texture path for each season and weather. The JSON file must follow the structure below:
@@ -211,16 +221,6 @@ It holds the texture path for each season and weather. The JSON file must follow
     - Used during autumn.
 - `winter` : **(orientedTexture, optional, default : base)**
     - Used during winter.
-
-#### RenderType
-
-Describe how the tileEntity should be rendered.
-
-- `TILE` : The tileEntity is rendered as a tile.
-- `SLAB` : The tileEntity is rendered as a tile in 2D mode and as a slab in 3D mode (used for rails).
-- `FOLIAGE` : The tileEntity is rendered as a foliage (used for grass, flowers, etc...). In 3D mode, it is rendered on z-axis. In 2D mode, it is rendered on y-axis from the bottom.
-- `RENDER_3D` : Same as `FOLIAGE` but in 3D mode, it use a 3D model instead of a texture. (WIP)
-- `NO_RENDER` : The tileEntity is not rendered.
 
 #### OrientedTexture
 
