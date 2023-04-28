@@ -4,10 +4,8 @@ Railventure is an open-world game that seamlessly blends RPG, adventure, and san
 In Railventure, players can switch between a top-down 2D view and a side-scrolling 3D perspective, offering a unique and immersive gaming experience. The game will be available on multiple platforms including Android, Web, Desktop, and iOS. Dive into the world of Railventure, and embark on an unforgettable adventure that offers endless opportunities for creativity, exploration, and fun!
 # Summary
 1. [Current look](#current-look-of-railventure)
-1. [Debug keys](#debug-keys)
-2. [Documentation](#documentation)
-3. [Data generation](#data-generation-deprecated)
-    1. [Structure of res.json](#structure-of-resjson)
+2. [Debug keys](#debug-keys)
+3. [Documentation](#documentation)
 4. [Adding features](#adding-features)
     1. [Adding a Tile](#adding-a-tile)
     2. [Adding an Item](#adding-an-item)
@@ -31,13 +29,6 @@ In Railventure, players can switch between a top-down 2D view and a side-scrolli
 
 - [Game Design Document](https://docs.google.com/document/d/11n7iS0IGyN1e3w6MINMN4v4J-sQadCq4GiFhUPvfKh4/)
 - [Project Management](https://trello.com/b/kmGSew56/railventure)
-
-# Data generation (Deprecated)
-
-An R class is generated from the res.json file. It contains all the paths to the assets and a method to load them.
-
-To generate the R.class file, you need to run the task generateRessourcesFromAssets from datagen group.
-It will look at `core/datagen/res.json` to generate it under `core/src/fr/manigames/railventure/generated/`.
 
 ## Structure of res.json
 
@@ -259,7 +250,10 @@ To add a new biome to the game, you need to create a JSON file in the `assets/mo
     "temperature": 20,
     "humidity": 50,
     "color": 165245,
-    "type": "TERRESTRIAL"
+    "type": "TERRESTRIAL",
+    "tiles": [],
+    "gradient": "RANDOM",
+    "tileEntities": []
 }
 ```
 ### Property Descriptions
@@ -274,15 +268,70 @@ To add a new biome to the game, you need to create a JSON file in the `assets/mo
 - `humidity` : **(int, required)**
     - Humidity of the biome. Must be between 0 and 100.
 - `color` : **(int, optional, default : purple)**
-    - Color of the biome. Must be a hexadecimal value (0x000000 to 0xFFFFFF). Used for debug purpose.
+    - Color of the biome. Must be a hexadecimal value (0x000000 to 0xFFFFFF).
+    - Used for debug purpose only.
 - `type` : **(biomeType, optional, default : TERRESTRIAL)**
     - Type of the biome.
+- `tiles` : **(array of TileWithProbability, required)**
+    - List of tiles that can be generated in the biome. 
+    - The probability is used to generate the biome, the sum of probability must be equal to 1.0.
+- `gradient` : **(biomeGradient, optional, default : RANDOM)** 
+    - Type of gradient used to generate the biome.
+- `tileEntities` : **(array of biomeTileEntitiesConfig, optional, default : [])**
+    - List of tileEntities that can be generated in the biome under certain conditions.
 
 #### BiomeType
 - `TERRESTRIAL` : The biome is a terrestrial biome.
 - `AQUATIC` : The biome is an aquatic biome.
 - `EXTRATERRESTRIAL` : The biome is an extraterrestrial biome.
 - `UNDERGROUND` : The biome is an underground biome.
+
+#### BiomeGradient
+- `UNSET` : The biome is generated randomly.
+- `RANDOM` : The biome is generated randomly.
+- `SMOOTH` : The biome is generated based on the altitude. Tile with the lowest probability will be generated first.
+- `SMOOTH_NOISY` : Like `SMOOTH` but with a noise applied to the intersection of the tiles.
+
+#### TileWithProbability
+
+It holds the tile and its probability to be generated in the biome. The JSON file must follow the structure below:
+
+```json
+{
+    "key": "tile_key",
+    "probability": 1.0
+}
+```
+##### Property Descriptions
+- `key` : **(string, required)**
+    - Unique identifier for the tile.
+    - The tile must be defined in the `assets/model/tile/` folder.
+- `probability` : **(float, required)** 
+    - Probability of the tile to be generated in the biome.
+    - Must be between 0.0 and 1.0.
+
+#### BiomeTileEntitiesConfig
+
+It holds the tileEntity and its conditions to be generated in the biome. The JSON file must follow the structure below:
+
+```json
+{
+    "spawnOn": ["tile_key1", "tile_key2", "tile_key..."],
+    "keys": ["tileEntity_key1", "tileEntity_key2", "tileEntity_key..."],
+    "odds": 0.03
+}
+```
+##### Property Descriptions
+- `spawnOn` : **(array of string, optional, default : [])**
+    - List of tiles on which the tileEntity can be generated.
+    - If empty, the tileEntity can't be generated.
+    - The tile must be defined in the `assets/model/tile/` folder.
+- `keys` : **(array of string, required)**
+    - List of tileEntities that can be generated in the biome.
+    - The tileEntity must be defined in the `assets/model/tileEntity/` folder.
+- `odds` : **(float, required)** 
+    - Probability of the tileEntity to be generated on the tile.
+    - Must be between 0.0 and 1.0.
 
 ## Adding an Inventory
 
@@ -306,7 +355,7 @@ To add a new inventory to the game, you need to create a JSON file in the `asset
     - Width in pixels of the inventory.
 - `height` : **(int, required)**
     - Height in pixels of the inventory.
-- `slots` : **(array<slot>, required)**
+- `slots` : **(array of slot, required)**
     - Array of slots in the inventory.
 
 #### Slot
