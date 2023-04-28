@@ -5,29 +5,35 @@ import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.api.map.biome.Biome
-import fr.manigames.railventure.api.map.biome.BiomeType
-import fr.manigames.railventure.api.map.biome.json.BiomeData
-import fr.manigames.railventure.api.map.biome.json.BiomeInstance
+import fr.manigames.railventure.api.map.biome.TileWithProbability
+import fr.manigames.railventure.api.registry.BiomeRegistry
+import fr.manigames.railventure.api.registry.TileRegistry
 import fr.manigames.railventure.common.generation.ProceduralHandler
 import kotlin.math.abs
 import kotlin.random.Random
 
-class ProceduralHandler : ProceduralHandler {
+class ProceduralHandler(
+    seed: Long,
+    biomeRegistry: BiomeRegistry,
+    tileRegistry: TileRegistry
+) : ProceduralHandler {
 
-    private var rng: Random? = null
+    private var rng: Random = Random(seed)
+    private val biomes = biomeRegistry.getAll().values.toList()
+    private val tileMapper = tileRegistry.mapper
 
-    val ocean = BiomeInstance(BiomeData("ocean", "Ocean", 10, 100, 1000, 0x0000FF, BiomeType.AQUATIC))
-    val tropicalOcean = BiomeInstance(BiomeData("ocean_tropical", "Tropical Ocean", 30, 100, 1000, 0x2222FF, BiomeType.AQUATIC))
-    val beach = BiomeInstance(BiomeData("beach", "Beach", 25, 70, 1050, 0xFFD700, BiomeType.TERRESTRIAL))
-    val desert = BiomeInstance(BiomeData("desert", "Desert", 50, 20, 1250, 0xFFD700, BiomeType.TERRESTRIAL))
+    //val ocean = BiomeInstance(BiomeData("ocean", "Ocean", 10, 100, 1000, emptyList(), 0x0000FF, BiomeType.AQUATIC))
+    //val tropicalOcean = BiomeInstance(BiomeData("ocean_tropical", "Tropical Ocean", 30, 100, 1000, emptyList(), 0x2222FF, BiomeType.AQUATIC))
+    //val beach = BiomeInstance(BiomeData("beach", "Beach", 25, 70, 1050, emptyList(), 0xFFD700, BiomeType.TERRESTRIAL))
+   // val desert = BiomeInstance(BiomeData("desert", "Desert", 50, 20, 1250, emptyList(), 0xFFD700, BiomeType.TERRESTRIAL))
 
-    val plains = BiomeInstance(BiomeData("plains", "Plains", 20, 60, 1500, 0x00FF00, BiomeType.TERRESTRIAL))
-    val forest = BiomeInstance(BiomeData("forest", "Forest", 16, 80, 1750, 0x228B22, BiomeType.TERRESTRIAL))
-    val mountain = BiomeInstance(BiomeData("mountain", "Mountain", 12, 60, 2000, 0x808080, BiomeType.TERRESTRIAL))
-    val snowMountain = BiomeInstance(BiomeData("mountain_snowy", "Snowy Mountain", 0, 40, 2200, 0xFFFFFF, BiomeType.TERRESTRIAL))
-    val biomes = arrayOf(ocean, tropicalOcean, beach, desert, plains, forest, mountain, snowMountain)
+   // val plains = BiomeInstance(BiomeData("plains", "Plains", 20, 60, 1500, emptyList(), 0x00FF00, BiomeType.TERRESTRIAL))
+    //val forest = BiomeInstance(BiomeData("forest", "Forest", 16, 80, 1750, emptyList(), 0x228B22, BiomeType.TERRESTRIAL))
+   // val mountain = BiomeInstance(BiomeData("mountain", "Mountain", 12, 60, 2000, emptyList(), 0x808080, BiomeType.TERRESTRIAL))
+   // val snowMountain = BiomeInstance(BiomeData("mountain_snowy", "Snowy Mountain", 0, 40, 2200, emptyList(), 0xFFFFFF, BiomeType.TERRESTRIAL))
+    //val biomes = arrayOf(ocean, tropicalOcean, beach, desert, plains, forest, mountain, snowMountain)
     // biome -> array of tile types and their probability
-    val biomeTiles = mapOf(
+   /* val biomeTiles = mapOf(
         ocean to arrayOf(Pair(TileType.DEEP_WATER, 1.0)),
         tropicalOcean to arrayOf(Pair(TileType.WATER, 1.0)),
         beach to arrayOf(Pair(TileType.CLEAR_SAND, 1.0)),
@@ -37,7 +43,7 @@ class ProceduralHandler : ProceduralHandler {
             TileType.MOSSY_STONE, 0.01)),
         mountain to arrayOf(Pair(TileType.STONE, 0.9), Pair(TileType.MOSSY_STONE, 0.1)),
         snowMountain to arrayOf(Pair(TileType.SNOW, 0.8), Pair(TileType.SNOWY_STONE, 0.19), Pair(TileType.STONE, 0.01))
-    )
+    )*/
     val offset = 1.2
     val maxAltitude = biomes.maxOf { it.altitude } * offset
     val minAltitude = 0.0
@@ -120,54 +126,42 @@ class ProceduralHandler : ProceduralHandler {
         tileX: Int,
         tileY: Int
     ): TileLayer {
-        if (rng == null) {
-            rng = Random(seed)
-        }
+
         val altitudeValue = (altitude + 1) / 2 * (maxAltitude - minAltitude) + minAltitude
         val humidityValue = (humidity + 1) / 2 * (maxHumidity - minHumidity) + minHumidity
         val temperatureValue = (temperature + 1) / 2 * (maxTemperature - minTemperature) + minTemperature
 
-        var biome = biomes.minByOrNull {
-            abs(it.altitude - altitudeValue) +
-                    abs(it.humidity - humidityValue) +
-                    abs(it.temperature - temperatureValue)
-        } ?: ocean
-
-      /*  if (altitude < -0.2) {
-            biome = ocean
-        } else if (altitude < 0 && temperature > 0) {
-            biome = tropicalOcean
-        }*/
+        val biome = biomes.minBy { abs(it.altitude - altitudeValue) + abs(it.humidity - humidityValue) + abs(it.temperature - temperatureValue) }
 
         val tileLayer = TileLayer()
 
-        var type = determineTileTypeUsingProbability(biomeTiles[biome])
+        var type = determineTileType(biome)//determineTileTypeUsingProbability(biomeTiles[biome])
 
         if (tileX == 10 && tileY == 10) {
-            type = TileType.CLEAR_SAND
+            type = tileMapper["clear_sand"]
             tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SPRING_CONIFER_1.code
         } else if (tileX == 5 && tileY == 10) {
-            type = TileType.CLEAR_SAND
+            type = tileMapper["clear_sand"]
             tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SUMMER_FLOWER_4.code
         } else if (tileX == 15 && tileY == 10) {
-            type = TileType.CLEAR_SAND
+            type = tileMapper["clear_sand"]
             tileLayer[Metric.MAP_OBJECT_LAYER] = TileType.FOLIAGE_SPRING_ROCK_3.code
         }
 
-        tileLayer[Metric.MAP_GROUND_LAYER] = type.code
+        tileLayer[Metric.MAP_GROUND_LAYER] = type
 
         val objectType = when (type) {
-            TileType.GRASS -> grassGroup.random(rng!!, TileType.FOLIAGE_SUMMER_BUSH_1)
-            TileType.TALL_GRASS -> tallGrassGroup.random(rng!!, TileType.FOLIAGE_SUMMER_TALL_BUSH_1)
-            TileType.FLOWER_GRASS -> flowerGroup.random(rng!!, TileType.FOLIAGE_SUMMER_FLOWER_1)
-            TileType.DIRT -> dirtGroup.random(rng!!, TileType.FOLIAGE_AUTUMN_TREE_1)
-            TileType.STONE -> stoneGroup.random(rng!!, TileType.FOLIAGE_SUMMER_CONIFER_1)
-            TileType.SNOW -> snowGroup.random(rng!!, TileType.FOLIAGE_WINTER_CONIFER_1)
+            tileMapper["grass"] -> grassGroup.random(rng, TileType.FOLIAGE_SUMMER_BUSH_1)
+            tileMapper["tall_grass"] -> tallGrassGroup.random(rng, TileType.FOLIAGE_SUMMER_TALL_BUSH_1)
+            tileMapper["flower_grass"] -> flowerGroup.random(rng, TileType.FOLIAGE_SUMMER_FLOWER_1)
+            tileMapper["dirt"] -> dirtGroup.random(rng, TileType.FOLIAGE_AUTUMN_TREE_1)
+            tileMapper["stone"] -> stoneGroup.random(rng, TileType.FOLIAGE_SUMMER_CONIFER_1)
+            tileMapper["snow"] -> snowGroup.random(rng, TileType.FOLIAGE_WINTER_CONIFER_1)
             else -> null
         }
 
         if (objectType != null) {
-            rng?.let { random ->
+            rng.let { random ->
                 if (random.nextFloat() > 0.95f) {
                     tileLayer[Metric.MAP_OBJECT_LAYER] = objectType.code
                 }
@@ -199,19 +193,29 @@ class ProceduralHandler : ProceduralHandler {
         return tileLayer
     }
 
-    private fun <T> Array<T>.random(rng: Random, default: T): T {
-        return if (isEmpty()) default else get(rng.nextInt(size))
+    private fun determineTileType(biome: Biome): Int {
+        if (biome.tiles.isEmpty())
+            return 0
+        return tileMapper[biome.tiles.random(rng, "air")]
     }
 
-    private fun determineTileTypeUsingProbability(tileTypes: Array<Pair<TileType, Double>>?): TileType {
-        val random = rng!!.nextDouble()
-        var sum = 0.0
-        for (tileType in tileTypes!!) {
-            sum += tileType.second
-            if (random < sum) {
-                return tileType.first
+    private fun List<TileWithProbability>.random(rng: Random, default: String): String {
+        if (isEmpty()) {
+            return default
+        }
+        val randomValue = rng.nextFloat()
+        var cumulativeProbability = 0f
+
+        for (tile in this) {
+            cumulativeProbability += tile.probability
+            if (randomValue <= cumulativeProbability) {
+                return tile.key
             }
         }
-        return tileTypes[0].first
+        return default
+    }
+
+    private fun <T> Array<T>.random(rng: Random, default: T): T {
+        return if (isEmpty()) default else get(rng.nextInt(size))
     }
 }

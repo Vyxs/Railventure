@@ -1,12 +1,15 @@
 package fr.manigames.railventure.api.registry
 
 import fr.manigames.railventure.api.gameobject.tileentity.TileEntity
+import fr.manigames.railventure.api.serialize.map.RegistryMapper
 
 private class TileEntityAlreadyRegisteredException(message: String) : Exception(message)
 
 class TileEntityRegistry : Registry<TileEntity>() {
 
-/**
+    val mapper = RegistryMapper()
+
+    /**
      * Register an tileEntity in the registry.
      *
      * @param registryObject The tileEntity to register.
@@ -20,4 +23,6 @@ class TileEntityRegistry : Registry<TileEntity>() {
         registry[registryObject.key] = registryObject
         return registryObject.key
     }
+
+    fun finishRegistration() = mapper.map(this)
 }

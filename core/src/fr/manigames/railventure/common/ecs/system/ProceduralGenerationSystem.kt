@@ -5,31 +5,34 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import fr.manigames.railventure.api.core.Assets
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.api.map.generation.*
+import fr.manigames.railventure.api.registry.BiomeRegistry
+import fr.manigames.railventure.api.registry.TileRegistry
 import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.util.PosUtil
 import fr.manigames.railventure.client.map.ChunkLoader
 import fr.manigames.railventure.common.ecs.component.Player
 import fr.manigames.railventure.common.ecs.component.WorldPosition
-import fr.manigames.railventure.common.generation.ProceduralHandler
+import fr.manigames.railventure.test.ProceduralHandler
 
 
 class ProceduralGenerationSystem(
     private val map: ProceduralMap = inject(),
-    private val handler: ProceduralHandler = inject()
+    biomeRegistry: BiomeRegistry = inject(),
+    tileRegistry: TileRegistry = inject()
 ) : IteratingSystem(
     family { all(Player, WorldPosition)}
 ), ProceduralTileHandler {
 
-    private val chunkLoader = ChunkLoader(Assets.instance)
+    private val chunkLoader = ChunkLoader(Assets.instance, tileRegistry)
     private val viewDistance = 4
     private val mapConfig = ProceduralMapConfig(
         seed = 4455,
         defaultGenerationSize = 20,
         regenerateOnConfigChange = false
     )
+    private val handler: ProceduralHandler = ProceduralHandler(mapConfig.seed, biomeRegistry, tileRegistry)
 
     init {
         map.setChunkLoader(chunkLoader::loadChunk)

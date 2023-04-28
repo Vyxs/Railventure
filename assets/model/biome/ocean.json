@@ -5,5 +5,11 @@
   "humidity": 100,
   "altitude": 1000,
   "color": 255,
-  "type": "AQUATIC"
+  "type": "AQUATIC",
+  "tiles": [
+    {
+      "key": "deep_water",
+      "probability": 1
+    }
+  ]
 }

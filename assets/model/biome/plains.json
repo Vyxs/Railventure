@@ -5,5 +5,20 @@
   "humidity": 60,
   "altitude": 1500,
   "color": 65280,
-  "type": "TERRESTRIAL"
+  "type": "TERRESTRIAL",
+  "tiles": [
+    {
+      "key": "grass",
+      "probability": 0.96
+    },
+    {
+      "key": "flower_grass",
+      "probability": 0.03
+    },
+    {
+      "key": "tall_grass",
+      "probability": 0.01
+    }
+  ],
+  "gradient": "RANDOM"
 }

@@ -6,7 +6,7 @@ abstract class Registry<T : RegistryObject> {
 
     abstract fun register(registryObject: T): String
 
-    fun get(key: String): T? {
+    operator fun get(key: String): T? {
         return registry[key]
     }
 

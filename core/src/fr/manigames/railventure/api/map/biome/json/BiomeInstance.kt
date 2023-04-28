@@ -1,7 +1,9 @@
 package fr.manigames.railventure.api.map.biome.json
 
 import fr.manigames.railventure.api.map.biome.Biome
+import fr.manigames.railventure.api.map.biome.BiomeGradient
 import fr.manigames.railventure.api.map.biome.BiomeType
+import fr.manigames.railventure.api.map.biome.TileWithProbability
 import fr.manigames.railventure.api.serialize.json.Json
 
 class InvalidBiomeModelException(message: String) : Exception(message)
@@ -25,6 +27,8 @@ class BiomeInstance(biomeData: BiomeData) : Biome() {
     override val temperature: Int = biomeData.temperature
     override val humidity: Int = biomeData.humidity
     override val altitude: Int = biomeData.altitude
+    override val tiles: List<TileWithProbability> = biomeData.tiles
     override val color: Int = biomeData.color
     override val type: BiomeType = biomeData.type
+    override val gradient: BiomeGradient = biomeData.gradient
 }

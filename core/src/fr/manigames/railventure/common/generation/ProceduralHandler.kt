@@ -1,7 +1,6 @@
 package fr.manigames.railventure.common.generation
 
 import com.github.quillraven.fleks.World
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.TileLayer
 
 interface ProceduralHandler {

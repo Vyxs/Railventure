@@ -5,5 +5,24 @@
   "humidity": 80,
   "altitude": 1750,
   "color": 2263842,
-  "type": "TERRESTRIAL"
+  "type": "TERRESTRIAL",
+  "tiles": [
+    {
+      "key": "grass",
+      "probability": 0.9
+    },
+    {
+      "key": "tall_grass",
+      "probability": 0.08
+    },
+    {
+      "key": "dirt",
+      "probability": 0.01
+    },
+    {
+      "key": "mossy_stone",
+      "probability": 0.01
+    }
+  ],
+  "gradient": "RANDOM"
 }

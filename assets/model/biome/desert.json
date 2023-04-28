@@ -5,5 +5,16 @@
   "humidity": 20,
   "altitude": 1250,
   "color": 16766754,
-  "type": "TERRESTRIAL"
+  "type": "TERRESTRIAL",
+  "tiles": [
+    {
+      "key": "sand",
+      "probability": 0.99
+    },
+    {
+      "key": "dirt",
+      "probability": 0.01
+    }
+  ],
+  "gradient": "RANDOM"
 }

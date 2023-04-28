@@ -13,7 +13,7 @@ class Game : Game() {
         const val DEFAULT_ENTITY_CAPACITY: Int = 10000
         const val DEBUG = true
         const val USE_PLAYER_CAMERA = true
-        const val USE_ORTHOGRAPHIC_CAMERA = false
+        const val USE_ORTHOGRAPHIC_CAMERA = true
         const val USE_FREE_CAMERA = false
 
         val GAME_WIDTH = Metric.GAME_WIDTH

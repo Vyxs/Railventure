@@ -38,7 +38,6 @@ class GameScreen : Screen {
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
     private val map = ProceduralMap()
-    private val proceduralHandler: ProceduralHandler = fr.manigames.railventure.test.ProceduralHandler()
     private val itemRegistry: ItemRegistry = ItemRegistry()
     private val itemLoader: ItemLoader = ItemLoader(itemRegistry)
     private val tileRegistry: TileRegistry = TileRegistry()
@@ -90,7 +89,6 @@ class GameScreen : Screen {
                 add(guiRenderer)
                 add(entityRenderer)
                 add(map)
-                add(proceduralHandler)
                 add(debugRenderer)
                 add(gameInput)
                 add("useDebugCamera", !Game.USE_PLAYER_CAMERA)
@@ -114,6 +112,8 @@ class GameScreen : Screen {
         registerObjects("Tile", tileLoader, tileRegistry)
         registerObjects("TileEntity", tileEntityLoader, tileEntityRegistry)
         registerObjects("Biome", biomeLoader, biomeRegistry)
+
+        tileRegistry.finishRegistration()
     }
 
     private fun registerObjects(type: String, loader: JsonLoader, registry: Registry<*>) = loader.load().run {

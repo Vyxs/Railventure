@@ -4,14 +4,15 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.ChunkLoader
+import fr.manigames.railventure.api.registry.TileRegistry
 
 open class ChunkLoader(
-    private val assets: Assets
+    private val assets: Assets,
+    private val tileRegistry: TileRegistry
 ) : ChunkLoader {
 
-    private val mutableMap = mutableMapOf<TileType, Pixmap>()
+    private val mutableMap = mutableMapOf<Int, Pixmap>()
 
     override fun loadChunk(chunk: RenderableChunk) {
         if (chunk.isLoading.compareAndSet(false, true)) {
@@ -51,12 +52,21 @@ open class ChunkLoader(
     protected open fun makePixmap(chunk: RenderableChunk, assets: Assets) : Pixmap {
         val chunkSizeInPx = (Metric.MAP_CHUNK_SIZE * Metric.TILE_SIZE).toInt()
         val pixmap = Pixmap(chunkSizeInPx, chunkSizeInPx, Pixmap.Format.RGBA8888)
+
         chunk.getTiles().reversed().forEachIndexed { y, column ->
+
             column.forEachIndexed { x, tileLayer ->
+
                 tileLayer[Metric.MAP_GROUND_LAYER].let { code ->
-                    val tileType = TileType.fromCode(code)
-                    assets.getTexture(tileType.texture.path)?.let {
-                        drawTextureToChunkPixmap(tileType, it, pixmap, x, y)
+                    val key = tileRegistry.mapper[code]
+                    val tile = tileRegistry[key]
+
+
+                    tile?.texture?.let { texture ->
+
+                        assets.getTexture(texture)?.let {
+                            drawTextureToChunkPixmap(code, it, pixmap, x, y)
+                        }
                     }
                 }
             }
@@ -72,7 +82,7 @@ open class ChunkLoader(
      * @param x The x world position
      * @param y The y world position
      **/
-    private fun drawTextureToChunkPixmap(type: TileType, texture: Texture, pixmap: Pixmap, x: Int, y: Int) {
+    private fun drawTextureToChunkPixmap(type: Int, texture: Texture, pixmap: Pixmap, x: Int, y: Int) {
         cacheTexture(type, texture)
         pixmap.drawPixmap(mutableMap[type], x * Metric.TILE_SIZE.toInt(), y * Metric.TILE_SIZE.toInt())
     }
@@ -83,7 +93,7 @@ open class ChunkLoader(
      * @param type The tile type
      * @param texture The texture to cache
      **/
-    private fun cacheTexture(type: TileType, texture: Texture) {
+    private fun cacheTexture(type: Int, texture: Texture) {
         if (mutableMap[type] == null) {
             mutableMap[type] = if (texture.width != Metric.TILE_SIZE.toInt()) {
                 getPixmapAtCorrectScale(texture)
