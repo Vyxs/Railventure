@@ -1,5 +1,6 @@
 package fr.manigames.railventure.api.core
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.debug.Logger
@@ -8,20 +9,29 @@ class Assets private constructor() {
 
     companion object {
         val instance = Assets()
+        const val TEXTURE_PATH = "texture/"
     }
 
     private val assetManager = AssetManager()
 
     /**
      * Load all assets
-     * Should be called in [Game.create]
-     *
-     * @param loadCallback Callback called when all assets are loaded
      *
      * @see [AssetManager.load]
      **/
-    fun load(loadCallback: (AssetManager) -> Unit) {
-        loadCallback(assetManager)
+    fun load() {
+        recursiveLoad(TEXTURE_PATH)
+    }
+
+    private fun recursiveLoad(path: String) {
+        val file = Gdx.files.internal(path)
+        if (file.isDirectory) {
+            file.list().forEach {
+                recursiveLoad(it.path())
+            }
+        } else if (file.extension() == "png") {
+            assetManager.load(path, Texture::class.java)
+        }
     }
 
     /**

@@ -10,7 +10,6 @@ import fr.manigames.railventure.api.loader.*
 import fr.manigames.railventure.api.registry.*
 import fr.manigames.railventure.client.ui.ProgressBar
 import fr.manigames.railventure.client.stage.loading.TileEntityAssetTransformer
-import fr.manigames.railventure.generated.R
 
 class LoadingScreen : Screen {
 
@@ -38,7 +37,7 @@ class LoadingScreen : Screen {
         tileEntityRegistry = game.tileEntityRegistry
         biomeRegistry = game.biomeRegistry
 
-        assets.load(R::loadingConsumer)
+        assets.load()
         populateRegistries()
         tileEntityAssetTransformer = TileEntityAssetTransformer(tileEntityRegistry.getAll().values)
 

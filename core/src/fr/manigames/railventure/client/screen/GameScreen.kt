@@ -13,9 +13,7 @@ import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.api.loader.*
 import fr.manigames.railventure.api.map.generation.ProceduralMap
-import fr.manigames.railventure.api.registry.*
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.renderer.*
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -27,8 +25,6 @@ import fr.manigames.railventure.common.ecs.component.Texture
 import fr.manigames.railventure.common.ecs.component.WorldPosition
 import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
-import fr.manigames.railventure.common.generation.ProceduralHandler
-import fr.manigames.railventure.generated.R
 import fr.manigames.railventure.test.TestSystem
 import java.util.*
 
@@ -63,7 +59,7 @@ class GameScreen : Screen {
             it += Player("Dev", UUID.randomUUID(), isReady = true, isHost = true)
             it += WorldPosition(2f, 2f)
             it += Move(maxSpeed = 5f, maxAngularSpeed = 1f)
-            it += Texture(R.Texture.WAGON.path)
+            it += Texture("texture/wagon/wagon.png")
         }
     }
 
