@@ -16,5 +16,17 @@
       "probability": 0.1
     }
   ],
-  "gradient": "SMOOTH"
+  "gradient": "SMOOTH",
+  "tileEntities": [
+    {
+      "spawnOn": ["stone"],
+      "keys": ["conifer_1", "conifer_2", "conifer_3"],
+      "odds": 0.05
+    },
+    {
+      "spawnOn": ["stone", "mossy_stone"],
+      "keys": ["rock_1", "rock_2", "rock_3"],
+      "odds": 0.07
+    }
+  ]
 }

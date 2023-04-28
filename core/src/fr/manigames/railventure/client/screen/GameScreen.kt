@@ -38,14 +38,6 @@ class GameScreen : Screen {
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
     private val map = ProceduralMap()
-    private val itemRegistry: ItemRegistry = ItemRegistry()
-    private val itemLoader: ItemLoader = ItemLoader(itemRegistry)
-    private val tileRegistry: TileRegistry = TileRegistry()
-    private val tileLoader: TileLoader = TileLoader(tileRegistry)
-    private val tileEntityRegistry: TileEntityRegistry = TileEntityRegistry()
-    private val tileEntityLoader: TileEntityLoader = TileEntityLoader(tileEntityRegistry)
-    private val biomeRegistry: BiomeRegistry = BiomeRegistry()
-    private val biomeLoader: BiomeLoader = BiomeLoader(biomeRegistry)
     private lateinit var world: World
     private lateinit var camera: Camera
     private lateinit var viewport: ExtendViewport
@@ -59,13 +51,12 @@ class GameScreen : Screen {
     override fun init(game: Game) {
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         groundMapRenderer = GroundMapRenderer(map, camera)
-        objectMapRenderer = ObjectMapRenderer(map, camera, !Game.USE_ORTHOGRAPHIC_CAMERA)
+        objectMapRenderer = ObjectMapRenderer(map, camera, !Game.USE_ORTHOGRAPHIC_CAMERA, game.tileEntityRegistry)
         guiRenderer = GuiRenderer()
         entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
         debugRenderer = DebugRenderer(camera, map)
 
-        populateRegistries()
-        initEcs()
+        initEcs(game)
 
         gameInput.bind()
         mainPlayer = world.entity {
@@ -76,13 +67,13 @@ class GameScreen : Screen {
         }
     }
 
-    private fun initEcs() {
+    private fun initEcs(game: Game) {
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {
-                add(itemRegistry)
-                add(tileRegistry)
-                add(tileEntityRegistry)
-                add(biomeRegistry)
+                add(game.itemRegistry)
+                add(game.tileRegistry)
+                add(game.tileEntityRegistry)
+                add(game.biomeRegistry)
                 add(camera)
                 add(groundMapRenderer)
                 add(objectMapRenderer)
@@ -105,19 +96,6 @@ class GameScreen : Screen {
                 if (Game.USE_PLAYER_CAMERA) add(PlayerCameraSystem())
             }
         }
-    }
-
-    private fun populateRegistries() {
-        registerObjects("Item", itemLoader, itemRegistry)
-        registerObjects("Tile", tileLoader, tileRegistry)
-        registerObjects("TileEntity", tileEntityLoader, tileEntityRegistry)
-        registerObjects("Biome", biomeLoader, biomeRegistry)
-
-        tileRegistry.finishRegistration()
-    }
-
-    private fun registerObjects(type: String, loader: JsonLoader, registry: Registry<*>) = loader.load().run {
-        println("Registering $type...\n${registry.getAll().toSortedMap().values.joinToString("\n") { "$type '${it.key}' registered." }}\nRegistered ${registry.getAll().size} $type.")
     }
 
     override fun render(delta: Float) {

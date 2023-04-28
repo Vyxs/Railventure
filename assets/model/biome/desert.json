@@ -16,5 +16,12 @@
       "probability": 0.01
     }
   ],
-  "gradient": "RANDOM"
+  "gradient": "RANDOM",
+  "tileEntities": [
+    {
+      "spawnOn": ["sand", "dirt"],
+      "keys": ["rock_1", "rock_2", "rock_3"],
+      "odds": 0.003
+    }
+  ]
 }

@@ -8,6 +8,7 @@ import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.api.map.generation.*
 import fr.manigames.railventure.api.registry.BiomeRegistry
+import fr.manigames.railventure.api.registry.TileEntityRegistry
 import fr.manigames.railventure.api.registry.TileRegistry
 import fr.manigames.railventure.api.type.math.ChunkArea
 import fr.manigames.railventure.api.util.PosUtil
@@ -20,7 +21,8 @@ import fr.manigames.railventure.test.ProceduralHandler
 class ProceduralGenerationSystem(
     private val map: ProceduralMap = inject(),
     biomeRegistry: BiomeRegistry = inject(),
-    tileRegistry: TileRegistry = inject()
+    tileRegistry: TileRegistry = inject(),
+    tileEntityRegistry: TileEntityRegistry = inject()
 ) : IteratingSystem(
     family { all(Player, WorldPosition)}
 ), ProceduralTileHandler {
@@ -32,7 +34,7 @@ class ProceduralGenerationSystem(
         defaultGenerationSize = 20,
         regenerateOnConfigChange = false
     )
-    private val handler: ProceduralHandler = ProceduralHandler(mapConfig.seed, biomeRegistry, tileRegistry)
+    private val handler: ProceduralHandler = ProceduralHandler(mapConfig.seed, biomeRegistry, tileRegistry, tileEntityRegistry)
 
     init {
         map.setChunkLoader(chunkLoader::loadChunk)

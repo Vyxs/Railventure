@@ -6,8 +6,10 @@ import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
+import fr.manigames.railventure.api.loader.*
+import fr.manigames.railventure.api.registry.*
 import fr.manigames.railventure.client.ui.ProgressBar
-import fr.manigames.railventure.client.stage.loading.EntityAssetTransformer
+import fr.manigames.railventure.client.stage.loading.TileEntityAssetTransformer
 import fr.manigames.railventure.generated.R
 
 class LoadingScreen : Screen {
@@ -16,7 +18,13 @@ class LoadingScreen : Screen {
     private val shapeRenderer = Render.shapeRenderer
     private val batch = Render.spriteBatch
     private val assets: Assets = Assets.instance
-    private val entityAssetTransformer = EntityAssetTransformer()
+
+    private lateinit var itemRegistry: ItemRegistry
+    private lateinit var tileRegistry: TileRegistry
+    private lateinit var tileEntityRegistry: TileEntityRegistry
+    private lateinit var biomeRegistry: BiomeRegistry
+
+    private lateinit var tileEntityAssetTransformer: TileEntityAssetTransformer
 
     private lateinit var changeScreen: (Screen) -> Unit
 
@@ -25,7 +33,14 @@ class LoadingScreen : Screen {
     override fun init(game: Game) {
         changeScreen = game::changeScreen
 
+        itemRegistry = game.itemRegistry
+        tileRegistry = game.tileRegistry
+        tileEntityRegistry = game.tileEntityRegistry
+        biomeRegistry = game.biomeRegistry
+
         assets.load(R::loadingConsumer)
+        populateRegistries()
+        tileEntityAssetTransformer = TileEntityAssetTransformer(tileEntityRegistry.getAll().values)
 
         val width = Gdx.graphics.width / 5f
         val height = 40f
@@ -37,8 +52,8 @@ class LoadingScreen : Screen {
     override fun render(delta: Float) {
         update()
         ScreenUtils.clear(0f, 0f, 0f, 1f)
-        if (entityAssetTransformer.isTransforming()) {
-            assetProgressBar.progress = entityAssetTransformer.getTransformProgression()
+        if (tileEntityAssetTransformer.isTransforming()) {
+            assetProgressBar.progress = tileEntityAssetTransformer.getTransformProgression()
         } else {
             assetProgressBar.progress = assets.getProgress()
         }
@@ -47,13 +62,27 @@ class LoadingScreen : Screen {
 
     private fun update() {
         assets.update()
-        if (entityAssetTransformer.getTransformProgression() == 1f) {
+        if (tileEntityAssetTransformer.getTransformProgression() == 1f) {
             changeScreen(GameScreen())
-        } else if (assets.hasFinishedLoading() && !entityAssetTransformer.isTransforming()) {
+        } else if (assets.hasFinishedLoading() && !tileEntityAssetTransformer.isTransforming()) {
             assetProgressBar.setText("Transforming assets...", bitmapFont)
             kotlin.run {
-                entityAssetTransformer.transform()
+                tileEntityAssetTransformer.transform()
             }
         }
+    }
+
+    private fun populateRegistries() {
+        registerObjects("Item", ItemLoader(itemRegistry), itemRegistry)
+        registerObjects("Tile", TileLoader(tileRegistry), tileRegistry)
+        registerObjects("TileEntity", TileEntityLoader(tileEntityRegistry), tileEntityRegistry)
+        registerObjects("Biome", BiomeLoader(biomeRegistry), biomeRegistry)
+
+        tileRegistry.finishRegistration()
+        tileEntityRegistry.finishRegistration()
+    }
+
+    private fun registerObjects(type: String, loader: JsonLoader, registry: Registry<*>) = loader.load().run {
+        println("Registering $type...\n${registry.getAll().toSortedMap().values.joinToString("\n") { "$type '${it.key}' registered." }}\nRegistered ${registry.getAll().size} $type.")
     }
 }

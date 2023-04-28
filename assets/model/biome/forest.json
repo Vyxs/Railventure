@@ -24,5 +24,27 @@
       "probability": 0.01
     }
   ],
-  "gradient": "RANDOM"
+  "gradient": "RANDOM",
+  "tileEntities": [
+    {
+      "spawnOn": ["grass"],
+      "keys": ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5", "tree_6", "conifer_1", "conifer_2", "conifer_3"],
+      "odds": 0.05
+    },
+    {
+      "spawnOn": ["grass", "dirt", "mossy_stone"],
+      "keys": ["rock_1", "rock_2", "rock_3"],
+      "odds": 0.01
+    },
+    {
+      "spawnOn": ["grass"],
+      "keys": ["bush_1", "bush_2", "bush_3", "bush_4", "bush_5", "bush_6", "bush_7", "bush_8"],
+      "odds": 0.006
+    },
+    {
+      "spawnOn": ["tall_grass"],
+      "keys": ["tall_bush_1", "tall_bush_2", "tall_bush_3", "tall_bush_4", "tall_bush_5", "tall_bush_6"],
+      "odds": 0.002
+    }
+  ]
 }
