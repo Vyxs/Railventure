@@ -5,5 +5,28 @@
   "humidity": 60,
   "altitude": 2000,
   "color": 8421504,
-  "type": "TERRESTRIAL"
+  "type": "TERRESTRIAL",
+  "tiles": [
+    {
+      "key": "stone",
+      "probability": 0.9
+    },
+    {
+      "key": "mossy_stone",
+      "probability": 0.1
+    }
+  ],
+  "gradient": "SMOOTH",
+  "tileEntities": [
+    {
+      "spawnOn": ["stone"],
+      "keys": ["conifer_1", "conifer_2", "conifer_3"],
+      "odds": 0.05
+    },
+    {
+      "spawnOn": ["stone", "mossy_stone"],
+      "keys": ["rock_1", "rock_2", "rock_3"],
+      "odds": 0.07
+    }
+  ]
 }

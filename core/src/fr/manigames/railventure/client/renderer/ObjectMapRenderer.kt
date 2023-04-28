@@ -9,18 +9,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy
 import com.badlogic.gdx.graphics.g3d.decals.Decal
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
-import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy
-import com.badlogic.gdx.graphics.g3d.decals.PluggableGroupStrategy
-import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.math.Vector3
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.EntityAssets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
 import fr.manigames.railventure.api.core.Metric.TILE_SIZE
 import fr.manigames.railventure.api.core.Render
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.generation.ProceduralMap
+import fr.manigames.railventure.api.registry.TileEntityRegistry
 
 private data class Render2d(
     val texture: Texture,
@@ -35,7 +31,8 @@ private data class Render3d(
 class ObjectMapRenderer(
     map: ProceduralMap,
     camera: Camera,
-    private val use3D: Boolean
+    private val use3D: Boolean,
+    private val tileEntityRegistry: TileEntityRegistry
 ) : MapRenderer(map, camera) {
 
     private val batch: SpriteBatch = Render.spriteBatch
@@ -90,12 +87,16 @@ class ObjectMapRenderer(
             chunk.getTiles().forEachIndexed { y, column ->
 
                 column.forEachIndexed { x, layer ->
-                    val tile = TileType.fromCode(layer[Metric.MAP_OBJECT_LAYER])
-                    if (tile == TileType.AIR) return@forEachIndexed
 
-                    var tex = EntityAssets.getTexture(tile.texture.path)
+                    val tileCode = layer[Metric.MAP_OBJECT_LAYER]
+                    val tileKey = tileEntityRegistry.mapper[tileCode]
+                    if (tileKey == "air") return@forEachIndexed
+
+                    val tileEntity = tileEntityRegistry[tileKey] ?: return@forEachIndexed
+
+                    var tex = EntityAssets.getTexture(tileEntity.texture.base.base)
                     if (tex == null) {
-                        tex = Assets.instance.getTexture(tile.texture.path) ?: return@forEachIndexed
+                        tex = Assets.instance.getTexture(tileEntity.texture.base.base) ?: return@forEachIndexed
                         val rx = (chunkXOffset + x) * TILE_SIZE
                         val ry = (chunkYOffset + y) * TILE_SIZE
                         render2d.add(Render2d(tex, rx, ry))
@@ -119,10 +120,16 @@ class ObjectMapRenderer(
             chunk.getTiles().forEachIndexed { y, column ->
 
                 column.forEachIndexed { x, layer ->
-                    val tile = TileType.fromCode(layer[Metric.MAP_OBJECT_LAYER])
-                    if (tile == TileType.AIR) return@forEachIndexed
+                    val tileCode = layer[Metric.MAP_OBJECT_LAYER]
+                    val tileKey = tileEntityRegistry.mapper[tileCode]
+                    if (tileKey == "air") return@forEachIndexed
 
-                    val tex = EntityAssets.getTexture(tile.texture.path) ?: return@forEachIndexed
+                    val tileEntity = tileEntityRegistry[tileKey] ?: return@forEachIndexed
+
+                    var tex = EntityAssets.getTexture(tileEntity.texture.base.base)
+                    if (tex == null) {
+                        tex = Assets.instance.getTexture(tileEntity.texture.base.base) ?: return@forEachIndexed
+                    }
                     val texRegion = TextureRegion(tex)
                     val decal = Decal.newDecal(texRegion, true)
                     val rx = (chunkXOffset + x) * TILE_SIZE + TILE_SIZE / 2

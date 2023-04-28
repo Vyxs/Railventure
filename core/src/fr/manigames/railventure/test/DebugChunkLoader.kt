@@ -3,12 +3,14 @@ package fr.manigames.railventure.test
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.PixmapIO
 import fr.manigames.railventure.api.core.Assets
+import fr.manigames.railventure.api.registry.TileRegistry
 import fr.manigames.railventure.client.map.ChunkLoader
 import fr.manigames.railventure.client.map.RenderableChunk
 
 class DebugChunkLoader(
-    assets: Assets
-) : ChunkLoader(assets) {
+    assets: Assets,
+    tileRegistry: TileRegistry
+) : ChunkLoader(assets, tileRegistry) {
 
     override fun generateChunkTexture(chunk: RenderableChunk, assets: Assets) {
         val pixmap = makePixmap(chunk, assets)

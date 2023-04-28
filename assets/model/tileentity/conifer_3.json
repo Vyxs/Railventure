@@ -3,10 +3,13 @@
   "name": "Fir",
   "texture": {
     "base": {
-      "base": "texture/foliage/spring/conifer_3.png"
+      "base": "texture/foliage/summer/conifer_3.png"
     },
     "winter": {
       "base": "texture/foliage/winter/conifer_3.png"
+    },
+    "spring": {
+      "base": "texture/foliage/spring/conifer_3.png"
     }
   },
   "renderType": "FOLIAGE",

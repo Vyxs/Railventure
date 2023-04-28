@@ -5,6 +5,13 @@ import fr.manigames.railventure.api.core.Metric
 import com.badlogic.gdx.Game
 import fr.manigames.railventure.api.core.Render
 import fr.manigames.railventure.api.graphics.screen.Screen
+import fr.manigames.railventure.api.loader.ItemLoader
+import fr.manigames.railventure.api.loader.TileEntityLoader
+import fr.manigames.railventure.api.loader.TileLoader
+import fr.manigames.railventure.api.registry.BiomeRegistry
+import fr.manigames.railventure.api.registry.ItemRegistry
+import fr.manigames.railventure.api.registry.TileEntityRegistry
+import fr.manigames.railventure.api.registry.TileRegistry
 import fr.manigames.railventure.client.screen.LoadingScreen
 
 class Game : Game() {
@@ -19,6 +26,11 @@ class Game : Game() {
         val GAME_WIDTH = Metric.GAME_WIDTH
         val GAME_HEIGHT = Metric.GAME_HEIGHT
     }
+
+    val itemRegistry: ItemRegistry = ItemRegistry()
+    val tileRegistry: TileRegistry = TileRegistry()
+    val tileEntityRegistry: TileEntityRegistry = TileEntityRegistry()
+    val biomeRegistry: BiomeRegistry = BiomeRegistry()
 
     fun changeScreen(screen: Screen) {
         this.screen?.dispose()

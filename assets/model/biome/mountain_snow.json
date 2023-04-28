@@ -5,5 +5,32 @@
   "humidity": 40,
   "altitude": 2200,
   "color": 16777215,
-  "type": "TERRESTRIAL"
+  "type": "TERRESTRIAL",
+  "tiles": [
+    {
+      "key": "snow",
+      "probability": 0.8
+    },
+    {
+      "key": "snowy_stone",
+      "probability": 0.19
+    },
+    {
+      "key": "stone",
+      "probability": 0.01
+    }
+  ],
+  "gradient": "SMOOTH",
+  "tileEntities": [
+    {
+      "spawnOn": ["stone", "snowy_stone", "snow"],
+      "keys": ["conifer_1", "conifer_2", "conifer_3"],
+      "odds": 0.07
+    },
+    {
+      "spawnOn": ["stone, snowy_stone"],
+      "keys": ["rock_1", "rock_2", "rock_3"],
+      "odds": 0.02
+    }
+  ]
 }

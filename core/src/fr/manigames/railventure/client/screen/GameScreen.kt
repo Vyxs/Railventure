@@ -13,9 +13,7 @@ import fr.manigames.railventure.Game
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.Metric
 import fr.manigames.railventure.api.graphics.screen.Screen
-import fr.manigames.railventure.api.loader.*
 import fr.manigames.railventure.api.map.generation.ProceduralMap
-import fr.manigames.railventure.api.registry.*
 import fr.manigames.railventure.client.input.GameInput
 import fr.manigames.railventure.client.renderer.*
 import fr.manigames.railventure.client.system.PlayerCameraSystem
@@ -27,8 +25,6 @@ import fr.manigames.railventure.common.ecs.component.Texture
 import fr.manigames.railventure.common.ecs.component.WorldPosition
 import fr.manigames.railventure.common.ecs.system.PhysicSystem
 import fr.manigames.railventure.common.ecs.system.ProceduralGenerationSystem
-import fr.manigames.railventure.common.generation.ProceduralHandler
-import fr.manigames.railventure.generated.R
 import fr.manigames.railventure.test.TestSystem
 import java.util.*
 
@@ -38,15 +34,6 @@ class GameScreen : Screen {
     private val gameInput: GameInput = GameInput()
     private val assets: Assets = Assets.instance
     private val map = ProceduralMap()
-    private val proceduralHandler: ProceduralHandler = fr.manigames.railventure.test.ProceduralHandler()
-    private val itemRegistry: ItemRegistry = ItemRegistry()
-    private val itemLoader: ItemLoader = ItemLoader(itemRegistry)
-    private val tileRegistry: TileRegistry = TileRegistry()
-    private val tileLoader: TileLoader = TileLoader(tileRegistry)
-    private val tileEntityRegistry: TileEntityRegistry = TileEntityRegistry()
-    private val tileEntityLoader: TileEntityLoader = TileEntityLoader(tileEntityRegistry)
-    private val biomeRegistry: BiomeRegistry = BiomeRegistry()
-    private val biomeLoader: BiomeLoader = BiomeLoader(biomeRegistry)
     private lateinit var world: World
     private lateinit var camera: Camera
     private lateinit var viewport: ExtendViewport
@@ -60,37 +47,35 @@ class GameScreen : Screen {
     override fun init(game: Game) {
         setCamera(Game.USE_ORTHOGRAPHIC_CAMERA)
         groundMapRenderer = GroundMapRenderer(map, camera)
-        objectMapRenderer = ObjectMapRenderer(map, camera, !Game.USE_ORTHOGRAPHIC_CAMERA)
+        objectMapRenderer = ObjectMapRenderer(map, camera, !Game.USE_ORTHOGRAPHIC_CAMERA, game.tileEntityRegistry)
         guiRenderer = GuiRenderer()
         entityRenderer = EntityRenderer(assets, !Game.USE_ORTHOGRAPHIC_CAMERA, camera)
         debugRenderer = DebugRenderer(camera, map)
 
-        populateRegistries()
-        initEcs()
+        initEcs(game)
 
         gameInput.bind()
         mainPlayer = world.entity {
             it += Player("Dev", UUID.randomUUID(), isReady = true, isHost = true)
             it += WorldPosition(2f, 2f)
             it += Move(maxSpeed = 5f, maxAngularSpeed = 1f)
-            it += Texture(R.Texture.WAGON.path)
+            it += Texture("texture/wagon/wagon.png")
         }
     }
 
-    private fun initEcs() {
+    private fun initEcs(game: Game) {
         world = world(entityCapacity = Game.DEFAULT_ENTITY_CAPACITY) {
             injectables {
-                add(itemRegistry)
-                add(tileRegistry)
-                add(tileEntityRegistry)
-                add(biomeRegistry)
+                add(game.itemRegistry)
+                add(game.tileRegistry)
+                add(game.tileEntityRegistry)
+                add(game.biomeRegistry)
                 add(camera)
                 add(groundMapRenderer)
                 add(objectMapRenderer)
                 add(guiRenderer)
                 add(entityRenderer)
                 add(map)
-                add(proceduralHandler)
                 add(debugRenderer)
                 add(gameInput)
                 add("useDebugCamera", !Game.USE_PLAYER_CAMERA)
@@ -107,17 +92,6 @@ class GameScreen : Screen {
                 if (Game.USE_PLAYER_CAMERA) add(PlayerCameraSystem())
             }
         }
-    }
-
-    private fun populateRegistries() {
-        registerObjects("Item", itemLoader, itemRegistry)
-        registerObjects("Tile", tileLoader, tileRegistry)
-        registerObjects("TileEntity", tileEntityLoader, tileEntityRegistry)
-        registerObjects("Biome", biomeLoader, biomeRegistry)
-    }
-
-    private fun registerObjects(type: String, loader: JsonLoader, registry: Registry<*>) = loader.load().run {
-        println("Registering $type...\n${registry.getAll().toSortedMap().values.joinToString("\n") { "$type '${it.key}' registered." }}\nRegistered ${registry.getAll().size} $type.")
     }
 
     override fun render(delta: Float) {

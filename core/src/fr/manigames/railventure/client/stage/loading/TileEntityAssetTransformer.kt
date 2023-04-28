@@ -5,10 +5,14 @@ import com.badlogic.gdx.graphics.Texture
 import fr.manigames.railventure.api.core.Assets
 import fr.manigames.railventure.api.core.EntityAssets
 import fr.manigames.railventure.api.debug.Logger
-import fr.manigames.railventure.api.gameobject.TileType
+import fr.manigames.railventure.api.gameobject.tileentity.RenderType
+import fr.manigames.railventure.api.gameobject.tileentity.TileEntity
+import fr.manigames.railventure.api.registry.TileEntityRegistry
 import java.util.concurrent.atomic.AtomicReference
 
-class EntityAssetTransformer {
+class TileEntityAssetTransformer(
+    private val tileEntities: Collection<TileEntity>
+) {
 
     private val transformProgression = AtomicReference(0f)
     private val isTransforming = AtomicReference(false)
@@ -19,33 +23,38 @@ class EntityAssetTransformer {
 
     fun transform() {
         isTransforming.set(true)
-        val startFrom = 24
-        val endTo = 95
-        val size = TileType.values().size
-        val total = 62
         var current = 0
-        TileType.values().filter { it.code in startFrom until endTo }.forEach { type ->
-            type.texture.path.let {
+        tileEntities.forEachIndexed { index, entity ->
+            if (entity.textureScale == 1f) {
+                current++
+                transformProgression.set(current.toFloat() / tileEntities.size)
+                return@forEachIndexed
+            }
+
+            println("Transforming ${entity.key}")
+
+            entity.texture.getEachDifferentTexture().forEach {
                 val tex = Assets.instance.getTexture(it)
-                val scaledTex = getScaledTexture(tex)
+                val scaledTex = getScaledTexture(entity.textureScale, tex)
 
                 if (scaledTex == null) {
                     Logger.error("Failed to get entity texture $it")
-                    return@let
+                    return@forEachIndexed
                 }
                 EntityAssets.addTexture(it, scaledTex)
             }
             current++
-            transformProgression.set(current.toFloat() / total)
+            transformProgression.set(current.toFloat() / tileEntities.size)
         }
+        transformProgression.set(1f)
         isTransforming.set(false)
     }
 
-    private fun getScaledTexture(texture: Texture?): Texture? {
+    private fun getScaledTexture(scaleFactor: Float, texture: Texture?): Texture? {
         if (texture == null) return null
         val srcPixmap = getPixmap(texture)
 
-        val width = (srcPixmap.width.toFloat() / 5).toInt()
+        val width = (srcPixmap.width.toFloat() * scaleFactor).toInt()
 
         val widthRatio = width / srcPixmap.width.toFloat()
         val height = srcPixmap.height.toFloat() * widthRatio

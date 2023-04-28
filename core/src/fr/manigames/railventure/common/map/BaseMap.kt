@@ -1,13 +1,12 @@
 package fr.manigames.railventure.common.map
 
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.Map
 import fr.manigames.railventure.api.map.base.MapChunk
 import fr.manigames.railventure.api.map.base.TileLayer
 import fr.manigames.railventure.api.util.PosUtil
 
-open class BaseMap : Map<TileType, TileLayer> {
+open class BaseMap : Map<Int, TileLayer> {
 
     companion object {
 
@@ -27,9 +26,9 @@ open class BaseMap : Map<TileType, TileLayer> {
         }
     }
 
-    protected val chunks: HashMap<Long, MapChunk<TileType, TileLayer>> = HashMap(9)
+    protected val chunks: HashMap<Long, MapChunk<Int, TileLayer>> = HashMap(9)
 
-    override fun getChunk(x: Int, y: Int): MapChunk<TileType, TileLayer>? {
+    override fun getChunk(x: Int, y: Int): MapChunk<Int, TileLayer>? {
         return chunks[toChunkId(x, y)]
     }
 
@@ -37,7 +36,7 @@ open class BaseMap : Map<TileType, TileLayer> {
         return chunks.containsKey(toChunkId(x, y))
     }
 
-    override fun getTile(tileX: Int, tileY: Int, tileZ: Int): TileType? {
+    override fun getTile(tileX: Int, tileY: Int, tileZ: Int): Int? {
         return getChunk(tileX / MAP_CHUNK_SIZE, tileY / MAP_CHUNK_SIZE)?.getTile(tileX % MAP_CHUNK_SIZE, tileY % MAP_CHUNK_SIZE, tileZ)
     }
 
@@ -48,7 +47,7 @@ open class BaseMap : Map<TileType, TileLayer> {
      * @param tileY The y position of the tile
      * @return The first non-air tile at the given position, or null if the chunk is not loaded
      **/
-    fun getFirstNonAirTile(tileX: Float, tileY: Float): TileType? {
+    fun getFirstNonAirTile(tileX: Float, tileY: Float): Int? {
         val (chunkX, chunkY) = PosUtil.getChunkPosition(tileX, tileY)
         val chunk = getChunk(chunkX, chunkY) ?: return null
 
@@ -56,8 +55,8 @@ open class BaseMap : Map<TileType, TileLayer> {
         val tileStack = chunk.getTileStack(posX, posY)
 
         for (tileCode in tileStack.reversed()) {
-            if (tileCode != TileType.AIR.code) {
-                return TileType.fromCode(tileCode)
+            if (tileCode != 0) {
+                return tileCode
             }
         }
         return null
@@ -73,7 +72,7 @@ open class BaseMap : Map<TileType, TileLayer> {
      *
      * @return True if the tile has been set, false otherwise
      **/
-    override fun setTile(tileX: Int, tileY: Int, tileZ: Int, tileType: TileType) : Boolean {
+    override fun setTile(tileX: Int, tileY: Int, tileZ: Int, tileType: Int) : Boolean {
         val chunk = getChunk(tileX / MAP_CHUNK_SIZE, tileY / MAP_CHUNK_SIZE)
         return if (chunk != null) {
             chunk.setTile(tileX % MAP_CHUNK_SIZE, tileY % MAP_CHUNK_SIZE, tileZ, tileType)
@@ -88,7 +87,7 @@ open class BaseMap : Map<TileType, TileLayer> {
      * @param y The y position of the chunk
      * @param chunk The chunk to set
      **/
-    override fun setChunk(chunk: MapChunk<TileType, TileLayer>) {
+    override fun setChunk(chunk: MapChunk<Int, TileLayer>) {
         chunks[toChunkId(chunk.getChunkX(), chunk.getChunkY())] = chunk
     }
 }

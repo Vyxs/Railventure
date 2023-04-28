@@ -1,11 +1,10 @@
 package fr.manigames.railventure.common.map
 
 import fr.manigames.railventure.api.core.Metric.MAP_CHUNK_SIZE
-import fr.manigames.railventure.api.gameobject.TileType
 import fr.manigames.railventure.api.map.base.MapChunk
 import fr.manigames.railventure.api.map.base.TileLayer
 
-open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType, TileLayer> {
+open class BaseChunk(val x: Int, val y: Int) : MapChunk<Int, TileLayer> {
 
     /**
      * The tiles of the chunk
@@ -36,8 +35,8 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType, TileLayer> {
      * @param z the z position depth
      * @return the tile at the given position
      */
-    override fun getTile(x: Int, y: Int, z: Int): TileType {
-        return TileType.values().first { it.code == tiles[y][x][z] }
+    override fun getTile(x: Int, y: Int, z: Int): Int {
+        return tiles[y][x][z]
     }
 
     /**
@@ -70,8 +69,8 @@ open class BaseChunk(val x: Int, val y: Int) : MapChunk<TileType, TileLayer> {
      * @param z the z position depth
      * @param tileType the tile type
      */
-    override fun setTile(x: Int, y: Int, z: Int, tileType: TileType) {
-        tiles[y][x][z] = tileType.code
+    override fun setTile(x: Int, y: Int, z: Int, tileType: Int) {
+        tiles[y][x][z] = tileType
     }
 
     /**

@@ -5,5 +5,42 @@
   "humidity": 60,
   "altitude": 1500,
   "color": 65280,
-  "type": "TERRESTRIAL"
+  "type": "TERRESTRIAL",
+  "tiles": [
+    {
+      "key": "grass",
+      "probability": 0.96
+    },
+    {
+      "key": "flower_grass",
+      "probability": 0.03
+    },
+    {
+      "key": "tall_grass",
+      "probability": 0.01
+    }
+  ],
+  "gradient": "RANDOM",
+  "tileEntities": [
+    {
+      "spawnOn": ["grass"],
+      "keys": ["bush_1", "bush_2", "bush_3", "bush_4", "bush_5", "bush_6", "bush_7", "bush_8"],
+      "odds": 0.04
+    },
+    {
+      "spawnOn": ["tall_grass"],
+      "keys": ["tall_bush_1", "tall_bush_2", "tall_bush_3", "tall_bush_4", "tall_bush_5", "tall_bush_6"],
+      "odds": 0.02
+    },
+    {
+      "spawnOn": ["flower_grass"],
+      "keys": ["flower_1", "flower_2", "flower_3", "flower_4"],
+      "odds": 0.02
+    },
+    {
+      "spawnOn": ["grass"],
+      "keys": ["rock_1", "rock_2", "rock_3"],
+      "odds": 0.005
+    }
+  ]
 }

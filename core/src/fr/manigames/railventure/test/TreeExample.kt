@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController
 import fr.manigames.railventure.api.core.Assets
-import fr.manigames.railventure.generated.R
 
 class TreeExample : ApplicationAdapter() {
     lateinit var perspectiveCamera: PerspectiveCamera
@@ -23,7 +22,7 @@ class TreeExample : ApplicationAdapter() {
     lateinit var groundTexture: Texture
 
     override fun create() {
-        Assets.instance.load(R::loadingConsumer)
+        Assets.instance.load()
         Assets.instance.finishLoading()
 
         perspectiveCamera = PerspectiveCamera(67f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
@@ -45,10 +44,10 @@ class TreeExample : ApplicationAdapter() {
 
         decalBatch = DecalBatch(CameraGroupStrategy(perspectiveCamera))
 
-        groundTexture = Assets.instance.getTexture(R.Texture.GRASS.path)!!
+        groundTexture = Assets.instance.getTexture("texture/tile/grass.png")!!
         spriteBatch = SpriteBatch()
 
-        val treeTexture = Assets.instance.getTexture(R.Texture.FOLIAGE_SUMMER_TREE_1.path)
+        val treeTexture = Assets.instance.getTexture("texture/foliage/summer/tree_1.png")
         val treeRegion = TextureRegion(treeTexture)
 
         treeDecal = Decal.newDecal(treeRegion, true)

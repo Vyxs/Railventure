@@ -4,15 +4,10 @@ import fr.manigames.railventure.api.registry.RegistryObject
 
 abstract class Item : RegistryObject {
 
-    companion object {
-
-        const val DEFAULT_ITEM_STACK_SIZE = 64
-    }
-
     abstract override val key: String
     abstract val name: String
     abstract val texture: String
-    @Transient open val maxStackSize: Int = DEFAULT_ITEM_STACK_SIZE
+    @Transient open val maxStackSize: Int = 1
     @Transient open val isStackable: Boolean = false
     @Transient open val isUsable: Boolean = false
     @Transient open val isPlaceable: Boolean = false

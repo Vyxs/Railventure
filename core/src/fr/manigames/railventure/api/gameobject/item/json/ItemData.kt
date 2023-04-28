@@ -1,12 +1,10 @@
 package fr.manigames.railventure.api.gameobject.item.json
 
-import fr.manigames.railventure.api.gameobject.item.Item
-
 data class ItemData(
     val key: String,
     val name: String,
     val texture: String,
-    val maxStackSize: Int = Item.DEFAULT_ITEM_STACK_SIZE,
+    val maxStackSize: Int = 1,
     val isStackable: Boolean = false,
     val isUsable: Boolean = false,
     val isPlaceable: Boolean = false,
