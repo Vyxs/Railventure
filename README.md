@@ -3,19 +3,14 @@ Railventure is an open-world game that seamlessly blends RPG, adventure, and san
 
 In Railventure, players can switch between a top-down 2D view and a side-scrolling 3D perspective, offering a unique and immersive gaming experience. The game will be available on multiple platforms including Android, Web, Desktop, and iOS. Dive into the world of Railventure, and embark on an unforgettable adventure that offers endless opportunities for creativity, exploration, and fun!
 # Summary
-1. [Current look](#current-look-of-railventure)
-2. [Debug keys](#debug-keys)
-3. [Documentation](#documentation)
-4. [Adding features](#adding-features)
+1. [Debug keys](#debug-keys)
+2. [Documentation](#documentation)
+3. [Adding features](#adding-features)
     1. [Adding a Tile](#adding-a-tile)
     2. [Adding an Item](#adding-an-item)
     3. [Adding a TileEntity](#adding-a-tileentity)
     4. [Adding an Inventory](#adding-an-inventory)
     5. [Adding a Biome](#adding-a-biome)
-
-# Current look of Railventure
-![Rendu 2D](./documentation/assets/img/2d_render.png)
-![Rendu 3D](./documentation/assets/img/3d_render.png)
 
 # Debug keys
 - `←` `→` `↓` `↑` : Move camera
